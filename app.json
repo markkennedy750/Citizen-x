@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#0E9C67"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -30,6 +32,9 @@
       }
     },
     "owner": "kennedy757",
-    "plugins": ["expo-secure-store"]
+    "plugins": [
+      "expo-secure-store",
+      "expo-font"
+    ]
   }
 }
