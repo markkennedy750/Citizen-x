@@ -4,27 +4,32 @@
     "slug": "citixenx",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/citizenx.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/citizenx.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0E9C67"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/citizenx.png",
+        "backgroundColor": "#0E9C67"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/citizenx.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "37271682-1c79-46cd-8a73-3c2cac94cb3c"
+      }
+    },
+    "owner": "kennedy757",
+    "plugins": ["expo-secure-store"]
   }
 }
