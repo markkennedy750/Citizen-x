@@ -22,11 +22,12 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="WelcomeScreen"
+        initialRouteName="SplashScreen"
         screenOptions={{
           headerShown: false,
         }}
       >
+        <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="MainScreen" component={Home} />
