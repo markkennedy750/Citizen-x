@@ -70,6 +70,7 @@ const CustomBottomTab = ({ state, descriptors, navigation }) => {
             onPress={onPress}
             onLongPress={onLongPress}
             style={{ flex: 1 }}
+            key={index}
           >
             <View style={styles.contentContainer}>
               <BottomTabIcon route={route.name} isFocused={isFocused} />

@@ -6,14 +6,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   Home,
-  HomeScreen,
-  HotSpot,
-  Notification,
   OnboardingScreen,
-  Profile,
   SplashScreen,
   WelcomeScreen,
-  Report,
+  SignIn,
+  ForgetPassword,
+  SignUp,
+  Otp,
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -30,7 +29,11 @@ export default function App() {
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Otp" component={Otp} />
         <Stack.Screen name="MainScreen" component={Home} />
+        <Stack.Screen name="ForgotPassword" component={ForgetPassword} />
       </Stack.Navigator>
     </NavigationContainer>
   );
