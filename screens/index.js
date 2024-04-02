@@ -12,6 +12,8 @@ import SignIn from "./Authentication/SignIn";
 import SignUp from "./Authentication/SignUp";
 import ForgetPassword from "./Authentication/ForgotPassword";
 import Otp from "./Authentication/Otp";
+import InitialSignIn from "./InitialSignIn";
+import InitialSignUp from "./InitialSignUp";
 
 export {
   Home,
@@ -28,4 +30,6 @@ export {
   SignUp,
   ForgetPassword,
   Otp,
+  InitialSignIn,
+  InitialSignUp
 };

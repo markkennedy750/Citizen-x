@@ -36,7 +36,7 @@ const SplashScreen = ({ navigation }) => {
   }, [navigation]);
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={styles.container}>
       <MotiImage
         source={require("../assets/citizenx.png")} // Provide the path to your image
         style={{ width: width * 0.3, height: width * 0.3 }}
@@ -50,6 +50,7 @@ const SplashScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#B7FF9D33",
     flex: 1,
     justifyContent: "center",
     alignItems: "center",

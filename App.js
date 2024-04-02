@@ -13,6 +13,8 @@ import {
   ForgetPassword,
   SignUp,
   Otp,
+  InitialSignIn,
+  InitialSignUp,
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -31,6 +33,8 @@ export default function App() {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="InitialSignIn" component={InitialSignIn} />
+        <Stack.Screen name="InitialSignUp" component={InitialSignUp} />
         <Stack.Screen name="Otp" component={Otp} />
         <Stack.Screen name="MainScreen" component={Home} />
         <Stack.Screen name="ForgotPassword" component={ForgetPassword} />
