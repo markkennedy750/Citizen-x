@@ -16,7 +16,7 @@ const AuthLayout = ({
         flex: 1,
         paddingVertical: SIZES.padding,
         backgroundColor: "white",
-        marginTop: 5,
+        marginTop: 35,
         ...containerStyle,
       }}
     >

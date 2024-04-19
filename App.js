@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+//import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   Home,
   OnboardingScreen,
@@ -13,7 +13,7 @@ import {
   ForgetPassword,
   SignUp,
   Otp,
-  InitialSignIn,
+  SignUpMethod,
   InitialSignUp,
 } from "./screens";
 
@@ -23,7 +23,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="SplashScreen"
+        initialRouteName="SignUpMethod"
         screenOptions={{
           headerShown: false,
         }}
@@ -33,7 +33,7 @@ export default function App() {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="InitialSignIn" component={InitialSignIn} />
+        <Stack.Screen name="SignUpMethod" component={SignUpMethod} />
         <Stack.Screen name="InitialSignUp" component={InitialSignUp} />
         <Stack.Screen name="Otp" component={Otp} />
         <Stack.Screen name="MainScreen" component={Home} />

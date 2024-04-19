@@ -17,7 +17,7 @@ const BottomTabIcon = ({ route, isFocused }) => {
           <HomeIcon
             width={width}
             height={height}
-            fill={isFocused ? "#0E9C67" : "white"}
+            fill={isFocused ? "#0E9C67" : "#000a03"}
           />
         );
       case "HotSpot":
@@ -25,7 +25,7 @@ const BottomTabIcon = ({ route, isFocused }) => {
           <HotSpotIcon
             width={width}
             height={height}
-            fill={isFocused ? "#0E9C67" : "white"}
+            fill={isFocused ? "#0E9C67" : "#000a03"}
           />
         );
       case "Report":
@@ -33,7 +33,7 @@ const BottomTabIcon = ({ route, isFocused }) => {
           <ReportIcon
             width={width}
             height={height}
-            fill={isFocused ? "#0E9C67" : "white"}
+            fill={isFocused ? "#0E9C67" : "#000a03"}
           />
         );
       case "Notification":
@@ -41,7 +41,7 @@ const BottomTabIcon = ({ route, isFocused }) => {
           <NotificationIcon
             width={width}
             height={height}
-            fill={isFocused ? "#0E9C67" : "white"}
+            fill={isFocused ? "#0E9C67" : "#000a03"}
           />
         );
       case "Profile":
@@ -49,7 +49,7 @@ const BottomTabIcon = ({ route, isFocused }) => {
           <ProfileIcon
             width={width}
             height={height}
-            fill={isFocused ? "#0E9C67" : "white"}
+            fill={isFocused ? "#0E9C67" : "#000a03"}
           />
         );
 

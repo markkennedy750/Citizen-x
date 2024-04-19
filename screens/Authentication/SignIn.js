@@ -32,7 +32,7 @@ const SignIn = ({ navigation }) => {
       >
         {/** Email Form Inputs */}
         <FormInput
-          label="Email"
+          label="email"
           keyboardType="email-address"
           autoCompleteType="email"
           onChange={(value) => {
@@ -69,7 +69,7 @@ const SignIn = ({ navigation }) => {
         />
 
         <FormInput
-          label="Password"
+          label="password"
           secureTextEntry={!showPass}
           autoCompleteType="password"
           containerStyle={{
@@ -124,6 +124,7 @@ const SignIn = ({ navigation }) => {
           buttonContainerStyle={{
             height: 55,
             alignItems: "center",
+            justifyContent: "center",
             marginTop: SIZES.padding,
             borderRadius: SIZES.radius,
             backgroundColor: isEnableSignIn() ? "#0E9C67" : COLORS.gray3,
@@ -162,7 +163,7 @@ const SignIn = ({ navigation }) => {
               backgroundColor: null,
             }}
             labelStyle={{
-              color: COLORS.primary,
+              color: "#0E9C67",
               fontWeight: "700",
               fontSize: 18,
             }}
@@ -171,53 +172,7 @@ const SignIn = ({ navigation }) => {
         </View>
       </View>
 
-      
       {/** Footer */}
-
-      <View>
-        {/** Facebook */}
-
-        <TextIconButton
-          containerStyle={{
-            height: 50,
-            alignItems: "center",
-            borderRadius: SIZES.radius,
-            backgroundColor: COLORS.blue,
-          }}
-          icon={icons.fb}
-          iconPosition="LEFT"
-          iconStyle={{
-            tintColor: COLORS.white,
-          }}
-          label="Continue With Facebook"
-          labelStyle={{
-            marginLeft: SIZES.radius,
-            color: COLORS.white,
-          }}
-          onPress={() => {}}
-        />
-
-        {/** Google */}
-        <TextIconButton
-          containerStyle={{
-            height: 50,
-            alignItems: "center",
-            marginTop: SIZES.radius,
-            borderRadius: SIZES.radius,
-            backgroundColor: COLORS.lightGray2,
-          }}
-          icon={icons.google}
-          iconPosition="LEFT"
-          iconStyle={{
-            tintColor: null,
-          }}
-          label="Continue With Google"
-          labelStyle={{
-            marginLeft: SIZES.radius,
-          }}
-          onPress={() => {}}
-        />
-      </View>
     </AuthLayout>
   );
 };

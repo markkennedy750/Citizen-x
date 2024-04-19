@@ -15,7 +15,7 @@ import Animated, {
 const CustomBottomTab = ({ state, descriptors, navigation }) => {
   const { width } = useWindowDimensions();
   const MARGIN = 20;
-  const TAB_BAR_WIDTH = width - 2 * MARGIN;
+  const TAB_BAR_WIDTH = width - 1.2 * MARGIN;
   const TAB_WIDTH = TAB_BAR_WIDTH / state.routes.length;
 
   const translateAnimation = useAnimatedStyle(() => {
@@ -25,9 +25,7 @@ const CustomBottomTab = ({ state, descriptors, navigation }) => {
   });
 
   return (
-    <View
-      style={[styles.tabBarContainer, { width: TAB_BAR_WIDTH, bottom: MARGIN }]}
-    >
+    <View style={[styles.tabBarContainer, { width: TAB_BAR_WIDTH, bottom: 5 }]}>
       <Animated.View
         style={[
           styles.slidingTabContainer,
@@ -76,8 +74,8 @@ const CustomBottomTab = ({ state, descriptors, navigation }) => {
               <BottomTabIcon route={route.name} isFocused={isFocused} />
               <Text
                 style={{
-                  color: isFocused ? "#0E9C67" : "white",
-                  fontSize: 12,
+                  color: isFocused ? "#0E9C67" : "#000a03",
+                  fontSize: 11,
                 }}
               >
                 {route.name}
@@ -95,14 +93,17 @@ const styles = StyleSheet.create({
   tabBarContainer: {
     flex: 1,
     flexDirection: "row",
-    height: 90,
+    height: 67,
     position: "absolute",
     alignSelf: "center",
-    backgroundColor: "#0E9C67",
-    borderRadius: 100,
+    backgroundColor: "#ebf5ed", //"#0E9C67",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
     alignItems: "center",
     justifyContent: "space-around",
     overflow: "hidden",
+    borderWidth: 0.5,
+    //borderColor: "#ebf5ed",
   },
   contentContainer: {
     flex: 1,
@@ -111,8 +112,8 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   slidingTab: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     borderRadius: 100,
     backgroundColor: "white",
   },

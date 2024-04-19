@@ -63,7 +63,7 @@ const CustomButton = ({ flatListRef, flatListIndex, dataLength }) => {
         if (flatListIndex.value < dataLength - 1) {
           flatListRef.current.scrollToIndex({ index: flatListIndex.value + 1 });
         } else {
-          navigation.navigate("InitialSignIn");
+          navigation.navigate("InitialSignUp");
         }
       }}
     >

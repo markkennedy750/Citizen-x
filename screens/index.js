@@ -12,7 +12,7 @@ import SignIn from "./Authentication/SignIn";
 import SignUp from "./Authentication/SignUp";
 import ForgetPassword from "./Authentication/ForgotPassword";
 import Otp from "./Authentication/Otp";
-import InitialSignIn from "./InitialSignIn";
+import SignUpMethod from "./Authentication/SignUpMethod";
 import InitialSignUp from "./InitialSignUp";
 
 export {
@@ -30,6 +30,6 @@ export {
   SignUp,
   ForgetPassword,
   Otp,
-  InitialSignIn,
-  InitialSignUp
+  SignUpMethod,
+  InitialSignUp,
 };

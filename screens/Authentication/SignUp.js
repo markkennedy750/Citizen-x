@@ -156,6 +156,7 @@ const SignUp = ({ navigation }) => {
           buttonContainerStyle={{
             height: 55,
             alignItems: "center",
+            justifyContent: "center",
             marginTop: SIZES.padding,
             borderRadius: SIZES.radius,
             backgroundColor: isEnableSignUp() ? "#0E9C67" : COLORS.gray3,
@@ -192,7 +193,7 @@ const SignUp = ({ navigation }) => {
               backgroundColor: null,
             }}
             labelStyle={{
-              color: COLORS.primary,
+              color: "#0E9C67",
               fontWeight: "700",
               fontSize: 18,
             }}
@@ -210,6 +211,7 @@ const SignUp = ({ navigation }) => {
           containerStyle={{
             height: 50,
             alignItems: "center",
+            justifyContent: "center",
             borderRadius: SIZES.radius,
             backgroundColor: COLORS.blue,
           }}
@@ -218,7 +220,7 @@ const SignUp = ({ navigation }) => {
           iconStyle={{
             tintColor: COLORS.white,
           }}
-          label="Continue With Facebook"
+          label="Continue with Facebook"
           labelStyle={{
             marginLeft: SIZES.radius,
             color: COLORS.white,
@@ -231,6 +233,7 @@ const SignUp = ({ navigation }) => {
           containerStyle={{
             height: 50,
             alignItems: "center",
+            justifyContent: "center",
             marginTop: SIZES.radius,
             borderRadius: SIZES.radius,
             backgroundColor: COLORS.lightGray2,
@@ -240,7 +243,7 @@ const SignUp = ({ navigation }) => {
           iconStyle={{
             tintColor: null,
           }}
-          label="Continue With Google"
+          label="Continue with Google"
           labelStyle={{
             marginLeft: SIZES.radius,
           }}

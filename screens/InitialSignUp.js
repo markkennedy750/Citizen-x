@@ -21,53 +21,52 @@ const InitialSignIn = ({ navigation }) => {
           <Text style={styles.titleContainer}>
             Be part of the Citizen X community, become the force for change.
           </Text>
-          <Text style={styles.subTitleContainer}>
-            Create your Citizen X account, join as a citizen or journalist.
-          </Text>
         </View>
 
-        <TextButton
-          label="SignUp as a Citizen"
-          //disabled={isEnableSignUp() ? false : true}
-          buttonContainerStyle={{
-            height: 55,
-            alignItems: "center",
-            marginTop: SIZES.padding,
-            borderRadius: SIZES.radius,
-            backgroundColor: "#0E9C67",
-            width: "100%",
-          }}
-          labelStyle={{
-            color: COLORS.white,
-            fontWeight: "700",
-            fontSize: 17,
-          }}
-          onPress={() => navigation.navigate("SignUp")}
-        />
-
-        <TextButton
-          label="SignUp as a Journalist"
-          //disabled={isEnableSignUp() ? false : true}
-          buttonContainerStyle={{
-            height: 55,
-            alignItems: "center",
-            marginTop: SIZES.padding,
-            borderRadius: SIZES.radius,
-            backgroundColor: "#0E9C67",
-            width: "100%",
-          }}
-          labelStyle={{
-            color: COLORS.white,
-            fontWeight: "700",
-            fontSize: 17,
-            textAlign: "center",
-          }}
-          onPress={() => navigation.navigate("SignUp")}
-        />
+        <View style={styles.buttomTextButton}>
+          <TextButton
+            label="Register"
+            //disabled={isEnableSignUp() ? false : true}
+            buttonContainerStyle={{
+              height: 55,
+              alignItems: "center",
+              marginTop: SIZES.padding,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+              width: "100%",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 17,
+            }}
+            onPress={() => navigation.navigate("SignUp")}
+          />
+          <TextButton
+            label="Continue without an account"
+            //disabled={isEnableSignUp() ? false : true}
+            buttonContainerStyle={{
+              height: 55,
+              alignItems: "center",
+              marginTop: SIZES.padding,
+              borderRadius: SIZES.radius,
+              backgroundColor: null,
+              borderWidth: 2,
+              width: "100%",
+            }}
+            labelStyle={{
+              color: "black",
+              fontWeight: "700",
+              fontSize: 17,
+              textAlign: "center",
+            }}
+            onPress={() => navigation.navigate("MainScreen")}
+          />
+        </View>
 
         <View
           style={{
-            marginTop: SIZES.radius,
+            flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
           }}
@@ -75,26 +74,24 @@ const InitialSignIn = ({ navigation }) => {
           <Text
             style={{
               color: COLORS.darkGray,
-              fontWeight: "600",
-              fontSize: 18,
+              fontWeight: "700",
+              fontSize: 15,
+              marginRight: 7,
             }}
           >
             Already have an account?
           </Text>
-
           <TextButton
-            label="SignIn as citizen/Journalist "
+            label="Sign In"
             buttonContainerStyle={{
-              marginLeft: 5,
-              marginRight: 4,
               backgroundColor: null,
             }}
             labelStyle={{
               color: "#0E9C67",
               fontWeight: "700",
-              fontSize: 17,
+              fontSize: 18,
             }}
-            onPress={() => navigation.navigate("InitialSignIn")}
+            onPress={() => navigation.navigate("SignIn")}
           />
         </View>
       </View>
@@ -124,17 +121,22 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     color: COLORS.darkGray,
-    fontWeight: "700",
+    fontWeight: "800",
     fontSize: 22,
     lineHeight: 24,
   },
   subTitleContainer: {
-    marginTop: SIZES.padding * 0.3,
+    marginTop: SIZES.padding * 1,
     color: COLORS.darkGray2,
-    fontSize: 14,
-    lineHeight: 19,
+    fontSize: 22,
+    lineHeight: 24,
   },
   imageTitle: {
     fontSize: 17,
+  },
+  buttomTextButton: {
+    width: "100%",
+    marginTop: 5,
+    marginBottom: 140,
   },
 });
