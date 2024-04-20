@@ -25,6 +25,7 @@ const setting = require("../assets/icons/icon/setting.png");
 const star = require("../assets/icons/icon/star.png");
 const wallet = require("../assets/icons/icon/wallet.png");
 const help = require("../assets/icons/icon/help.png");
+const arrow_back = require("../assets/icons/back-arrow.png");
 
 export default {
   coupon,
@@ -54,4 +55,5 @@ export default {
   star,
   wallet,
   help,
+  arrow_back,
 };
