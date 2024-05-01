@@ -15,6 +15,12 @@ import {
   Otp,
   SignUpMethod,
   InitialSignUp,
+  ReportGuideline,
+  Crime,
+  FakeProduct,
+  MakeReport,
+  Roads,
+  Election,
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -23,7 +29,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="SignUpMethod"
+        initialRouteName="MainScreen"
         screenOptions={{
           headerShown: false,
         }}
@@ -33,7 +39,13 @@ export default function App() {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Crime" component={Crime} />
+        <Stack.Screen name="FakeProduct" component={FakeProduct} />
+        <Stack.Screen name="Election" component={Election} />
+        <Stack.Screen name="MakeReport" component={MakeReport} />
+        <Stack.Screen name="Roads" component={Roads} />
         <Stack.Screen name="SignUpMethod" component={SignUpMethod} />
+        <Stack.Screen name="GuideLine" component={ReportGuideline} />
         <Stack.Screen name="InitialSignUp" component={InitialSignUp} />
         <Stack.Screen name="Otp" component={Otp} />
         <Stack.Screen name="MainScreen" component={Home} />

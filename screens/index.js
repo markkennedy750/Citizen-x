@@ -14,6 +14,13 @@ import ForgetPassword from "./Authentication/ForgotPassword";
 import Otp from "./Authentication/Otp";
 import SignUpMethod from "./Authentication/SignUpMethod";
 import InitialSignUp from "./InitialSignUp";
+//Reports
+import ReportGuideline from "./ReportContainer/ReportGuideline";
+import MakeReport from "./ReportContainer/MakeReport";
+import Crime from "./ReportContainer/Crime";
+import FakeProduct from "./ReportContainer/FakeProduct";
+import Roads from "./ReportContainer/Roads";
+import Election from "./ReportContainer/Election";
 
 export {
   Home,
@@ -32,4 +39,10 @@ export {
   Otp,
   SignUpMethod,
   InitialSignUp,
+  ReportGuideline,
+  MakeReport,
+  Crime,
+  FakeProduct,
+  Roads,
+  Election
 };
