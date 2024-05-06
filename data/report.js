@@ -7,25 +7,25 @@ const reportData = [
   },
   {
     id: 2,
-    image: require("../assets/reports/consumer.png"),
-    title: "Consumer Protection",
+    image: require("../assets/reports/fakeproducts.png"),
+    title: "Fake Products",
     navigation: "FakeProduct",
   },
   {
     id: 3,
-    image: require("../assets/reports/infrastructure.png"),
-    title: "Infastructure & Utilities",
+    image: require("../assets/reports/roads.png"),
+    title: "Infastructures",
     navigation: "Roads",
   },
   {
     id: 4,
     image: require("../assets/reports/health.png"),
-    title: "Health and HealthCare",
+    title: "HealthCare",
     navigation: "MakeReport",
   },
   {
     id: 5,
-    image: require("../assets/reports/education.png"), //TODO: Election issues
+    image: require("../assets/reports/election.png"),
     title: "Election Issues",
     navigation: "Election",
   },
@@ -44,7 +44,7 @@ const reportData = [
   {
     id: 8,
     image: require("../assets/reports/community.png"),
-    title: "Community & Development",
+    title: "Community Development",
     navigation: "MakeReport",
   },
   {
@@ -56,11 +56,84 @@ const reportData = [
   {
     id: 10,
     image: require("../assets/reports/environmental.png"),
-    title: "Environmental Concern",
+    title: "Environment",
+    navigation: "MakeReport",
+  },
+
+  {
+    id: 11,
+    image: require("../assets/reports/accidents.png"),
+    title: "Accidents",
     navigation: "MakeReport",
   },
   {
-    id: 11,
+    id: 12,
+    image: require("../assets/reports/power.png"),
+    title: "Power",
+    navigation: "MakeReport",
+  },
+  {
+    id: 13,
+    image: require("../assets/reports/portablewater.png"),
+    title: "Portable Water",
+    navigation: "MakeReport",
+  },
+  {
+    id: 14,
+    image: require("../assets/reports/petrol.png"),
+    title: "Petrol",
+    navigation: "MakeReport",
+  },
+  {
+    id: 15,
+    image: require("../assets/reports/airport.png"),
+    title: "Airport",
+    navigation: "MakeReport",
+  },
+  {
+    id: 16,
+    image: require("../assets/reports/transport.png"),
+    title: "transport",
+    navigation: "MakeReport",
+  },
+  {
+    id: 17,
+    image: require("../assets/reports/embassies.png"),
+    title: "Embassies",
+    navigation: "MakeReport",
+  },
+  {
+    id: 18,
+    image: require("../assets/reports/corruption.png"),
+    title: "Corruption",
+    navigation: "MakeReport",
+  },
+  {
+    id: 19,
+    image: require("../assets/reports/election.png"),
+    title: "Election",
+    navigation: "MakeReport",
+  },
+  {
+    id: 20,
+    image: require("../assets/reports/employment.png"),
+    title: "Employment",
+    navigation: "MakeReport",
+  },
+  {
+    id: 21,
+    image: require("../assets/reports/socialwelfare.png"),
+    title: "socialwelfare",
+    navigation: "MakeReport",
+  },
+  {
+    id: 22,
+    image: require("../assets/reports/tradecommerce.png"),
+    title: "Trade/Commerce",
+    navigation: "MakeReport",
+  },
+  {
+    id: 23,
     image: require("../assets/reports/others.png"),
     title: "Others",
     navigation: "MakeReport",

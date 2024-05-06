@@ -5,8 +5,13 @@ import {
   TouchableOpacity,
   Animated,
   //Dimensions,
+  Modal,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  StatusBar,
 } from "react-native";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { HomeScreen, HotSpot, Report, Notification, Profile } from "./";
 import "react-native-gesture-handler";
@@ -17,10 +22,14 @@ import {
   Entypo,
   FontAwesome6,
 } from "@expo/vector-icons";
-import { icons, COLORS } from "../constants";
+import { icons, COLORS, SIZES } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
 
+//import { SIZES, COLORS, icons } from "../constants";
+import reportData from "../data/report";
 
+import Container from "./ReportContainer/Container";
+import TextIconButton from "../components/TextIconButton";
 // const CustomBottomTabs = (props) => {
 //   return <CustomBottomTab {...props} />;
 // };
@@ -70,6 +79,43 @@ const Home = ({ navigation }) => {
   const Tab = createBottomTabNavigator();
 
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const footerButton = () => {
+    return (
+      <View>
+        <TextIconButton
+          containerStyle={{
+            height: 50,
+            alignItems: "center",
+            justifyContent: "center",
+            //marginTop: SIZES.radius,
+            borderRadius: SIZES.radius,
+            backgroundColor: COLORS.lightGray2,
+            marginTop: SIZES.padding,
+          }}
+          icon={icons.arrow_right}
+          iconPosition="RIGHT"
+          iconStyle={{
+            tintColor: null,
+          }}
+          label="View Report Guidelines"
+          labelStyle={{
+            marginRight: SIZES.radius,
+            fontWeight: "700",
+            color: "#0276FF",
+          }}
+          onPress={() => navigation.navigate("GuideLine")}
+        />
+      </View>
+    );
+  };
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
   return (
     <>
       <Tab.Navigator
@@ -182,7 +228,7 @@ const Home = ({ navigation }) => {
           options={{
             tabBarIcon: ({ focused }) => {
               return (
-                <TouchableOpacity onPress={() => navigation.navigate("Report")}>
+                <TouchableOpacity onPress={() => toggleModal()}>
                   <View
                     style={{
                       width: 62,
@@ -289,13 +335,100 @@ const Home = ({ navigation }) => {
           // })}
         />
       </Tab.Navigator>
-      
+
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={isModalVisible}
+        onRequestClose={() => setIsModalVisible(false)}
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          borderWidth: 1,
+          borderRadius: 25,
+        }}
+      >
+        <View style={styles.primaryContainer}>
+          <View>
+            <TouchableOpacity
+              onPress={() => toggleModal()}
+              style={styles.imageContainer}
+            >
+              <Image style={styles.image} source={icons.arrow_back} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>Make a report</Text>
+            <Text style={styles.subTitle}>
+              Please select the category of report you want to make{" "}
+            </Text>
+          </View>
+          <View style={styles.itemContainer}>
+            <FlatList
+              data={reportData}
+              renderItem={({ item }) => <Container item={item} />}
+              keyExtractor={(item) => item.id}
+              numColumns={3}
+              ListFooterComponent={footerButton}
+            />
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };
 
 export default Home;
 
+const styles = StyleSheet.create({
+  primaryContainer: {
+    marginTop: 25,
+    flex: 1,
+    paddingHorizontal: 18,
+    height: "95%",
+    marginVertical: 15,
+    borderWidth: 1,
+    marginLeft: 10,
+    marginRight: 10,
+    borderRadius: 25,
+    borderColor: COLORS.gray2,
+  },
+  imageContainer: {
+    width: 32,
+    height: 30,
+    marginTop: 15,
+  },
+  image: {
+    flex: 1,
+    width: 30,
+    height: 25,
+  },
+  textContainer: {
+    flexDirection: "column",
+    marginTop: 20,
+    justifyContent: "flex-end",
+  },
+  title: {
+    color: `${COLORS.primary}`,
+    fontWeight: "700",
+    fontSize: 25,
+    lineHeight: 28,
+  },
+  subTitle: {
+    color: "#000000",
+    fontWeight: "500",
+    fontSize: 14,
+    lineHeight: 19.6,
+  },
+  itemContainer: {
+    width: 327,
+    height: 800,
+    marginTop: 17,
+    alignSelf: "center",
+    alignItems: "center",
+  },
+});
 
 // <Ionicons name="notifications-outline" size={24} color="black" />
 // <Octicons name="home" size={24} color="black" />
