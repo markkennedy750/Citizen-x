@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   StyleSheet,
   StatusBar,
+  ScrollView,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -57,6 +58,15 @@ const TabBarCustomButton = ({ children, onPress }) => {
     </TouchableOpacity>
   );
 };
+
+const HeadeComponent = () => (
+  <View style={styles.textContainer}>
+    <Text style={styles.title}>Make a report</Text>
+    <Text style={styles.subTitle}>
+      Please select the category of report you want to make{" "}
+    </Text>
+  </View>
+);
 // function getWidth() {
 //   let width = Dimensions.get("window").width;
 //   width = width - 55;
@@ -84,31 +94,31 @@ const Home = ({ navigation }) => {
 
   const footerButton = () => {
     return (
-      <View>
-        <TextIconButton
-          containerStyle={{
-            height: 50,
-            alignItems: "center",
-            justifyContent: "center",
-            //marginTop: SIZES.radius,
-            borderRadius: SIZES.radius,
-            backgroundColor: COLORS.lightGray2,
-            marginTop: SIZES.padding,
-          }}
-          icon={icons.arrow_right}
-          iconPosition="RIGHT"
-          iconStyle={{
-            tintColor: null,
-          }}
-          label="View Report Guidelines"
-          labelStyle={{
-            marginRight: SIZES.radius,
-            fontWeight: "700",
-            color: "#0276FF",
-          }}
-          onPress={() => navigation.navigate("GuideLine")}
-        />
-      </View>
+      <TextIconButton
+        containerStyle={{
+          height: 50,
+          alignItems: "center",
+          justifyContent: "flex-end",
+
+          //marginTop: SIZES.radius,
+          borderRadius: SIZES.radius,
+          backgroundColor: null,
+          marginTop: SIZES.padding,
+          marginBottom: SIZES.padding,
+        }}
+        icon={icons.arrow_right}
+        iconPosition="RIGHT"
+        iconStyle={{
+          tintColor: null,
+        }}
+        label="View Report Guidelines"
+        labelStyle={{
+          marginRight: SIZES.radius,
+          fontWeight: "700",
+          color: "#0276FF",
+        }}
+        onPress={() => navigation.navigate("GuideLine")}
+      />
     );
   };
 
@@ -341,13 +351,12 @@ const Home = ({ navigation }) => {
         transparent={false}
         visible={isModalVisible}
         onRequestClose={() => setIsModalVisible(false)}
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          borderWidth: 1,
-          borderRadius: 25,
-        }}
+        // style={{
+        //   justifyContent: "center",
+        //   alignItems: "center",
+        //   borderWidth: 1,
+        //   borderRadius: 25,
+        // }}
       >
         <View style={styles.primaryContainer}>
           <View>
@@ -358,21 +367,17 @@ const Home = ({ navigation }) => {
               <Image style={styles.image} source={icons.arrow_back} />
             </TouchableOpacity>
           </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>Make a report</Text>
-            <Text style={styles.subTitle}>
-              Please select the category of report you want to make{" "}
-            </Text>
-          </View>
-          <View style={styles.itemContainer}>
-            <FlatList
-              data={reportData}
-              renderItem={({ item }) => <Container item={item} />}
-              keyExtractor={(item) => item.id}
-              numColumns={3}
-              ListFooterComponent={footerButton}
-            />
-          </View>
+
+          <FlatList
+            ListHeaderComponent={HeadeComponent}
+            data={reportData}
+            renderItem={({ item }) => <Container item={item} />}
+            keyExtractor={(item) => item.id}
+            numColumns={3}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ ...styles.itemContainer, flexGrow: 1 }}
+            ListFooterComponent={footerButton}
+          />
         </View>
       </Modal>
     </>
@@ -383,10 +388,9 @@ export default Home;
 
 const styles = StyleSheet.create({
   primaryContainer: {
-    marginTop: 25,
     flex: 1,
+    marginTop: 25,
     paddingHorizontal: 18,
-    height: "95%",
     marginVertical: 15,
     borderWidth: 1,
     marginLeft: 10,
@@ -423,8 +427,7 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     width: 327,
-    height: 800,
-    marginTop: 17,
+    marginTop: 10,
     alignSelf: "center",
     alignItems: "center",
   },

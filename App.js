@@ -21,6 +21,18 @@ import {
   MakeReport,
   Roads,
   Election,
+  Accidents,
+  Power,
+  PortableWater,
+  Petrol,
+  Airport,
+  Transport,
+  Embassies,
+  Corruption,
+  Employment,
+  SocialWelfare,
+  TradeCommerce,
+  HealthCare
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -44,6 +56,18 @@ export default function App() {
         <Stack.Screen name="Election" component={Election} />
         <Stack.Screen name="MakeReport" component={MakeReport} />
         <Stack.Screen name="Roads" component={Roads} />
+        <Stack.Screen name="Accidents" component={Accidents} />
+        <Stack.Screen name="Power" component={Power} />
+        <Stack.Screen name="PortableWater" component={PortableWater} />
+        <Stack.Screen name="Petrol" component={Petrol} />
+        <Stack.Screen name="Airport" component={Airport} />
+        <Stack.Screen name="Transport" component={Transport} />
+        <Stack.Screen name="Embassies" component={Embassies} />
+        <Stack.Screen name="Corruption" component={Corruption} />
+        <Stack.Screen name="Employment" component={Employment} />
+        <Stack.Screen name="SocialWelfare" component={SocialWelfare} />
+        <Stack.Screen name="TradeCommerce" component={TradeCommerce} />
+        <Stack.Screen name="HealthCare" component={HealthCare} />
         <Stack.Screen name="SignUpMethod" component={SignUpMethod} />
         <Stack.Screen name="GuideLine" component={ReportGuideline} />
         <Stack.Screen name="InitialSignUp" component={InitialSignUp} />

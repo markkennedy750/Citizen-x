@@ -21,6 +21,18 @@ import Crime from "./ReportContainer/Crime";
 import FakeProduct from "./ReportContainer/FakeProduct";
 import Roads from "./ReportContainer/Roads";
 import Election from "./ReportContainer/Election";
+import Accidents from "./ReportContainer/Accidents";
+import Power from "./ReportContainer/Power";
+import PortableWater from "./ReportContainer/PortableWater";
+import Petrol from "./ReportContainer/Petrol";
+import Airport from "./ReportContainer/Airport";
+import Transport from "./ReportContainer/Transport";
+import Embassies from "./ReportContainer/Embassies";
+import Corruption from "./ReportContainer/Corruption";
+import Employment from "./ReportContainer/Employment";
+import SocialWelfare from "./ReportContainer/SocialWelfare";
+import TradeCommerce from "./ReportContainer/TradeCommerce";
+import HealthCare from "./ReportContainer/HealthCare";
 
 export {
   Home,
@@ -44,5 +56,17 @@ export {
   Crime,
   FakeProduct,
   Roads,
-  Election
+  Election,
+  Accidents,
+  Power,
+  PortableWater,
+  Petrol,
+  Airport,
+  Transport,
+  Embassies,
+  Corruption,
+  Employment,
+  SocialWelfare,
+  TradeCommerce,
+  HealthCare,
 };
