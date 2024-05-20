@@ -1,8 +1,8 @@
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import React from "react";
 import RNPickerSelect from "react-native-picker-select";
 import { NigeriaStates, LocalGovernment } from "../data/state_local";
-import { SIZES } from "../constants";
+import { COLORS, SIZES } from "../constants";
 
 const StateLocal = ({
   selectedState,
@@ -17,28 +17,34 @@ const StateLocal = ({
         flexDirection: "column",
         justifyContent: "flex-start",
         width: "100%",
-        alignItems:"center",
+        alignItems: "center",
         paddingVertical: SIZES.padding,
       }}
     >
       <View
         style={{
           flex: 1,
+          //alignItems: "center",
+          justifyContent: "flex-start",
         }}
       >
         <Text
           style={{
             fontSize: 14,
             fontWeight: "400",
+            color: "#000000B2",
+            lineHeight: 20,
           }}
         >
           State
         </Text>
-        <RNPickerSelect
-          placeholder={{ label: "Select a State", value: null }}
-          onValueChange={(value) => setSelectedState(value)}
-          items={NigeriaStates}
-        />
+        <View style={styles.statePicker}>
+          <RNPickerSelect
+            placeholder={{ label: "Select a State", value: null }}
+            onValueChange={(value) => setSelectedState(value)}
+            items={NigeriaStates}
+          />
+        </View>
         {selectedState && (
           <View
             style={{
@@ -49,15 +55,22 @@ const StateLocal = ({
               style={{
                 fontSize: 14,
                 fontWeight: "400",
+                color: "#000000B2",
+                lineHeight: 20,
               }}
             >
               L.G.A
             </Text>
-            <RNPickerSelect
-              placeholder={{ label: "Select a Local Government", value: null }}
-              onValueChange={(value) => setSelectedLocalGov(value)}
-              items={localGovOptions.map((lg) => ({ label: lg, value: lg }))}
-            />
+            <View style={styles.statePicker}>
+              <RNPickerSelect
+                placeholder={{
+                  label: "Select a Local Government",
+                  value: null,
+                }}
+                onValueChange={(value) => setSelectedLocalGov(value)}
+                items={localGovOptions.map((lg) => ({ label: lg, value: lg }))}
+              />
+            </View>
           </View>
         )}
       </View>
@@ -66,3 +79,13 @@ const StateLocal = ({
 };
 
 export default StateLocal;
+
+const styles = StyleSheet.create({
+  statePicker: {
+    width: 320,
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: COLORS.gray2,
+  },
+});

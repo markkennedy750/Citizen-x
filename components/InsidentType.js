@@ -6,7 +6,7 @@ import { SIZES, COLORS } from "../constants";
 const InsidentType = ({
   insidenType,
   setInsidentType,
-  labelType,
+  //labelType,
   label,
   insident,
 }) => {
