@@ -4,9 +4,11 @@ import { FONTS, SIZES, COLORS } from "../constants";
 
 const FormInput = ({
   containerStyle,
+  formInputStyle,
   label,
   placeholder,
   inputStyle,
+  value,
   prependComponent,
   appendComponent,
   onChange,
@@ -15,6 +17,7 @@ const FormInput = ({
   autoCompleteType = "off",
   autoCapitalize = "none",
   errorMsg = "",
+  multiline,
 }) => {
   return (
     <View
@@ -57,6 +60,7 @@ const FormInput = ({
           marginTop: SIZES.base,
           borderRadius: SIZES.radius,
           backgroundColor: COLORS.lightGray2,
+          ...formInputStyle,
         }}
       >
         {prependComponent}
@@ -71,6 +75,8 @@ const FormInput = ({
           keyboardType={keyboardType}
           autoCompleteType={autoCompleteType}
           autoCapitalize={autoCapitalize}
+          multiline={multiline}
+          value={value}
           onChangeText={(text) => onChange(text)}
         />
         {appendComponent}

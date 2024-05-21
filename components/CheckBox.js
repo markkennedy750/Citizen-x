@@ -8,7 +8,7 @@ export default function CheckBox({ checked, setChecked, label }) {
       <Pressable style={styles.checkboxBase} onPress={onChange}>
         <MaterialIcons
           name={checked ? "radio-button-checked" : "radio-button-unchecked"}
-          size={40}
+          size={36}
           color={checked ? "#0E9C67" : "black"}
         />
       </Pressable>
@@ -20,10 +20,10 @@ export default function CheckBox({ checked, setChecked, label }) {
         alignItems: "center",
         justifyContent: "flex-start",
         flexDirection: "row",
-        paddingVertical: 15,
+        paddingVertical: 8,
       }}
     >
-      <MyCheckbox onChange={() => setChecked(!checked)} checked={checked} />
+      <MyCheckbox onChange={() => setChecked()} checked={checked} />
       <Text style={styles.label}>{label}</Text>
     </View>
   );
@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
 
   label: {
     fontWeight: "700",
-    fontSize: 14,
+    fontSize: 20,
     lineHeight: 20,
+    marginLeft:8
   },
 });
