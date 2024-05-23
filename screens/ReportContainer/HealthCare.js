@@ -5,15 +5,12 @@ import InsidentType from "../../components/InsidentType";
 import TextDesc from "../../components/TextDesc";
 import CameraVideoMedia from "../../components/CameraVideoMedia";
 import UserLocation from "../../components/UserLocation";
-import DateTime from "../../components/DateTime";
 import StateLocal from "../../components/StateLocal";
-import CheckBox from "../../components/CheckBox";
 import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
 import { useNavigation } from "@react-navigation/native";
-import RadioGroup from "react-native-radio-buttons-group";
 
 const HealthCare = () => {
   const [insidentType, setInsidentType] = useState("");
@@ -26,37 +23,29 @@ const HealthCare = () => {
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
-  const [selectedId, setSelectedId] = useState();
-  const [hospitalName, setHospitalName] = useState("");
-  const [hospitaleAddress, setHospitalAddress] = useState("");
-  const [department, setDepartment] = useState("");
-  const [departmentNameHead, setDepartmentNameHead] = useState("");
 
   const { navigation } = useNavigation();
 
-  const crime = [
+  const healthcare = [
     {
-      label: "Predifined Emergency Service",
-      value: "Predifined Emergency Service",
+      label: "Medical Staff Shortage",
+      value: "Medical Staff Shortage",
     },
-    { label: "Patience Care", value: "Patience Care" },
-    { label: "Staff Attitude", value: "Staff Attitude" },
-    { label: "Facilities Cleanliness", value: "Facilities Cleanliness" },
+    {
+      label: "Equipment Maintenance Issues",
+      value: "Equipment Maintenance Issues",
+    },
     {
       label: "Availability of Medications",
       value: "Availability of Medications",
     },
+    { label: "Patient Wait Time", value: "Patient Wait Time" },
+    {
+      label: "HealthCare Availability",
+      value: "HealthCare Availability",
+    },
   ];
 
-  function submitPost() {
-    return (
-      insidentType != "" &&
-      textInput != "" &&
-      selectedState != null &&
-      hospitalName != "" &&
-      hospitaleAddress != ""
-    );
-  }
   const radioButtons = useMemo(
     () => [
       {
@@ -88,14 +77,18 @@ const HealthCare = () => {
     []
   );
 
+  function submitPost() {
+    return insidentType != "" && textInput != "" && selectedState != null;
+  }
+
   return (
-    <ReportWrapper title="Hospitals">
+    <ReportWrapper title="HealthCare">
       <InsidentType
         insidenType={insidentType}
         setInsidentType={setInsidentType}
-        labelType="Crime Type"
-        label="Select the type of Insident"
-        insident={crime}
+        labelType="HealthCare"
+        label="Report type"
+        insident={healthcare}
       />
       <TextDesc
         onChange={setTextInput}
@@ -107,66 +100,7 @@ const HealthCare = () => {
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
       />
-      <FormInput
-        label="Hospital Name"
-        //keyboardType="text"
-        onChange={(value) => {
-          setHospitalName(value);
-        }}
-        autoCapitalize="words"
-        value={hospitalName}
-        formInputStyle={{
-          //height: 40,
-          borderWidth: 1,
-          borderColor: COLORS.gray2,
-          borderRadius: 7,
-        }}
-      />
-      <FormInput
-        label="Hospital Address"
-        //keyboardType="text"
-        onChange={(value) => {
-          setHospitalAddress(value);
-        }}
-        autoCapitalize="words"
-        value={hospitaleAddress}
-        formInputStyle={{
-          //height: 40,
-          borderWidth: 1,
-          borderColor: COLORS.gray2,
-          borderRadius: 7,
-        }}
-      />
-      <FormInput
-        label="Department"
-        //keyboardType="text"
-        onChange={(value) => {
-          setDepartment(value);
-        }}
-        autoCapitalize="words"
-        value={department}
-        formInputStyle={{
-          //height: 40,
-          borderWidth: 1,
-          borderColor: COLORS.gray2,
-          borderRadius: 7,
-        }}
-      />
-      <FormInput
-        label="Department Name Head"
-        //keyboardType="text"
-        onChange={(value) => {
-          setDepartmentNameHead(value);
-        }}
-        autoCapitalize="words"
-        value={departmentNameHead}
-        formInputStyle={{
-          //height: 40,
-          borderWidth: 1,
-          borderColor: COLORS.gray2,
-          borderRadius: 7,
-        }}
-      />
+
       <StateLocal
         selectedState={selectedState}
         setSelectedState={setSelectedState}
@@ -174,7 +108,7 @@ const HealthCare = () => {
         setSelectedLocalGov={setSelectedLocalGov}
       />
       <FormInput
-        label="Landmark"
+        label="Address/Landmark"
         //keyboardType="text"
         onChange={(value) => {
           setAddress(value);
@@ -188,6 +122,7 @@ const HealthCare = () => {
           borderRadius: 7,
         }}
       />
+
       <UserLocation location={location} setLocation={setLocation} />
 
       <View style={styles.checkBoxContainer}>
@@ -200,19 +135,22 @@ const HealthCare = () => {
             color: "#000000B2",
           }}
         >
-          How would you rate your healthcare experience?
+          How was your experience with the healthcare service?
         </Text>
-
-        <RadioGroup
-          radioButtons={radioButtons}
-          onPress={setSelectedId}
-          selectedId={selectedId}
-          containerStyle={{
-            justifyContent: "flex-start",
-            marginRight: 50,
-          }}
-        />
+        <View style={{ alignItems: "flex-start" }}>
+          <RadioGroup
+            radioButtons={radioButtons}
+            onPress={setSelectedId}
+            selectedId={selectedId}
+            containerStyle={{
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+            }}
+          />
+        </View>
       </View>
+
       <AnonymousPost isEnabled={isEnabled} setIsEnabled={setIsEnabled} />
       <TextButton
         label="Submit Report"

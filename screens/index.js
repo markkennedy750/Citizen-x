@@ -33,6 +33,11 @@ import Employment from "./ReportContainer/Employment";
 import SocialWelfare from "./ReportContainer/SocialWelfare";
 import TradeCommerce from "./ReportContainer/TradeCommerce";
 import HealthCare from "./ReportContainer/HealthCare";
+import Technology from "./ReportContainer/Technology";
+import Environment from "./ReportContainer/Environment";
+import School from "./ReportContainer/School";
+import Hospital from "./ReportContainer/Hospital";
+import CommunityDev from "./ReportContainer/CommunityDev";
 
 export {
   Home,
@@ -69,4 +74,9 @@ export {
   SocialWelfare,
   TradeCommerce,
   HealthCare,
+  Technology,
+  Environment,
+  School,
+  Hospital,
+  CommunityDev,
 };

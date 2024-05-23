@@ -5,9 +5,7 @@ import InsidentType from "../../components/InsidentType";
 import TextDesc from "../../components/TextDesc";
 import CameraVideoMedia from "../../components/CameraVideoMedia";
 import UserLocation from "../../components/UserLocation";
-import DateTime from "../../components/DateTime";
 import StateLocal from "../../components/StateLocal";
-import CheckBox from "../../components/CheckBox";
 import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
@@ -15,37 +13,48 @@ import FormInput from "../../components/FormInput";
 import { useNavigation } from "@react-navigation/native";
 import RadioGroup from "react-native-radio-buttons-group";
 
-const Power = () => {
+const Hospital = () => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
   const [albums, setAlbums] = useState(null);
   const [storedRecording, setStoredRecording] = useState(null);
   const [photoUri, setPhotoUri] = useState(null);
   const [location, setLocation] = useState(null);
-  const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState(new Date());
   const [selectedState, setSelectedState] = useState();
   const [selectedLocalGov, setSelectedLocalGov] = useState();
-  const [checked, setChecked] = useState(false);
-  const [unchecked, setUnChecked] = useState(false);
-  const [checkboxValue, setCheckboxValue] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
+  const [selectedId, setSelectedId] = useState();
+  const [hospitalName, setHospitalName] = useState("");
+  const [hospitaleAddress, setHospitalAddress] = useState("");
+  const [department, setDepartment] = useState("");
+  const [departmentNameHead, setDepartmentNameHead] = useState("");
 
   const { navigation } = useNavigation();
 
-  const Power = [
-    { label: "Power Outages", value: "Power Outages" },
-    { label: "Voltage Fluctuations", value: "Voltage Fluctuations" },
-    { label: "Billing Issues", value: "Billing Issues" },
-    { label: "Response time to faults", value: "Response time to faults" },
-    { label: "Power Resoration Time", value: "Power Resoration Time" },
+  const Hospital = [
+    {
+      label: "Predifined Emergency Service",
+      value: "Predifined Emergency Service",
+    },
+    { label: "Patience Care", value: "Patience Care" },
+    { label: "Staff Attitude", value: "Staff Attitude" },
+    { label: "Facilities Cleanliness", value: "Facilities Cleanliness" },
+    {
+      label: "Availability of Medications",
+      value: "Availability of Medications",
+    },
   ];
 
   function submitPost() {
-    return insidentType != "" && textInput != "" && selectedState != null;
+    return (
+      insidentType != "" &&
+      textInput != "" &&
+      selectedState != null &&
+      hospitalName != "" &&
+      hospitaleAddress != ""
+    );
   }
-
   const radioButtons = useMemo(
     () => [
       {
@@ -76,26 +85,15 @@ const Power = () => {
     ],
     []
   );
-  const checkedBoxFucn = (value) => {
-    if (value === checked) {
-      setChecked(true);
-      setUnChecked(false);
-      setCheckboxValue(true);
-    } else if (value === unchecked) {
-      setUnChecked(true);
-      setChecked(false);
-      setCheckboxValue(false);
-    }
-  };
 
   return (
-    <ReportWrapper title="Power">
+    <ReportWrapper title="Hospitals">
       <InsidentType
         insidenType={insidentType}
         setInsidentType={setInsidentType}
         labelType="Crime Type"
         label="Select the type of Insident"
-        insident={Power}
+        insident={Hospital}
       />
       <TextDesc
         onChange={setTextInput}
@@ -107,7 +105,66 @@ const Power = () => {
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
       />
-
+      <FormInput
+        label="Hospital Name"
+        //keyboardType="text"
+        onChange={(value) => {
+          setHospitalName(value);
+        }}
+        autoCapitalize="words"
+        value={hospitalName}
+        formInputStyle={{
+          //height: 40,
+          borderWidth: 1,
+          borderColor: COLORS.gray2,
+          borderRadius: 7,
+        }}
+      />
+      <FormInput
+        label="Hospital Address"
+        //keyboardType="text"
+        onChange={(value) => {
+          setHospitalAddress(value);
+        }}
+        autoCapitalize="words"
+        value={hospitaleAddress}
+        formInputStyle={{
+          //height: 40,
+          borderWidth: 1,
+          borderColor: COLORS.gray2,
+          borderRadius: 7,
+        }}
+      />
+      <FormInput
+        label="Department"
+        //keyboardType="text"
+        onChange={(value) => {
+          setDepartment(value);
+        }}
+        autoCapitalize="words"
+        value={department}
+        formInputStyle={{
+          //height: 40,
+          borderWidth: 1,
+          borderColor: COLORS.gray2,
+          borderRadius: 7,
+        }}
+      />
+      <FormInput
+        label="Department Name Head"
+        //keyboardType="text"
+        onChange={(value) => {
+          setDepartmentNameHead(value);
+        }}
+        autoCapitalize="words"
+        value={departmentNameHead}
+        formInputStyle={{
+          //height: 40,
+          borderWidth: 1,
+          borderColor: COLORS.gray2,
+          borderRadius: 7,
+        }}
+      />
       <StateLocal
         selectedState={selectedState}
         setSelectedState={setSelectedState}
@@ -115,7 +172,7 @@ const Power = () => {
         setSelectedLocalGov={setSelectedLocalGov}
       />
       <FormInput
-        label="Address/Landmark"
+        label="Landmark"
         //keyboardType="text"
         onChange={(value) => {
           setAddress(value);
@@ -129,8 +186,8 @@ const Power = () => {
           borderRadius: 7,
         }}
       />
-
       <UserLocation location={location} setLocation={setLocation} />
+
       <View style={styles.checkBoxContainer}>
         <Text
           style={{
@@ -141,7 +198,7 @@ const Power = () => {
             color: "#000000B2",
           }}
         >
-          How would you rate the Power supply in your area?
+          How would you rate your healthcare experience?
         </Text>
         <View style={{ alignItems: "flex-start" }}>
           <RadioGroup
@@ -156,7 +213,6 @@ const Power = () => {
           />
         </View>
       </View>
-
       <AnonymousPost isEnabled={isEnabled} setIsEnabled={setIsEnabled} />
       <TextButton
         label="Submit Report"
@@ -180,10 +236,11 @@ const Power = () => {
   );
 };
 
-export default Power;
+export default Hospital;
 
 const styles = StyleSheet.create({
   checkBoxContainer: {
     marginVertical: 20,
+    justifyContent: "flex-start",
   },
 });

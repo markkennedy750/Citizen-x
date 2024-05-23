@@ -33,7 +33,12 @@ import {
   Employment,
   SocialWelfare,
   TradeCommerce,
-  HealthCare
+  HealthCare,
+  Technology,
+  Environment,
+  School,
+  Hospital,
+  CommunityDev,
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -69,6 +74,11 @@ export default function App() {
         <Stack.Screen name="SocialWelfare" component={SocialWelfare} />
         <Stack.Screen name="TradeCommerce" component={TradeCommerce} />
         <Stack.Screen name="HealthCare" component={HealthCare} />
+        <Stack.Screen name="Technology" component={Technology} />
+        <Stack.Screen name="Environment" component={Environment} />
+        <Stack.Screen name="School" component={School} />
+        <Stack.Screen name="Hospital" component={Hospital} />
+        <Stack.Screen name="CommunityDev" component={CommunityDev} />
         <Stack.Screen name="SignUpMethod" component={SignUpMethod} />
         <Stack.Screen name="GuideLine" component={ReportGuideline} />
         <Stack.Screen name="InitialSignUp" component={InitialSignUp} />

@@ -1,101 +1,63 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import ReportWrapper from "./ReportWrapper";
 import InsidentType from "../../components/InsidentType";
 import TextDesc from "../../components/TextDesc";
 import CameraVideoMedia from "../../components/CameraVideoMedia";
 import UserLocation from "../../components/UserLocation";
-import DateTime from "../../components/DateTime";
 import StateLocal from "../../components/StateLocal";
-import CheckBox from "../../components/CheckBox";
 import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
 import { useNavigation } from "@react-navigation/native";
-import RadioGroup from "react-native-radio-buttons-group";
 
-const Power = () => {
+const CommunityDev = () => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
   const [albums, setAlbums] = useState(null);
   const [storedRecording, setStoredRecording] = useState(null);
   const [photoUri, setPhotoUri] = useState(null);
   const [location, setLocation] = useState(null);
-  const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState(new Date());
   const [selectedState, setSelectedState] = useState();
   const [selectedLocalGov, setSelectedLocalGov] = useState();
-  const [checked, setChecked] = useState(false);
-  const [unchecked, setUnChecked] = useState(false);
-  const [checkboxValue, setCheckboxValue] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
 
   const { navigation } = useNavigation();
 
-  const Power = [
-    { label: "Power Outages", value: "Power Outages" },
-    { label: "Voltage Fluctuations", value: "Voltage Fluctuations" },
-    { label: "Billing Issues", value: "Billing Issues" },
-    { label: "Response time to faults", value: "Response time to faults" },
-    { label: "Power Resoration Time", value: "Power Resoration Time" },
+  const communitydevelopment = [
+    { label: "Community Project Funding", value: "Community Project Funding" },
+    {
+      label: "Community Engagement Initiatives",
+      value: "Community Engagement Initiatives",
+    },
+    {
+      label: "Neighborhood Safety Measures",
+      value: "Neighborhood Safety Measures",
+    },
+    {
+      label: "Community Events Organization",
+      value: "Community Events Organization",
+    },
+    {
+      label: "Civic Participation Opportunities",
+      value: "Civic Participation Opportunities",
+    },
   ];
 
   function submitPost() {
     return insidentType != "" && textInput != "" && selectedState != null;
   }
 
-  const radioButtons = useMemo(
-    () => [
-      {
-        id: "1",
-        label: "Very Bad",
-        value: "Very Bad",
-      },
-      {
-        id: "2",
-        label: "Bad",
-        value: "Bad",
-      },
-      {
-        id: "3",
-        label: "Average",
-        value: "Average",
-      },
-      {
-        id: "4",
-        label: "Good",
-        value: "Good",
-      },
-      {
-        id: "5",
-        label: "Very Good",
-        value: "Very Good",
-      },
-    ],
-    []
-  );
-  const checkedBoxFucn = (value) => {
-    if (value === checked) {
-      setChecked(true);
-      setUnChecked(false);
-      setCheckboxValue(true);
-    } else if (value === unchecked) {
-      setUnChecked(true);
-      setChecked(false);
-      setCheckboxValue(false);
-    }
-  };
-
   return (
-    <ReportWrapper title="Power">
+    <ReportWrapper title="Community Development">
       <InsidentType
         insidenType={insidentType}
         setInsidentType={setInsidentType}
-        labelType="Crime Type"
-        label="Select the type of Insident"
-        insident={Power}
+        labelType="communitydevelopment"
+        label="Report type"
+        insident={communitydevelopment}
       />
       <TextDesc
         onChange={setTextInput}
@@ -131,31 +93,6 @@ const Power = () => {
       />
 
       <UserLocation location={location} setLocation={setLocation} />
-      <View style={styles.checkBoxContainer}>
-        <Text
-          style={{
-            fontWeight: "400",
-            fontSize: 15,
-            lineHeight: 20,
-            marginVertical: 10,
-            color: "#000000B2",
-          }}
-        >
-          How would you rate the Power supply in your area?
-        </Text>
-        <View style={{ alignItems: "flex-start" }}>
-          <RadioGroup
-            radioButtons={radioButtons}
-            onPress={setSelectedId}
-            selectedId={selectedId}
-            containerStyle={{
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-            }}
-          />
-        </View>
-      </View>
 
       <AnonymousPost isEnabled={isEnabled} setIsEnabled={setIsEnabled} />
       <TextButton
@@ -180,10 +117,4 @@ const Power = () => {
   );
 };
 
-export default Power;
-
-const styles = StyleSheet.create({
-  checkBoxContainer: {
-    marginVertical: 20,
-  },
-});
+export default CommunityDev;

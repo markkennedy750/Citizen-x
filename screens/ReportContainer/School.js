@@ -5,7 +5,6 @@ import InsidentType from "../../components/InsidentType";
 import TextDesc from "../../components/TextDesc";
 import CameraVideoMedia from "../../components/CameraVideoMedia";
 import UserLocation from "../../components/UserLocation";
-import DateTime from "../../components/DateTime";
 import StateLocal from "../../components/StateLocal";
 import CheckBox from "../../components/CheckBox";
 import AnonymousPost from "../../components/AnonymousPost";
@@ -15,15 +14,13 @@ import FormInput from "../../components/FormInput";
 import { useNavigation } from "@react-navigation/native";
 import RadioGroup from "react-native-radio-buttons-group";
 
-const Power = () => {
+const School = () => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
   const [albums, setAlbums] = useState(null);
   const [storedRecording, setStoredRecording] = useState(null);
   const [photoUri, setPhotoUri] = useState(null);
   const [location, setLocation] = useState(null);
-  const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState(new Date());
   const [selectedState, setSelectedState] = useState();
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [checked, setChecked] = useState(false);
@@ -31,19 +28,31 @@ const Power = () => {
   const [checkboxValue, setCheckboxValue] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
+  const [schoolName, setSchoolName] = useState("");
+  const [schoolHead, setSchoolHead] = useState("");
 
   const { navigation } = useNavigation();
 
-  const Power = [
-    { label: "Power Outages", value: "Power Outages" },
-    { label: "Voltage Fluctuations", value: "Voltage Fluctuations" },
-    { label: "Billing Issues", value: "Billing Issues" },
-    { label: "Response time to faults", value: "Response time to faults" },
-    { label: "Power Resoration Time", value: "Power Resoration Time" },
+  const school = [
+    { label: "Academic Performance", value: "Academic Performance" },
+    { label: "Facilities Maintenance", value: "Facilities Maintenance" },
+    { label: "Teacher Quality", value: "Teacher Quality" },
+    { label: "Student Discipline", value: "Student Discipline" },
+    {
+      label: "Extracurricular Activities",
+      value: "Extracurricular Activities",
+    }
   ];
 
   function submitPost() {
-    return insidentType != "" && textInput != "" && selectedState != null;
+    return (
+      insidentType != "" &&
+      textInput != "" &&
+      selectedState != null &&
+      schoolName != "" &&
+      schoolHead != "" &&
+      address != ""
+    );
   }
 
   const radioButtons = useMemo(
@@ -76,26 +85,15 @@ const Power = () => {
     ],
     []
   );
-  const checkedBoxFucn = (value) => {
-    if (value === checked) {
-      setChecked(true);
-      setUnChecked(false);
-      setCheckboxValue(true);
-    } else if (value === unchecked) {
-      setUnChecked(true);
-      setChecked(false);
-      setCheckboxValue(false);
-    }
-  };
 
   return (
-    <ReportWrapper title="Power">
+    <ReportWrapper title="Schools">
       <InsidentType
         insidenType={insidentType}
         setInsidentType={setInsidentType}
-        labelType="Crime Type"
+        labelType="school"
         label="Select the type of Insident"
-        insident={Power}
+        insident={school}
       />
       <TextDesc
         onChange={setTextInput}
@@ -107,7 +105,36 @@ const Power = () => {
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
       />
-
+      <FormInput
+        label="Name of school"
+        //keyboardType="text"
+        onChange={(value) => {
+          setSchoolName(value);
+        }}
+        autoCapitalize="words"
+        value={schoolName}
+        formInputStyle={{
+          //height: 40,
+          borderWidth: 1,
+          borderColor: COLORS.gray2,
+          borderRadius: 7,
+        }}
+      />
+      <FormInput
+        label="VP/ Principal Name"
+        //keyboardType="text"
+        onChange={(value) => {
+          setSchoolHead(value);
+        }}
+        autoCapitalize="words"
+        value={schoolHead}
+        formInputStyle={{
+          //height: 40,
+          borderWidth: 1,
+          borderColor: COLORS.gray2,
+          borderRadius: 7,
+        }}
+      />
       <StateLocal
         selectedState={selectedState}
         setSelectedState={setSelectedState}
@@ -115,7 +142,7 @@ const Power = () => {
         setSelectedLocalGov={setSelectedLocalGov}
       />
       <FormInput
-        label="Address/Landmark"
+        label="Landmark"
         //keyboardType="text"
         onChange={(value) => {
           setAddress(value);
@@ -141,7 +168,7 @@ const Power = () => {
             color: "#000000B2",
           }}
         >
-          How would you rate the Power supply in your area?
+          How would you rate this school?
         </Text>
         <View style={{ alignItems: "flex-start" }}>
           <RadioGroup
@@ -180,7 +207,7 @@ const Power = () => {
   );
 };
 
-export default Power;
+export default School;
 
 const styles = StyleSheet.create({
   checkBoxContainer: {
