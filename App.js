@@ -39,6 +39,8 @@ import {
   School,
   Hospital,
   CommunityDev,
+  Interest,
+  ReportSuccess,
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -47,7 +49,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="MainScreen"
+        initialRouteName="ReportSuccess"
         screenOptions={{
           headerShown: false,
         }}
@@ -57,6 +59,9 @@ export default function App() {
         <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
+
+        {/**Report start */}
+
         <Stack.Screen name="Crime" component={Crime} />
         <Stack.Screen name="FakeProduct" component={FakeProduct} />
         <Stack.Screen name="Election" component={Election} />
@@ -79,6 +84,11 @@ export default function App() {
         <Stack.Screen name="School" component={School} />
         <Stack.Screen name="Hospital" component={Hospital} />
         <Stack.Screen name="CommunityDev" component={CommunityDev} />
+
+        {/**Report end */}
+
+        <Stack.Screen name="Interest" component={Interest} />
+        <Stack.Screen name="ReportSuccess" component={ReportSuccess} />
         <Stack.Screen name="SignUpMethod" component={SignUpMethod} />
         <Stack.Screen name="GuideLine" component={ReportGuideline} />
         <Stack.Screen name="InitialSignUp" component={InitialSignUp} />

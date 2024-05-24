@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, Text, Image, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, Image, StyleSheet, View } from "react-native";
 import { COLORS } from "../constants";
 
 const TextButton = ({
@@ -22,6 +22,7 @@ const TextButton = ({
       disabled={disabled}
       onPress={onPress}
     >
+      <View style={{ marginRight: 20 }} />
       <Text style={{ ...labelStyle }}>{label}</Text>
       <Image
         source={icon}

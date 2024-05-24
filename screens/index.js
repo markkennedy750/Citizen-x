@@ -14,6 +14,7 @@ import ForgetPassword from "./Authentication/ForgotPassword";
 import Otp from "./Authentication/Otp";
 import SignUpMethod from "./Authentication/SignUpMethod";
 import InitialSignUp from "./InitialSignUp";
+import Interest from "./Authentication/Interest";
 //Reports
 import ReportGuideline from "./ReportContainer/ReportGuideline";
 import MakeReport from "./ReportContainer/MakeReport";
@@ -38,6 +39,7 @@ import Environment from "./ReportContainer/Environment";
 import School from "./ReportContainer/School";
 import Hospital from "./ReportContainer/Hospital";
 import CommunityDev from "./ReportContainer/CommunityDev";
+import ReportSuccess from "./ReportContainer/ReportSuccess";
 
 export {
   Home,
@@ -79,4 +81,6 @@ export {
   School,
   Hospital,
   CommunityDev,
+  Interest,
+  ReportSuccess,
 };

@@ -25,7 +25,7 @@ const InitialSignIn = ({ navigation }) => {
 
         <View style={styles.buttomTextButton}>
           <TextButton
-            label="Register"
+            label="Create an account"
             //disabled={isEnableSignUp() ? false : true}
             buttonContainerStyle={{
               height: 55,
@@ -68,7 +68,8 @@ const InitialSignIn = ({ navigation }) => {
           style={{
             flexDirection: "row",
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "flex-end",
+            marginTop: 35,
           }}
         >
           <Text
@@ -76,7 +77,7 @@ const InitialSignIn = ({ navigation }) => {
               color: COLORS.darkGray,
               fontWeight: "700",
               fontSize: 15,
-              marginRight: 7,
+              marginRight: 5,
             }}
           >
             Already have an account?
@@ -111,7 +112,8 @@ const styles = StyleSheet.create({
   semiContainer: {
     flex: 1,
     marginTop: SIZES.padding * 3,
-    padding: SIZES.padding,
+    paddingTop: SIZES.padding,
+    paddingHorizontal: SIZES.padding,
     alignItems: "center",
   },
   textContainer: {

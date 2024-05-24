@@ -49,6 +49,9 @@ No internet connection
 import { Entypo } from '@expo/vector-icons';
 <Entypo name="signal" size={24} color="black" />
 
+comment
+import { FontAwesome } from '@expo/vector-icons';
+<FontAwesome name="comments-o" size={24} color="black" />
 ////////////////////////////////////////////////////////////////////////////////////////
 BULLETED TEXT
 /////////////////////////////////////////////////////////////////////////////
