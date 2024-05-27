@@ -32,6 +32,7 @@ const cloudUpload = require("../assets/icons/icon/cloudUpload.png");
 const cameraIcon = require("../assets/icons/icon/cameraIcon.png");
 const audioRecord = require("../assets/icons/icon/audioRecord.png");
 const anonymous = require("../assets/icons/icon/anonymous.png");
+const SignUpSuccess = require("../assets/icons/icon/signUp-success.png");
 
 export default {
   coupon,
@@ -68,4 +69,5 @@ export default {
   cameraIcon,
   audioRecord,
   anonymous,
+  SignUpSuccess,
 };

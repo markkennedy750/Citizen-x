@@ -41,6 +41,9 @@ import {
   CommunityDev,
   Interest,
   ReportSuccess,
+  SignUpSuccess,
+  UserName,
+  ProfilePics,
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -49,7 +52,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="ReportSuccess"
+        initialRouteName="ProfilePics"
         screenOptions={{
           headerShown: false,
         }}
@@ -95,6 +98,9 @@ export default function App() {
         <Stack.Screen name="Otp" component={Otp} />
         <Stack.Screen name="MainScreen" component={Home} />
         <Stack.Screen name="ForgotPassword" component={ForgetPassword} />
+        <Stack.Screen name="SignUpSuccess" component={SignUpSuccess} />
+        <Stack.Screen name="UserName" component={UserName} />
+        <Stack.Screen name="ProfilePics" component={ProfilePics} />
       </Stack.Navigator>
     </NavigationContainer>
   );

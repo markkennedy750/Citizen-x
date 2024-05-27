@@ -5,34 +5,37 @@ import FormInput from "../../components/FormInput";
 import TextButton from "../../components/TextButton";
 import { utils } from "../../utils";
 import AuthLayout from "./AuthLayout";
+import AuthLayoutSignUp from "./AuthLayoutSignUp";
 
 const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(0);
+  const [fullName, setFullName] = useState("");
   const [showPass, setShowPass] = useState(false);
 
   const [emailError, setEmailError] = useState("");
-  const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [phoneNumberError, setPhoneNumberError] = useState("");
+  const [fullNameError, setFullNameError] = useState("");
 
   function isEnableSignUp() {
     return (
-      email != "" &&
-      username != "" &&
-      password != "" &&
-      emailError == "" &&
-      passwordError == "" &&
-      usernameError == ""
+      email !== "" &&
+      password !== "" &&
+      fullName !== "" &&
+      emailError === "" &&
+      passwordError === "" &&
+      phoneNumberError === "" &&
+      fullNameError === ""
     );
   }
   return (
-    <AuthLayout
-      title="Getting Started"
-      subtitle="Create an account to Continue"
-      titleContainerStyle={{
-        marginTop: SIZES.radius,
-      }}
+    <AuthLayoutSignUp
+      steps="Step 1 of 2"
+      title="Create your Account"
+      subTitle="Create your Citizen X account and be part of the journey."
+      show={true}
     >
       {/** Form Inputs and Sign Up */}
 
@@ -45,6 +48,7 @@ const SignUp = ({ navigation }) => {
         <FormInput
           label="Email"
           keyboardType="email-address"
+          placeholder="ObiShegunAminu@mail.com"
           autoCompleteType="email"
           onChange={(value) => {
             // validate email
@@ -80,14 +84,15 @@ const SignUp = ({ navigation }) => {
         />
 
         <FormInput
-          label="Username"
+          label="Full Name"
+          placeholder="Obi Shegun Aminu"
           containerStyle={{
             marginTop: SIZES.radius,
           }}
           onChange={(value) => {
-            setUsername(value);
+            setFullName(value);
           }}
-          errorMsg={usernameError}
+          errorMsg={fullNameError}
           appendComponent={
             <View
               style={{
@@ -96,7 +101,7 @@ const SignUp = ({ navigation }) => {
             >
               <Image
                 source={
-                  username == "" || (username != "" && usernameError == "")
+                  fullName == "" || (fullName != "" && fullNameError == "")
                     ? icons.correct
                     : icons.cancel
                 }
@@ -104,9 +109,49 @@ const SignUp = ({ navigation }) => {
                   height: 20,
                   width: 20,
                   tintColor:
-                    username == ""
+                    fullName == ""
                       ? COLORS.gray
-                      : username != "" && usernameError == ""
+                      : fullName != "" && fullNameError == ""
+                      ? COLORS.green
+                      : COLORS.red,
+                }}
+              />
+            </View>
+          }
+        />
+        {/** TODO: Fix Phone Number */}
+        <FormInput
+          label="Phone Number"
+          inputMode="numeric"
+          placeholder="08063XXXXXX"
+          containerStyle={{
+            marginTop: SIZES.radius,
+          }}
+          onChange={(value) => {
+            utils.validatePhoneNumber(value, setPhoneNumberError);
+            setPhoneNumber(value);
+          }}
+          errorMsg={phoneNumberError}
+          appendComponent={
+            <View
+              style={{
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                source={
+                  phoneNumber == "" ||
+                  (phoneNumber != "" && phoneNumberError == "")
+                    ? icons.correct
+                    : icons.cancel
+                }
+                style={{
+                  height: 20,
+                  width: 20,
+                  tintColor:
+                    phoneNumber == ""
+                      ? COLORS.gray
+                      : phoneNumber != "" && phoneNumberError == ""
                       ? COLORS.green
                       : COLORS.red,
                 }}
@@ -118,6 +163,7 @@ const SignUp = ({ navigation }) => {
         <FormInput
           label="Password"
           secureTextEntry={!showPass}
+          placeholder="!12$ogiQ0L"
           autoCompleteType="password"
           containerStyle={{
             marginTop: SIZES.radius,
@@ -156,22 +202,22 @@ const SignUp = ({ navigation }) => {
             height: 55,
             alignItems: "center",
             justifyContent: "center",
-            marginTop: SIZES.padding,
+            marginTop: 25,
             borderRadius: SIZES.radius,
-            backgroundColor: isEnableSignUp() ? "#0E9C67" : COLORS.gray3,
+            backgroundColor: isEnableSignUp() ? "#0E9C67" : COLORS.invisible,
           }}
           labelStyle={{
             color: COLORS.white,
             fontWeight: "700",
             fontSize: 17,
           }}
-          onPress={() => navigation.navigate("Otp")}
+          onPress={() => navigation.navigate("SignUpSuccess")}
         />
 
         <View
           style={{
             flexDirection: "row",
-            marginTop: SIZES.radius,
+            marginTop: 67,
             justifyContent: "center",
             alignItems: "center",
           }}
@@ -181,7 +227,7 @@ const SignUp = ({ navigation }) => {
               color: COLORS.darkGray,
               fontWeight: "700",
               fontSize: 15,
-              marginRight: 7,
+              //marginRight: 2,
             }}
           >
             Already have an account?
@@ -202,7 +248,7 @@ const SignUp = ({ navigation }) => {
       </View>
 
       {/** Footer */}
-    </AuthLayout>
+    </AuthLayoutSignUp>
   );
 };
 

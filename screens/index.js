@@ -40,6 +40,9 @@ import School from "./ReportContainer/School";
 import Hospital from "./ReportContainer/Hospital";
 import CommunityDev from "./ReportContainer/CommunityDev";
 import ReportSuccess from "./ReportContainer/ReportSuccess";
+import SignUpSuccess from "./Authentication/SignUpSuccess";
+import UserName from "./Authentication/UserName";
+import ProfilePics from "./Authentication/ProfilePics";
 
 export {
   Home,
@@ -83,4 +86,7 @@ export {
   CommunityDev,
   Interest,
   ReportSuccess,
+  SignUpSuccess,
+  UserName,
+  ProfilePics
 };

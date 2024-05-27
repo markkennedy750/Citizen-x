@@ -248,6 +248,15 @@ const Home = ({ navigation }) => {
                       justifyContent: "center",
                       alignItems: "center",
                       marginBottom: 67,
+                      //Shadow
+                      shadowColor: "#000000",
+                      shadowOffset: {
+                        width: 0,
+                        height: 4,
+                      },
+                      shadowOpacity: 0.19,
+                      shadowRadius: 5.62,
+                      elevation: 6,
                     }}
                   >
                     <Image
@@ -327,7 +336,7 @@ const Home = ({ navigation }) => {
                     name={
                       focused ? "person-circle-sharp" : "person-circle-outline"
                     }
-                    size={33}
+                    size={34}
                     color={focused ? `${COLORS.primary}` : "black"}
                   />
                   <CustomTabBarLabel focused={focused} label="Profile" />

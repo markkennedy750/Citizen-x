@@ -96,6 +96,7 @@ const SignIn = ({ navigation }) => {
             </TouchableOpacity>
           }
         />
+
         {/** Save me & Forget Password */}
         <View
           style={{
@@ -112,7 +113,7 @@ const SignIn = ({ navigation }) => {
             }}
             labelStyle={{
               color: COLORS.gray,
-              fontWeight: "400",
+              fontWeight: "600",
             }}
             onPress={() => navigation.navigate("ForgotPassword")}
           />
@@ -127,7 +128,7 @@ const SignIn = ({ navigation }) => {
             justifyContent: "center",
             marginTop: SIZES.padding,
             borderRadius: SIZES.radius,
-            backgroundColor: isEnableSignIn() ? "#0E9C67" : COLORS.gray3,
+            backgroundColor: isEnableSignIn() ? "#0E9C67" : COLORS.invisible,
           }}
           labelStyle={{
             color: COLORS.white,
@@ -144,6 +145,7 @@ const SignIn = ({ navigation }) => {
             marginTop: SIZES.radius,
             justifyContent: "center",
             alignItems: "center",
+            marginTop: 180,
           }}
         >
           <Text
@@ -159,7 +161,7 @@ const SignIn = ({ navigation }) => {
           <TextButton
             label="Sign Up"
             buttonContainerStyle={{
-              marginLeft: 5,
+              //marginLeft: 2,
               backgroundColor: null,
             }}
             labelStyle={{

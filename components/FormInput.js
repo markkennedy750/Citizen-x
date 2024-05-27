@@ -18,6 +18,7 @@ const FormInput = ({
   autoCapitalize = "none",
   errorMsg = "",
   multiline,
+  inputMode = "text",
 }) => {
   return (
     <View
@@ -36,8 +37,8 @@ const FormInput = ({
         <Text
           style={{
             color: COLORS.gray,
-            fontWeight: "300",
-            fontSize: 16,
+            fontWeight: "400",
+            fontSize: 15,
           }}
         >
           {label}
@@ -58,7 +59,7 @@ const FormInput = ({
           height: 55,
           paddingHorizontal: SIZES.padding,
           marginTop: SIZES.base,
-          borderRadius: SIZES.radius,
+          borderRadius: 10,
           backgroundColor: COLORS.lightGray2,
           ...formInputStyle,
         }}
@@ -77,6 +78,7 @@ const FormInput = ({
           autoCapitalize={autoCapitalize}
           multiline={multiline}
           value={value}
+          inputMode={inputMode}
           onChangeText={(text) => onChange(text)}
         />
         {appendComponent}
