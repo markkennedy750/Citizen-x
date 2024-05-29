@@ -1,6 +1,8 @@
 primary color = background: #0E9C67;
 #f5fcf2
 
+
+
 background: #B7FF9D33;
 background: #0E9C67;
 
@@ -14,6 +16,30 @@ background: #0E9C67;
 > > git push origin main
 
 https://github.com/react-native-clipboard/clipboard?tab=readme-ov-file#readme
+https://ashishnoob.medium.com/docker-basic-cheatsheet-011b8ccf78fc
+
+////////////////////////////////////////////////////////////////////////////////////
+
+For the feed section
+
+Like button
+import { Octicons } from '@expo/vector-icons';
+<Octicons name="thumbsup" size={24} color="black" />
+
+FollowUp
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+<MaterialCommunityIcons name="swap-horizontal-variant" size={24} color="black" />
+
+BookMark
+import { Feather } from '@expo/vector-icons';
+<Feather name="bookmark" size={24} color="black" />
+
+seen
+import { Feather } from '@expo/vector-icons';
+<Feather name="eye" size={24} color="black" />
+
+share
+import { AntDesign } from '@expo/vector-icons';
 
 /////////////////////////////////////////////////////////////////////////////////////////
 likeButton

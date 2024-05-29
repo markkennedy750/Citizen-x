@@ -9,8 +9,8 @@ import {
   FlatList,
   SafeAreaView,
   StyleSheet,
-  StatusBar,
-  ScrollView,
+  //StatusBar,
+ // ScrollView,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
