@@ -7,7 +7,7 @@ import {
   //Dimensions,
   Modal,
   FlatList,
-  SafeAreaView,
+  //SafeAreaView,
   StyleSheet,
   //StatusBar,
  // ScrollView,

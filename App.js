@@ -52,7 +52,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="ProfilePics"
+        initialRouteName="MainScreen"
         screenOptions={{
           headerShown: false,
         }}

@@ -12,7 +12,7 @@ export default feeds = [
     reportType: "Fake Product",
     content:
       "In bustling Ikeja, Lagos, a troubling trend has emerged: the proliferation of counterfeit packaged provisions. Consumers navigating the markets",
-    image: require("../assets/reportImage/fakeprod.jpg"),
+    image: [require("../assets/reportImage/fakeprod.jpg")],
     numOfLike: 110,
     numberOfView: 220,
     followUp: [
@@ -51,7 +51,7 @@ export default feeds = [
     reportType: "Roads",
     content:
       "Most federal roads in the country are presently in a state of disrepair, occasioning tales of woe by road users in the affected places. Indeed, findings following onsite inspection and assessment of federal roads in different parts of the country by our correspondents clearly contradict claims of achievements by the administration on road infrastructure.  ON Wednesday, October 19, 2022, the Minister of Works and Housing, Mr. Babatunde Fashola, had at a press conference to highlight the achievements of the Buhari administration in the areas of Works and Housing, boasted that despite the shortfall in federal revenue arising from a depressed economy and drop in oil revenue, the Federal Government has been able to construct and complete at least 8,352.94 kilometres of roads and created no fewer than 339,955 jobs between 2016 and 2022.The minister did not stop there. He also claimed that 12 major federal roads spanning 896.187 kilometres in the country within the same period had been rehabilitated, with attendant reduction of travel time by 56.20 percent and added value to the people in the communities where the roads pass through. The Minister was to reiterate these claims on Tuesday November 1, 2022 while defending the 2023 budget proposal of his ministry at the House of Representatives. At the event, Fashola informed that the ministry was undertaking a total of 1,642 highway contracts nationwide at a total contract sum of N10,395,294,937,624.20. He said that these projects had special funding mechanisms which included the Presidential Infrastructure Development Fund, PIDF, SUKUK and Nigerian National Petroleum Company Limited, NNPCL.",
-    image: require("../assets/reportImage/roadImag.jpg"),
+    image: [require("../assets/reportImage/roadImag.jpg")],
     numOfLike: 210,
     numberOfView: 20,
     followUp: [
@@ -109,7 +109,7 @@ export default feeds = [
       reportType: "election",
       content:
         "He was gruesomely murdered for struggling with hoodlums who stormed his polling unit to disrupt the poll by snatching the ballot boxes.His wife just gave birth. The child is only 21 days old. She is still in shock at how a man she saw that morning was brought back, wrapped in bloodied wrappers for simply going out to exercise his right to vote.",
-      image: require("../assets/reportImage/ElectoralV3.jpg"),
+      image: [require("../assets/reportImage/ElectoralV3.jpg")],
     },
   },
 
@@ -180,7 +180,7 @@ export default feeds = [
       "Last Easter Monday, when Christians all over the world were celebrating Jesus Christ, an Uber driver, Tope Olorunfemi, was begging for his life in the Ijoka area of Akure, Ondo State. A bloodthirsty horde milled around him, hitting him with stones and sticks, as they accused him of being an Internet fraudster, aka Yahoo boy. By his side was his mother, Mojisola, who appealed to the mob to let go of her son, who was only visiting the town because his wife and child were holidaying with her. Instead of heeding the pleas, the mob made to burn her with her son. Recalling the heart-rending incident in tears, the bereaved mother said, “By the time I got there, he was in a pool of blood; his face was on the ground. I called his name; he raised his head and looked at my face. I asked his siblings to help me carry him to a hospital; the people there said they would hit me with sticks. I was hit and they said I must not carry him. That was how someone from the crowd poured petrol on him and lit a cloth and threw it at him. I ran there and picked the cloth up and threw it away. Someone said they should hit me with sticks again; they said, Who is this woman? I said he was my son and begged them to help me carry him. Someone threw the burning cloth at him again, but he took the cloth and threw it away himself because it was already burning him. As he threw the cloth away, there was one tall man, his name is Luku; Luku is a friend to Tope’s elder brother. Tope’s elder brother shouted at Luku that Tope was his younger brother, but Luku pushed him away; he carried a stick and hit Tope’s head in my presence.",
     image: [
       require("../assets/reportImage/mobAttack3.jpg"),
-      require("../assets/reportImage/mobAttack4.jpg"),
+      require("../assets/reportImage/mobAttack4.jpeg"),
     ],
     numOfLike: 110,
     numberOfView: 220,
