@@ -146,7 +146,7 @@ export default feeds = [
         reportType: "Crime",
         content:
           "In response to this incident, a high-level meeting was convened in the Office of the National Security Adviser including  the Principal General Staff Officer to the NSA, Commissioner of Police FCT, the FCT Director of the Department of State Services, the Leadership and Management of Banex Plaza, a Representative from the Directorate of Abuja Environmental Protection Board, and the National Chairman of the Mobile Phone Traders Association. The primary objective of this meeting was to identify and apprehend the perpetrators and ensure the continued security of the Federal Capital Territory. The following resolutions were agreed upon: a. Immediate reopening of Banex Plaza: Banex Plaza will be reopened immediately to the public. b. Closure of Shop C93: The leadership of Banex Plaza is instructed to lock up Shop C93 with immediate effect.  c. Arrest of Perpetrators: The owners of the shop who orchestrated the mob attack on the soldiers are to be arrested and handed over to the Nigerian Police. d. Vigilance by Market Leaders: Market leaders are to remain vigilant and report any remaining perpetrators to the authorities.",
-        image: require("../assets/reportImage/mobAttack.jpg"),
+        image: [require("../assets/reportImage/mobAttack.jpg")],
       },
       {
         id: 60821,
@@ -198,7 +198,7 @@ export default feeds = [
         reportType: "Crime",
         content:
           "The Ondo State Police Command on Monday said it had arrested no fewer than seven persons in connection with the killing of a man, Tope Olorunfemi, who was lynched in Akure, the state capital.",
-        image: require("../assets/reportImage/mobAttack5.jpg"),
+        image: [require("../assets/reportImage/mobAttack5.jpg")],
       },
       {
         id: 60821,
@@ -283,7 +283,7 @@ export default feeds = [
         reportType: "Others",
         content:
           "On the other hand, the Kano State High Court, under the jurisdiction of Hon. Justice Amina Adamu Aliyu, issued an injunction to protect Muhammadu Sunusi and other key figures from potential harassment by state authorities. This order prevents any interference with the Emir’s autonomy and the seizure of key symbols of his authority, such as the twin spear, the Royal Hat of Dabo, and the Ostrich-feathered shoes.",
-        image: require("../assets/reportImage/reportCase1.jpg"),
+        image: [require("../assets/reportImage/reportCase1.jpg")],
       },
       {
         id: 6082109098711,

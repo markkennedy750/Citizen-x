@@ -33,6 +33,7 @@ const cameraIcon = require("../assets/icons/icon/cameraIcon.png");
 const audioRecord = require("../assets/icons/icon/audioRecord.png");
 const anonymous = require("../assets/icons/icon/anonymous.png");
 const SignUpSuccess = require("../assets/icons/icon/signUp-success.png");
+const coin_bg = require("../assets/icons/icon/coin_bg.png");
 
 export default {
   coupon,
@@ -70,4 +71,5 @@ export default {
   audioRecord,
   anonymous,
   SignUpSuccess,
+  coin_bg,
 };

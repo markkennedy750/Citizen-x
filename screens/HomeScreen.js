@@ -25,7 +25,7 @@ const Home = () => {
         renderItem={({ item }) => <Feed item={item} />}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ ...styles.itemContainer, flexGrow: 1 }}
-        ListFooterComponent={<View style={{ height: 110 }} />}
+        ListFooterComponent={<View style={{ height: 105 }} />}
       />
     </View>
   );

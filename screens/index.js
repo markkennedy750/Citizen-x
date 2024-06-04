@@ -43,6 +43,8 @@ import ReportSuccess from "./ReportContainer/ReportSuccess";
 import SignUpSuccess from "./Authentication/SignUpSuccess";
 import UserName from "./Authentication/UserName";
 import ProfilePics from "./Authentication/ProfilePics";
+import FeedDetail from "./FeedDetail";
+import EditProfile from "./EditProfile";
 
 export {
   Home,
@@ -88,5 +90,7 @@ export {
   ReportSuccess,
   SignUpSuccess,
   UserName,
-  ProfilePics
+  ProfilePics,
+  FeedDetail,
+  EditProfile,
 };

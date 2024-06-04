@@ -10,6 +10,7 @@ import {
 } from "@expo/vector-icons";
 import CustomImageSlider from "./CustomImageSlider";
 import TextComponent from "./TextComponent";
+import { useNavigation } from "@react-navigation/native";
 
 function FooterButton({ text, IconFamily, IconName, onPress }) {
   return (
@@ -26,8 +27,12 @@ function FooterButton({ text, IconFamily, IconName, onPress }) {
 }
 
 const Feed = ({ item }) => {
+  const navigation = useNavigation();
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => navigation.navigate("FeedDetail", { feed: item })}
+    >
       <View style={styles.profileContainer}>
         <Image source={item.user.profileImage} style={styles.profileImg} />
         <View style={{ marginLeft: 10 }}>
@@ -58,7 +63,7 @@ const Feed = ({ item }) => {
         <Text style={styles.reportText}>{item.reportType}</Text>
       </View>
       <View style={{ marginRight: 10 }}>
-        <TextComponent text={item.content}/>
+        <TextComponent text={item.content} />
         {item.image && <CustomImageSlider images={item.image} />}
       </View>
       <View style={styles.iconContainer}>
@@ -155,6 +160,7 @@ export default Feed;
 const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
+    flex: 1,
     backgroundColor: "white",
     borderBottomWidth: StyleSheet.hairlineWidth,
     paddingBottom: 10,

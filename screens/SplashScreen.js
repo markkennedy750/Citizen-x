@@ -26,7 +26,7 @@ const SplashScreen = ({ navigation }) => {
         setTimeout(() => {
           navigation.navigate("WelcomeScreen");
           //AsyncStorage.setItem("splashShown", "true");
-        }, 6000); // Change the delay time (in milliseconds) according to your preference (here, it's set to 3000 milliseconds = 3 seconds)
+        }, 9000); // Change the delay time (in milliseconds) according to your preference (here, it's set to 3000 milliseconds = 3 seconds)
       } catch (error) {
         console.error("Error accessing AsyncStorage:", error);
       }

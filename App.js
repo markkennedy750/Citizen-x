@@ -44,6 +44,8 @@ import {
   SignUpSuccess,
   UserName,
   ProfilePics,
+  FeedDetail,
+  EditProfile,
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -52,7 +54,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="MainScreen"
+        initialRouteName="SplashScreen"
         screenOptions={{
           headerShown: false,
         }}
@@ -101,6 +103,8 @@ export default function App() {
         <Stack.Screen name="SignUpSuccess" component={SignUpSuccess} />
         <Stack.Screen name="UserName" component={UserName} />
         <Stack.Screen name="ProfilePics" component={ProfilePics} />
+        <Stack.Screen name="FeedDetail" component={FeedDetail} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
       </Stack.Navigator>
     </NavigationContainer>
   );

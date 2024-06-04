@@ -10,7 +10,7 @@ import {
   //SafeAreaView,
   StyleSheet,
   //StatusBar,
- // ScrollView,
+  // ScrollView,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -136,7 +136,7 @@ const Home = ({ navigation }) => {
           tabBarStyle: {
             backgroundColor: "white",
             position: "absolute",
-            bottom: 15,
+            bottom: 10,
             marginHorizontal: 10,
             height: 73,
             borderRadius: 18,
