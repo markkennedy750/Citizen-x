@@ -46,6 +46,7 @@ import {
   ProfilePics,
   FeedDetail,
   EditProfile,
+  Coin,
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -54,7 +55,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="SplashScreen"
+        initialRouteName="Coin"
         screenOptions={{
           headerShown: false,
         }}
@@ -105,6 +106,7 @@ export default function App() {
         <Stack.Screen name="ProfilePics" component={ProfilePics} />
         <Stack.Screen name="FeedDetail" component={FeedDetail} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen name="Coin" component={Coin} />
       </Stack.Navigator>
     </NavigationContainer>
   );

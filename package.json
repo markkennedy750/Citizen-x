@@ -40,15 +40,16 @@
     "react-native-gesture-handler": "~2.16.1",
     "react-native-image-slider-box": "^2.0.7",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-pager-view": "6.3.0",
     "react-native-picker-select": "^9.1.3",
     "react-native-radio-buttons-group": "^3.1.0",
     "react-native-reanimated": "~3.10.1",
     "react-native-skeleton-content": "^1.0.28",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg-transformer": "^1.3.0",
+    "react-native-swipe-list-view": "^3.2.9",
     "react-native-tab-view": "^3.5.2",
-    "react-native-web": "~0.19.6",
-    "react-native-pager-view": "6.3.0"
+    "react-native-web": "~0.19.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

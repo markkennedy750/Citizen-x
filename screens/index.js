@@ -45,6 +45,7 @@ import UserName from "./Authentication/UserName";
 import ProfilePics from "./Authentication/ProfilePics";
 import FeedDetail from "./FeedDetail";
 import EditProfile from "./EditProfile";
+import Coin from "./Coin";
 
 export {
   Home,
@@ -93,4 +94,5 @@ export {
   ProfilePics,
   FeedDetail,
   EditProfile,
+  Coin,
 };
