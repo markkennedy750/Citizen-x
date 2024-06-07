@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingLeft: 25,
     alignItems: "center",
-    marginBottom:20
+    marginBottom: 20,
   },
   imageStyle: {
     borderRadius: 10,

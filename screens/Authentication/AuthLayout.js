@@ -30,17 +30,6 @@ const AuthLayout = ({
         ...containerStyle,
       }}
     >
-      <TouchableOpacity
-        style={{
-          //marginTop: 5,
-          justifyContent: "flex-start",
-          marginBottom: 10,
-          marginLeft: 12,
-        }}
-        onPress={() => navigation.goBack()}
-      >
-        <AntDesign name="arrowleft" size={25} color="black" />
-      </TouchableOpacity>
       <KeyboardAwareScrollView
         keyboardDismissMode="on-drag"
         contentContainerStyle={{
@@ -52,6 +41,7 @@ const AuthLayout = ({
         <View
           style={{
             alignItems: "center",
+            marginTop: 15,
           }}
         >
           <Image

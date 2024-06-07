@@ -69,7 +69,7 @@ const InitialSignIn = ({ navigation }) => {
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "flex-end",
-            marginTop: 35,
+            marginTop: "auto",
           }}
         >
           <Text

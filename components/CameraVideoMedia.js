@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import * as MediaLibrary from "expo-media-library";
 import TextIconButton from "./TextIconButton";
 import { COLORS, SIZES, icons } from "../constants";
-import { CameraView, useCameraPermissions } from "expo-camera";
+import { CameraView, useCameraPermissions, Camera } from "expo-camera";
 import { Audio } from "expo-av";
 
 export default function CameraVideoMedia({
@@ -21,18 +21,22 @@ export default function CameraVideoMedia({
   const [cameraRef, setCameraRef] = useState(null);
 
   useEffect(() => {
-    if (!permissionResponse) {
-      requestPermission();
-    }
+    (async () => {
+      if (!permissionResponse) {
+        await requestPermission();
+      }
+      if (!audioPermissionResponse) {
+        await audioRequestPermission();
+      }
+      if (!hasPermission) {
+        await setHasPermission();
+      }
+    })();
   }, []);
 
   async function getAlbums() {
-    if (!permissionResponse || permissionResponse.status !== "granted") {
-      Alert.alert(
-        "Citizen X Permission",
-        "This app requires permission to access media files"
-      );
-      return;
+    if (permissionResponse.status !== "granted") {
+      await requestPermission();
     }
     const fetchedAlbums = await MediaLibrary.getAlbumsAsync({
       includeSmartAlbums: true,
@@ -41,31 +45,25 @@ export default function CameraVideoMedia({
   }
 
   async function takePicture() {
-    if (!hasPermission) {
-      // Camera permissions are still loading.
-      return <Text>Loading...</Text>;
-    }
-    if (!hasPermission.granted) {
-      // Camera permissions are not granted yet.
-      return Alert.alert(
+    if (hasPermission?.status !== "granted") {
+      Alert.alert(
         "Citizen X Permission",
-        "This App requires permission to access camera",
+        "This app requires permission to access the camera",
         [
-          {
-            text: "Cancel",
-            onPress: () => {},
-            style: "cancel",
-          },
+          { text: "Cancel", style: "cancel" },
           {
             text: "Grant permission",
-            onPress: async () => await requestPermission(),
+            onPress: async () => await requestCameraPermission(),
           },
         ],
         { cancelable: true }
       );
+      return;
     }
-    const { uri } = await cameraRef.takePictureAsync();
-    setPhotoUri(uri);
+    if (cameraRef) {
+      const photo = await cameraRef.takePictureAsync();
+      setPhotoUri(photo.uri);
+    }
   }
 
   //Audio Recording
@@ -146,12 +144,13 @@ export default function CameraVideoMedia({
       >
         <TextIconButton
           containerStyle={{
-            flex: 1,
+            height: 40,
             alignItems: "center",
             justifyContent: "center",
             marginTop: SIZES.radius,
             borderRadius: SIZES.radius,
             backgroundColor: "#0585FA",
+            width: 160,
           }}
           icon={icons.cameraIcon}
           iconPosition="LEFT"

@@ -31,7 +31,7 @@ const Profile = ({ navigation }) => {
             <Text style={styles.userName}>@{profile.user.username}</Text>
           </View>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Coin")}>
             <ImageBackground
               source={icons.coin_bg}
               style={styles.coinImage}
@@ -101,7 +101,7 @@ const Profile = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.editButton}>
             <SimpleLineIcons name="settings" size={22} color={COLORS.primary} />
-            <Text style={styles.buttonText}>Edit Profile</Text>
+            <Text style={styles.buttonText}>Settings</Text>
           </TouchableOpacity>
         </View>
       </View>

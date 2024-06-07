@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
-
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  StatusBar,
+  Alert,
+} from "react-native";
 import { SIZES, COLORS } from "../../constants";
 import TextButton from "../../components/TextButton";
-import { AuthLayout } from "../";
 import OTPInputView from "@twotalltotems/react-native-otp-input";
+import { AntDesign } from "@expo/vector-icons";
 
 const Otp = ({ navigation }) => {
   const [timer, setTimer] = useState(60);
@@ -23,14 +29,37 @@ const Otp = ({ navigation }) => {
   }, []);
 
   return (
-    <AuthLayout
-      title="OTP Authentication"
-      subtitle="An authentication code has been sent to your email address"
-      titleContainerStyle={{
-        mariginTop: SIZES.padding * 1.5,
-      }}
-    >
-      {/** OTP inputs */}
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={{
+          justifyContent: "flex-start",
+          marginBottom: 10,
+          marginLeft: 12,
+        }}
+        onPress={() => navigation.goBack()}
+      >
+        <AntDesign name="arrowleft" size={25} color="black" />
+      </TouchableOpacity>
+      <Text
+        style={{
+          textAlign: "center",
+          fontWeight: "700",
+          fontSize: 16,
+        }}
+      >
+        OTP Authentication
+      </Text>
+      <Text
+        style={{
+          textAlign: "center",
+          color: "black",
+          marginTop: 2,
+          fontWeight: "500",
+          fontSize: 14,
+        }}
+      >
+        An authentication code has been sent to your email address
+      </Text>
       <View
         style={{
           flex: 1,
@@ -56,9 +85,6 @@ const Otp = ({ navigation }) => {
             console.log(code);
           }}
         />
-
-        {/** Countdown Timer */}
-
         <View
           style={{
             flexDirection: "row",
@@ -77,7 +103,7 @@ const Otp = ({ navigation }) => {
           </Text>
           <TextButton
             label={`Resend (${timer}s)`}
-            disabled={timer == 0 ? false : true}
+            disabled={timer !== 0}
             buttonContainerStyle={{
               marginLeft: SIZES.base,
               backgroundColor: null,
@@ -91,8 +117,6 @@ const Otp = ({ navigation }) => {
           />
         </View>
       </View>
-
-      {/** Footer */}
       <View>
         <TextButton
           label="Continue"
@@ -109,39 +133,49 @@ const Otp = ({ navigation }) => {
           }}
           onPress={() => navigation.navigate("MainScreen")}
         />
-
-        <View
+      </View>
+      <View
+        style={{
+          marginTop: SIZES.padding,
+          alignItems: "center",
+          marginBottom: 18,
+        }}
+      >
+        <Text
           style={{
-            marginTop: SIZES.padding,
-            alignItems: "center",
+            color: COLORS.darkGray,
+            fontWeight: "700",
+            fontSize: 15,
+            marginRight: 7,
           }}
         >
-          <Text
-            style={{
-              color: COLORS.darkGray,
-              fontWeight: "700",
-              fontSize: 15,
-              marginRight: 7,
-            }}
-          >
-            By signing up, you agree to our
-          </Text>
-          <TextButton
-            label="Terms and Conditions"
-            buttonContainerStyle={{
-              backgroundColor: null,
-            }}
-            labelStyle={{
-              color: "#0E9C67",
-              fontWeight: "700",
-              fontSize: 15,
-            }}
-            onPress={() => console.log("To do terms and conditions")}
-          />
-        </View>
+          By signing up, you agree to our
+        </Text>
+        <TextButton
+          label="Terms and Conditions"
+          buttonContainerStyle={{
+            backgroundColor: null,
+          }}
+          labelStyle={{
+            color: "#0E9C67",
+            fontWeight: "700",
+            fontSize: 15,
+          }}
+          onPress={() => console.log("To do terms and conditions")}
+        />
       </View>
-    </AuthLayout>
+    </View>
   );
 };
 
 export default Otp;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 45,
+    backgroundColor: "white",
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+  },
+});

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, StatusBar } from "react-native";
 import { AuthLayout } from "../";
 import { SIZES, COLORS, icons } from "../../constants";
 import FormInput from "../../components/FormInput";
@@ -19,7 +19,7 @@ const ForgotPassword = ({ navigation }) => {
       title="Password Recovery"
       subtitle="Please enter your email address to recover your password"
       titleContainerStyle={{
-        marginTop: SIZES.padding * 1.5,
+        marginTop: StatusBar.currentHeight || 45,
       }}
     >
       {/** Form Input */}
@@ -75,9 +75,9 @@ const ForgotPassword = ({ navigation }) => {
         buttonContainerStyle={{
           height: 55,
           alignItems: "center",
-          marginTop: SIZES.padding,
+          marginBottom: SIZES.padding,
           borderRadius: SIZES.radius,
-          backgroundColor: isEnableSendEmail() ? "#0E9C67" : COLORS.gray3,
+          backgroundColor: isEnableSendEmail() ? "#0E9C67" : COLORS.invisible,
         }}
         labelStyle={{
           color: COLORS.white,

@@ -92,7 +92,7 @@ const MakeReport = () => {
           justifyContent: "center",
           marginVertical: SIZES.padding,
           borderRadius: SIZES.radius,
-          backgroundColor: submitPost() ? "#0E9C67" : COLORS.gray3,
+          backgroundColor: submitPost() ? "#0E9C67" : COLORS.invisible,
         }}
         labelStyle={{
           color: COLORS.white,

@@ -145,7 +145,8 @@ const SignIn = ({ navigation }) => {
             marginTop: SIZES.radius,
             justifyContent: "center",
             alignItems: "center",
-            marginTop: 180,
+            marginTop: "auto",
+            marginBottom: 10,
           }}
         >
           <Text
