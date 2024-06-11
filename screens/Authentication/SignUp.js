@@ -4,7 +4,6 @@ import { SIZES, COLORS, icons } from "../../constants";
 import FormInput from "../../components/FormInput";
 import TextButton from "../../components/TextButton";
 import { utils } from "../../utils";
-import AuthLayout from "./AuthLayout";
 import AuthLayoutSignUp from "./AuthLayoutSignUp";
 
 const SignUp = ({ navigation }) => {
@@ -36,6 +35,7 @@ const SignUp = ({ navigation }) => {
       title="Create your Account"
       subTitle="Create your Citizen X account and be part of the journey."
       show={true}
+      //screen="SignUpMethod"
     >
       {/** Form Inputs and Sign Up */}
 
@@ -211,7 +211,7 @@ const SignUp = ({ navigation }) => {
             fontWeight: "700",
             fontSize: 17,
           }}
-          onPress={() => navigation.navigate("SignUpSuccess")}
+          onPress={() => navigation.navigate("ProfilePics")}
         />
 
         <View

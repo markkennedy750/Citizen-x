@@ -1,13 +1,11 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Platform } from "react-native";
 import React, { useState } from "react";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Fontisto, Feather } from "@expo/vector-icons";
 import { COLORS } from "../constants";
 
 const DateTime = ({ date, setDate, time, setTime }) => {
-  //const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  //const [time, setTime] = useState(null);
   const [showTimePicker, setShowTimePicker] = useState(false);
 
   const onDateChange = (event, selectedDate) => {
@@ -15,6 +13,7 @@ const DateTime = ({ date, setDate, time, setTime }) => {
     setShowDatePicker(Platform.OS === "ios");
     setDate(currentDate);
   };
+
   const onTimeChange = (event, selectedTime) => {
     const currentTime = selectedTime || time;
     setShowTimePicker(Platform.OS === "ios");
@@ -24,6 +23,7 @@ const DateTime = ({ date, setDate, time, setTime }) => {
   const showDateMode = () => {
     setShowDatePicker(true);
   };
+
   const showTimeMode = () => {
     setShowTimePicker(true);
   };
@@ -56,13 +56,14 @@ const DateTime = ({ date, setDate, time, setTime }) => {
               justifyContent: "space-between",
               borderWidth: 1.2,
               borderRadius: 5,
-              width: 140,
+              width: 160,
               height: 45,
-              paddingLeft: 10,
+              paddingHorizontal: 10,
               borderColor: COLORS.gray2,
             }}
-            onPress={() => showDateMode()}
+            onPress={showDateMode}
           >
+            <Text style={{ fontSize: 16 }}>{date.toLocaleDateString()}</Text>
             <Fontisto name="date" size={24} color={COLORS.primary} />
           </TouchableOpacity>
         </View>
@@ -84,13 +85,14 @@ const DateTime = ({ date, setDate, time, setTime }) => {
               justifyContent: "space-between",
               borderWidth: 1.2,
               borderRadius: 5,
-              width: 140,
+              width: 160,
               height: 45,
-              paddingLeft: 10,
+              paddingHorizontal: 10,
               borderColor: COLORS.gray2,
             }}
-            onPress={() => showTimeMode()}
+            onPress={showTimeMode}
           >
+            <Text style={{ fontSize: 16 }}>{time.toLocaleTimeString()}</Text>
             <Feather name="watch" size={24} color={COLORS.primary} />
           </TouchableOpacity>
         </View>

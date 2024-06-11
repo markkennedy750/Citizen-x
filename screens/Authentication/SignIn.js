@@ -1,12 +1,13 @@
 import { Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
-import { AuthLayout } from "../";
+//import { AuthLayout } from "../";
 import { SIZES, COLORS, icons } from "../../constants";
 import FormInput from "../../components/FormInput";
 import { utils } from "../../utils";
 import CustomSwitch from "../../components/CustomSwitch";
 import TextButton from "../../components/TextButton";
 import TextIconButton from "../../components/TextIconButton";
+import AuthLayoutSignUp from "./AuthLayoutSignUp";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -20,9 +21,11 @@ const SignIn = ({ navigation }) => {
     return email != "" && password != "" && emailError == "";
   }
   return (
-    <AuthLayout
+    <AuthLayoutSignUp
       title="Let's Sign You In"
       subtitle="Welcome back you've been missed"
+  
+      show={true}
     >
       <View
         style={{
@@ -176,7 +179,7 @@ const SignIn = ({ navigation }) => {
       </View>
 
       {/** Footer */}
-    </AuthLayout>
+    </AuthLayoutSignUp>
   );
 };
 

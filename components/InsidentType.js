@@ -15,7 +15,7 @@ const InsidentType = ({
       style={{
         width: "100%",
         justifyContent: "flex-start",
-        paddingVertical: SIZES.padding,
+        paddingVertical: 10,
       }}
     >
       <Text

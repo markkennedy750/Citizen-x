@@ -2,7 +2,7 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   StatusBar,
   Image,
 } from "react-native";
@@ -14,28 +14,28 @@ import { AntDesign } from "@expo/vector-icons";
 
 const IconButton = ({ onPress }) => {
   return (
-    <TouchableWithoutFeedback
+    <TouchableOpacity
       onPress={onPress}
       style={{
-        //...styles.iconButtonContainer,
+        ...styles.iconButtonContainer,
         flex: 1,
         justifyContent: "center",
-        backgroundColor: COLORS.primary,
+        backgroundColor: "#db3951",
         marginRight: "auto",
         alignItems: "center",
-        paddingLeft: 20,
-        paddingTop: 15,
+        marginBottom: 15,
+        marginLeft: 10,
       }}
     >
-      <AntDesign name="delete" size={35} color="black" />
-    </TouchableWithoutFeedback>
+      <AntDesign name="delete" size={38} color={COLORS.white} />
+    </TouchableOpacity>
   );
 };
 
 const Notification = () => {
   const [notifyData, setNotifyData] = useState(notification);
 
-  function removeMyCardHandler() {
+  function removeMyCardHandler(id) {
     let newMyCardList = [...notifyData];
     const index = newMyCardList.findIndex((card) => card.id === id);
 
@@ -61,7 +61,7 @@ const Notification = () => {
           <View
             style={{
               height: 100,
-              backgroundColor: COLORS.lightGray1,
+              backgroundColor: "#c4f5d1",
               ...styles.caryItemContainer,
             }}
           >
@@ -69,16 +69,18 @@ const Notification = () => {
               style={{
                 flex: 1,
                 flexDirection: "row",
-                rowGap: 5,
+                gap: 10,
                 paddingHorizontal: 20,
+                alignItems: "center",
               }}
             >
               <Image
                 source={data.item.image}
                 style={{
-                  width: 58,
-                  height: 59,
+                  width: 50,
+                  height: 50,
                   top: 10,
+                  borderRadius: 10,
                 }}
               />
 
@@ -90,7 +92,7 @@ const Notification = () => {
         renderHiddenItem={(data, rowMap) => (
           <View
             style={{
-              backgroundColor: COLORS.primary,
+              backgroundColor: "#db3951",
               marginTop: 10,
               height: 95,
               borderRadius: 20,
@@ -144,16 +146,17 @@ const styles = StyleSheet.create({
     borderRadius: SIZES.radius,
   },
   notificationData: {
-    fontWeight: "400",
-    fontSize: 14,
-    lineHeight: 20,
+    fontWeight: "600",
+    fontSize: 13,
+    lineHeight: 18,
+    textAlign: "left",
   },
   time: {
     fontWeight: "500",
     fontSize: 14,
     lineHeight: 20,
-    marginLeft:"auto",
-    color:COLORS.gray
+    marginLeft: "auto",
+    color: COLORS.gray,
   },
   iconButtonContainer: {
     flexDirection: "row",

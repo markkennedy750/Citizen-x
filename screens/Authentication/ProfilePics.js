@@ -48,7 +48,7 @@ const ProfilePics = ({ navigation }) => {
             fontWeight: "700",
             fontSize: 17,
           }}
-          onPress={() => navigation.navigate("MainScreen")}
+          onPress={() => navigation.navigate("SignUpSuccess")}
         />
       </View>
     </AuthLayoutSignUp>

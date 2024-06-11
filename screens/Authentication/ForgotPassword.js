@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image, StatusBar } from "react-native";
-import { AuthLayout } from "../";
+//import { AuthLayout } from "../";
 import { SIZES, COLORS, icons } from "../../constants";
 import FormInput from "../../components/FormInput";
 import TextButton from "../../components/TextButton";
 import { utils } from "../../utils";
+import AuthLayoutSignUp from "./AuthLayoutSignUp";
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -15,12 +16,13 @@ const ForgotPassword = ({ navigation }) => {
   }
 
   return (
-    <AuthLayout
+    <AuthLayoutSignUp
       title="Password Recovery"
       subtitle="Please enter your email address to recover your password"
       titleContainerStyle={{
         marginTop: StatusBar.currentHeight || 45,
       }}
+
     >
       {/** Form Input */}
 
@@ -86,7 +88,7 @@ const ForgotPassword = ({ navigation }) => {
         }}
         onPress={() => navigation.navigate("Otp")}
       />
-    </AuthLayout>
+    </AuthLayoutSignUp>
   );
 };
 

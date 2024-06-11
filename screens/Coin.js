@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     marginTop: StatusBar.currentHeight || 40,
     paddingHorizontal: 12,
+    backgroundColor: COLORS.white,
   },
   topContainer: {
     flexDirection: "row",

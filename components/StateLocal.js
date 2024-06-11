@@ -9,6 +9,7 @@ const StateLocal = ({
   setSelectedState,
   selectedLocalGov,
   setSelectedLocalGov,
+  localgovernmentstyle,
 }) => {
   const localGovOptions = selectedState ? LocalGovernment[selectedState] : [];
   return (
@@ -18,7 +19,7 @@ const StateLocal = ({
         justifyContent: "flex-start",
         width: "100%",
         alignItems: "center",
-        paddingVertical: SIZES.padding,
+        paddingVertical: 5,
       }}
     >
       <View
@@ -49,6 +50,7 @@ const StateLocal = ({
           <View
             style={{
               width: "100%",
+              ...localgovernmentstyle,
             }}
           >
             <Text
@@ -82,7 +84,7 @@ export default StateLocal;
 
 const styles = StyleSheet.create({
   statePicker: {
-    width: 320,
+    width: 325,
     height: 50,
     borderWidth: 1,
     borderRadius: 10,

@@ -7,7 +7,7 @@ import HotSpot from "./HotSpot";
 import Notification from "./Notification";
 import Report from "./Report";
 import Profile from "./Profile";
-import AuthLayout from "./Authentication/AuthLayout";
+//import AuthLayout from "./Authentication/AuthLayout";
 import SignIn from "./Authentication/SignIn";
 import SignUp from "./Authentication/SignUp";
 import ForgetPassword from "./Authentication/ForgotPassword";
@@ -46,6 +46,8 @@ import ProfilePics from "./Authentication/ProfilePics";
 import FeedDetail from "./FeedDetail";
 import EditProfile from "./EditProfile";
 import Coin from "./Coin";
+import HotspotSearch from "./HotspotSearch"
+import SearchScreen from "./SearchScreen";
 
 export {
   Home,
@@ -57,7 +59,7 @@ export {
   Notification,
   Report,
   Profile,
-  AuthLayout,
+  //AuthLayout,
   SignIn,
   SignUp,
   ForgetPassword,
@@ -95,4 +97,6 @@ export {
   FeedDetail,
   EditProfile,
   Coin,
+  HotspotSearch,
+  SearchScreen
 };

@@ -16,9 +16,10 @@ export default function AuthLayoutSignUp({
   children,
   title,
   subTitle,
-  steps,
-  show,
+  steps = "",
+  show = false,
   containerStyle,
+  screen,
 }) {
   const { navigation } = useNavigation();
 

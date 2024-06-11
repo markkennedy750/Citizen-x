@@ -20,6 +20,11 @@ https://ashishnoob.medium.com/docker-basic-cheatsheet-011b8ccf78fc
 
 For the feed section
 
+Share 
+import { AntDesign } from '@expo/vector-icons';
+<AntDesign name="sharealt" size={24} color="black" />
+
+/////////////////////////////////////////////////////////////////////////////////////
 Like button
 import { Octicons } from '@expo/vector-icons';
 <Octicons name="thumbsup" size={24} color="black" />

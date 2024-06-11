@@ -82,7 +82,7 @@ const UserName = ({ navigation }) => {
             fontWeight: "700",
             fontSize: 17,
           }}
-          onPress={() => navigation.navigate("ProfilePics")}
+          onPress={() => navigation.navigate("MainScreen")}
         />
       </View>
     </AuthLayoutSignUp>

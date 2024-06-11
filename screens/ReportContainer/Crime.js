@@ -12,9 +12,9 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-import { useNavigation } from "@react-navigation/native";
+//import { useNavigation } from "@react-navigation/native";
 
-const Crime = () => {
+const Crime = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
   const [albums, setAlbums] = useState(null);
@@ -30,8 +30,6 @@ const Crime = () => {
   const [checkboxValue, setCheckboxValue] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
-
-  const { navigation } = useNavigation();
 
   const crime = [
     { label: "Theft", value: "Theft" },

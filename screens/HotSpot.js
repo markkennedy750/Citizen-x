@@ -10,15 +10,19 @@ import React from "react";
 import { COLORS } from "../constants";
 import { Feather } from "@expo/vector-icons";
 
-const HotSpot = () => {
+const HotSpot = ({ navigation }) => {
   const ReportContainer = ({ primaryText, scondarytext }) => {
     return (
-      <TouchableOpacity style={styles.reportComponentContainer}>
+      <TouchableOpacity
+        style={styles.reportComponentContainer}
+        onPress={() => navigation.navigate("SearchScreen")}
+      >
         <Text style={styles.primTextConatiner}>{primaryText}</Text>
         <Text style={styles.secTextContainer}>{scondarytext}</Text>
       </TouchableOpacity>
     );
   };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.firstContainer}>
@@ -26,7 +30,10 @@ const HotSpot = () => {
       </View>
 
       <View style={styles.secondContainer}>
-        <TouchableOpacity style={styles.seachContainer}>
+        <TouchableOpacity
+          style={styles.seachContainer}
+          onPress={() => navigation.navigate("HotspotSearch")}
+        >
           <Feather name="search" size={25} color={COLORS.gray} />
           <Text style={styles.filterReportText}>Filter Reports HotSpot</Text>
         </TouchableOpacity>

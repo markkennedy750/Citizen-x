@@ -40,7 +40,7 @@ const InitialSignIn = ({ navigation }) => {
               fontWeight: "700",
               fontSize: 17,
             }}
-            onPress={() => navigation.navigate("SignUp")}
+            onPress={() => navigation.navigate("SignUpMethod")}
           />
           <TextButton
             label="Continue without an account"
