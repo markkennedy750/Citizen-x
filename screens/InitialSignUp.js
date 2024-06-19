@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textContainer: {
-    flex: 1,
+    //flex: 1,
     marginTop: SIZES.padding * 2.3,
     alignItems: "center",
   },
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   },
   buttomTextButton: {
     width: "100%",
-    marginTop: 5,
+    marginTop: 10,
     marginBottom: 140,
   },
 });

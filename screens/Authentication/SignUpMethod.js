@@ -10,16 +10,17 @@ import {
 import { SIZES, COLORS, icons } from "../../constants";
 import TextButton from "../../components/TextButton";
 import TextIconButton from "../../components/TextIconButton";
+import { AntDesign } from "@expo/vector-icons";
 
 const SignUpMethods = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.miniContainer}>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate("InitialSignUp")}
           style={styles.imageContainer}
         >
-          <Image style={styles.image} source={icons.arrow_back} />
+          <AntDesign name="arrowleft" size={30} color="black" />
         </TouchableOpacity>
       </View>
       <View style={styles.textContainer}>
@@ -46,7 +47,13 @@ const SignUpMethods = ({ navigation }) => {
           onPress={() => navigation.navigate("SignUp")}
         />
         <View style={styles.lineConatiner}>
+          <View
+            style={{ width: "35%", height: 2, backgroundColor: COLORS.black }}
+          />
           <Text style={styles.line}>Or</Text>
+          <View
+            style={{ width: "35%", height: 2, backgroundColor: COLORS.black }}
+          />
         </View>
       </View>
       <View>
@@ -59,6 +66,7 @@ const SignUpMethods = ({ navigation }) => {
             justifyContent: "center",
             borderRadius: SIZES.radius,
             backgroundColor: COLORS.blue,
+            marginBottom: 18,
           }}
           icon={icons.fb}
           iconPosition="LEFT"
@@ -82,7 +90,7 @@ const SignUpMethods = ({ navigation }) => {
             marginTop: SIZES.radius,
             borderRadius: SIZES.radius,
             backgroundColor: COLORS.lightGray2,
-            borderWidth:1,
+            borderWidth: 1,
           }}
           icon={icons.google}
           iconPosition="LEFT"
@@ -99,7 +107,7 @@ const SignUpMethods = ({ navigation }) => {
 
       <View
         style={{
-          marginTop: SIZES.padding *0.5,
+          marginTop: SIZES.padding * 0.5,
           alignItems: "center",
           flexDirection: "row",
           justifyContent: "center",
@@ -110,7 +118,7 @@ const SignUpMethods = ({ navigation }) => {
             color: COLORS.darkGray,
             fontWeight: "400",
             fontSize: 11,
-            marginRight:2
+            marginRight: 2,
           }}
         >
           By signing up, you agree to our
@@ -162,8 +170,8 @@ const SignUpMethods = ({ navigation }) => {
       <View
         style={{
           flexDirection: "row",
-          marginTop: SIZES.padding * 6,
-          marginBottom: 3,
+          marginTop: "auto",
+          marginBottom: 25,
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -181,7 +189,7 @@ const SignUpMethods = ({ navigation }) => {
         <TextButton
           label="Sign In"
           buttonContainerStyle={{
-            marginLeft: 5,
+            marginLeft: 2,
             backgroundColor: null,
           }}
           labelStyle={{
@@ -200,8 +208,10 @@ export default SignUpMethods;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 45,
-    marginHorizontal: SIZES.padding * 0.5,
+    flex: 1,
+    paddingTop: 45,
+    paddingHorizontal: SIZES.padding * 0.5,
+    backgroundColor: COLORS.background,
   },
   miniContainer: {
     flexDirection: "row",
@@ -220,8 +230,8 @@ const styles = StyleSheet.create({
   textContainer: {
     marginTop: 40,
     padding: 5,
-    height: 85,
-    width: 361,
+    // height: 85,
+    //width: "100",
   },
   titleContainer: {
     color: COLORS.black,
@@ -239,10 +249,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   lineConatiner: {
-    marginVertical: 40,
+    marginVertical: 35,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
   },
   line: {
     color: COLORS.black,

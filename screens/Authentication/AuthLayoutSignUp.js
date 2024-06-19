@@ -17,27 +17,15 @@ export default function AuthLayoutSignUp({
   title,
   subTitle,
   steps = "",
-  show = false,
+  //show = false,
   containerStyle,
   screen,
 }) {
-  const { navigation } = useNavigation();
+  //const { navigation } = useNavigation();
 
   return (
     <View style={{ ...styles.layoutContainer, ...containerStyle }}>
-      {show && (
-        <TouchableOpacity
-          style={{
-            marginTop: 5,
-            justifyContent: "flex-start",
-            marginBottom: 12,
-            marginLeft: 15,
-          }}
-          onPress={() => navigation.goBack()}
-        >
-          <AntDesign name="arrowleft" size={27} color="black" />
-        </TouchableOpacity>
-      )}
+      
       <ScrollView
         style={{
           flex: 1,
@@ -77,8 +65,8 @@ export default function AuthLayoutSignUp({
 const styles = StyleSheet.create({
   layoutContainer: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 45,
-    backgroundColor: "white",
+    //marginTop: StatusBar.currentHeight || 45,
+    //backgroundColor: "white",
 
     //paddingHorizontal:5
   },

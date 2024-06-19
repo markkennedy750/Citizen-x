@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, Image } from "react-native";
+import { Text, View, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React, { useState } from "react";
 //import { AuthLayout } from "../";
 import { SIZES, COLORS, icons } from "../../constants";
@@ -8,6 +8,8 @@ import CustomSwitch from "../../components/CustomSwitch";
 import TextButton from "../../components/TextButton";
 import TextIconButton from "../../components/TextIconButton";
 import AuthLayoutSignUp from "./AuthLayoutSignUp";
+import { StatusBar } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -21,18 +23,33 @@ const SignIn = ({ navigation }) => {
     return email != "" && password != "" && emailError == "";
   }
   return (
-    <AuthLayoutSignUp
-      title="Let's Sign You In"
-      subtitle="Welcome back you've been missed"
-  
-      show={true}
-    >
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={{
+          marginTop: 5,
+          justifyContent: "flex-start",
+          marginBottom: 10,
+          marginLeft: 15,
+        }}
+        onPress={() => navigation.navigate("SignUp")}
+      >
+        <AntDesign name="arrowleft" size={27} color="black" />
+      </TouchableOpacity>
       <View
         style={{
           flex: 1,
-          marginTop: SIZES.padding * 2,
+          paddingTop: SIZES.padding * 0.5,
+          paddingHorizontal: 17,
         }}
       >
+        <View style={styles.imageContainer}>
+          <Image
+            source={icons.citizenx}
+            resizeMode="contain"
+            style={styles.image}
+          />
+          <Text style={styles.titleText}>CITIZEN X</Text>
+        </View>
         {/** Email Form Inputs */}
         <FormInput
           label="email"
@@ -179,8 +196,29 @@ const SignIn = ({ navigation }) => {
       </View>
 
       {/** Footer */}
-    </AuthLayoutSignUp>
+    </View>
   );
 };
 
 export default SignIn;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: StatusBar.currentHeight || 45,
+    backgroundColor: COLORS.white,
+  },
+  image: {
+    width: 65,
+    height: 65,
+  },
+  imageContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 18,
+  },
+  titleText: {
+    fontSize: 12.1,
+    fontWeight: "500",
+    color: "#000000",
+  },
+});
