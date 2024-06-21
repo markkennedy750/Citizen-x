@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React from "react";
-import { COLORS } from "../constants";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { COLORS, icons } from "../constants";
 import {
   MaterialIcons,
   AntDesign,
@@ -11,20 +11,6 @@ import {
 import CustomImageSlider from "./CustomImageSlider";
 import TextComponent from "./TextComponent";
 import { useNavigation } from "@react-navigation/native";
-
-function FooterButton({ text, IconFamily, IconName, onPress }) {
-  return (
-    <View style={{ alignItems: "center", justifyContent: "center" }}>
-      <TouchableOpacity
-        style={{ marginHorizontal: 10 }}
-        onPress={() => onPress()}
-      >
-        <IconFamily name={IconName} size={24} color="black" />
-      </TouchableOpacity>
-      {text && <Text>{text}</Text>}
-    </View>
-  );
-}
 
 const Feed = ({ item }) => {
   const navigation = useNavigation();
@@ -74,8 +60,8 @@ const Feed = ({ item }) => {
             flexDirection: "row",
           }}
         >
-          <TouchableOpacity>
-            <Octicons name="thumbsup" size={24} color={COLORS.gray} />
+          <TouchableOpacity style={{ width: 25 }}>
+            <Octicons name="thumbsup" size={18} color="#000000" />
           </TouchableOpacity>
           <Text
             style={{
@@ -83,6 +69,7 @@ const Feed = ({ item }) => {
               fontSize: 14,
               marginHorizontal: 5,
               lineHeight: 17,
+              marginHorizontal: 5,
             }}
           >
             {item.numOfLike}
@@ -95,12 +82,28 @@ const Feed = ({ item }) => {
             flexDirection: "row",
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             <MaterialCommunityIcons
-              name="comment-edit-outline"
-              size={26}
-              color={COLORS.gray}
+              name="swap-horizontal-variant"
+              size={16}
+              color="#000000"
             />
+            <Text
+              style={{
+                fontWeight: "500",
+                fontSize: 14,
+                marginHorizontal: 5,
+                lineHeight: 17,
+              }}
+            >
+              Follow Up
+            </Text>
           </TouchableOpacity>
         </View>
         <View
@@ -111,7 +114,7 @@ const Feed = ({ item }) => {
           }}
         >
           <TouchableOpacity>
-            <Feather name="bookmark" size={24} color={COLORS.gray} />
+            <Feather name="bookmark" size={16} color="#000000" />
           </TouchableOpacity>
         </View>
         <View
@@ -122,7 +125,7 @@ const Feed = ({ item }) => {
           }}
         >
           <TouchableOpacity>
-            <Feather name="eye" size={24} color={COLORS.gray} />
+            <Feather name="eye" size={16} color="#000000" />
           </TouchableOpacity>
           <Text
             style={{
@@ -143,11 +146,7 @@ const Feed = ({ item }) => {
           }}
         >
           <TouchableOpacity>
-            <MaterialCommunityIcons
-              name="share-outline"
-              size={28}
-              color={COLORS.gray}
-            />
+            <AntDesign name="sharealt" size={19} color="#000000" />
           </TouchableOpacity>
         </View>
       </View>
@@ -257,9 +256,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   iconContainer: {
-    marginTop: 10,
+    paddingTop: 5,
     alignItems: "center",
     justifyContent: "space-between",
     flexDirection: "row",
+    paddingHorizontal: 8,
   },
 });

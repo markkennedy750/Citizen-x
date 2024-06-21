@@ -117,6 +117,74 @@ const FeedDetail = ({ route, navigation }) => {
             <View style={{ marginRight: 10 }}>
               <TextComponent text={feed.content} />
               {feed.image && <CustomImageSlider images={feed.image} />}
+              <View style={styles.iconContainer}>
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "row",
+                  }}
+                >
+                  <TouchableOpacity style={{ width: 25 }}>
+                    <Octicons name="thumbsup" size={18} color="#000000" />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontWeight: "500",
+                      fontSize: 14,
+                      marginHorizontal: 5,
+                      lineHeight: 17,
+                      marginHorizontal: 5,
+                    }}
+                  >
+                    {feed.numOfLike}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "row",
+                  }}
+                >
+                  <TouchableOpacity style={{ width: 25 }}>
+                    <Feather name="bookmark" size={19} color="#000000" />
+                  </TouchableOpacity>
+                </View>
+
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "row",
+                  }}
+                >
+                  <TouchableOpacity>
+                    <Feather name="eye" size={16} color="#000000" />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontWeight: "500",
+                      fontSize: 14,
+                      marginHorizontal: 5,
+                      lineHeight: 17,
+                    }}
+                  >
+                    {feed.numberOfView}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "row",
+                  }}
+                >
+                  <TouchableOpacity>
+                    <AntDesign name="sharealt" size={19} color="#000000" />
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
           </View>
         }
@@ -169,7 +237,7 @@ export default FeedDetail;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 45,
+    paddingTop: StatusBar.currentHeight || 45,
     backgroundColor: "white",
     paddingHorizontal: 15,
     paddingVertical: 20,
@@ -275,5 +343,14 @@ const styles = StyleSheet.create({
   },
   flatListStyle: {
     marginVertical: 15,
+  },
+  iconContainer: {
+    paddingTop: 2,
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
+    paddingHorizontal: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingBottom:10
   },
 });

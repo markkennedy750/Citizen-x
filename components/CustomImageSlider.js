@@ -27,7 +27,7 @@ const CustomImageSlider = ({ images, contentContainerStyle }) => {
   );
 
   return (
-    <View>
+    <View style={styles.sliderContainer}>
       <FlatList
         data={images}
         renderItem={renderItem}
@@ -37,27 +37,45 @@ const CustomImageSlider = ({ images, contentContainerStyle }) => {
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
         ref={flatListRef}
-        style={{ ...styles.flatList, ...contentContainerStyle }}
+        contentContainerStyle={contentContainerStyle}
+        snapToAlignment="center"
+        decelerationRate="fast"
       />
+      <View style={styles.pagination}>
+        {images.map((_, index) => (
+          <Text
+            key={index}
+            style={[
+              styles.dot,
+              { color: index === activeIndex ? "black" : "gray" },
+            ]}
+          >
+            ●
+          </Text>
+        ))}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  sliderContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
   flatList: {
-    marginRight: "auto",
-    width: 415,
-    
+    width: viewportWidth,
   },
   imageContainer: {
     width: viewportWidth,
     justifyContent: "center",
-    alignItems:"flex-start"
+    alignItems: "center",
   },
   image: {
-    width: viewportWidth * 0.8,
-    height: viewportWidth * 0.5,
-    borderRadius: 8,
+    width: viewportWidth * 0.85,
+    height: viewportWidth * 0.7, // Adjust based on aspect ratio
+    resizeMode: "cover",
+    borderRadius: 5,
   },
   pagination: {
     flexDirection: "row",
@@ -65,8 +83,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   dot: {
-    fontSize: 24,
-    marginHorizontal: 3,
+    fontSize: 19,
+    //marginHorizontal: 1,
   },
 });
 

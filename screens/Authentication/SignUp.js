@@ -12,7 +12,7 @@ const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState(0);
-  const [fullName, setFullName] = useState("");
+  const [fullname, setFullName] = useState("");
   const [showPass, setShowPass] = useState(false);
 
   const [emailError, setEmailError] = useState("");
@@ -24,7 +24,7 @@ const SignUp = ({ navigation }) => {
     return (
       email !== "" &&
       password !== "" &&
-      fullName !== "" &&
+      fullname !== "" &&
       emailError === "" &&
       passwordError === "" &&
       phoneNumberError === "" &&
@@ -116,7 +116,7 @@ const SignUp = ({ navigation }) => {
               >
                 <Image
                   source={
-                    fullName == "" || (fullName != "" && fullNameError == "")
+                    fullname == "" || (fullname != "" && fullNameError == "")
                       ? icons.correct
                       : icons.cancel
                   }
@@ -124,9 +124,9 @@ const SignUp = ({ navigation }) => {
                     height: 20,
                     width: 20,
                     tintColor:
-                      fullName == ""
+                      fullname == ""
                         ? COLORS.gray
-                        : fullName != "" && fullNameError == ""
+                        : fullname != "" && fullNameError == ""
                         ? COLORS.green
                         : COLORS.red,
                   }}
@@ -226,7 +226,14 @@ const SignUp = ({ navigation }) => {
               fontWeight: "700",
               fontSize: 17,
             }}
-            onPress={() => navigation.navigate("ProfilePics")}
+            onPress={() =>
+              navigation.navigate("UserName", {
+                fullname,
+                email,
+                phoneNumber,
+                password,
+              })
+            }
           />
         </View>
         {/** Footer */}

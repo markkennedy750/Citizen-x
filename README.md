@@ -18,6 +18,11 @@ https://ashishnoob.medium.com/docker-basic-cheatsheet-011b8ccf78fc
 
 ////////////////////////////////////////////////////////////////////////////////////
 
+navigation.navigate('Signup', { username });
+
+const SignupScreen = ({ route }) => {
+  const { username } = route.params;
+
 For the feed section
 
 Share 

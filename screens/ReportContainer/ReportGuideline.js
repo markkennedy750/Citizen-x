@@ -10,16 +10,17 @@ import {
 import React from "react";
 import { SIZES, COLORS, icons } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
 
 const ReportGuideline = () => {
   const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.primaryContainer}>
       <TouchableOpacity
-        onPress={() => navigation.goBack()}
+        onPress={() => navigation.navigate("MainScreen")}
         style={styles.imageContainer}
       >
-        <Image style={styles.image} source={icons.arrow_back} />
+        <AntDesign name="arrowleft" size={24} color="black" />
       </TouchableOpacity>
 
       <View style={styles.textContainer}>
@@ -62,7 +63,7 @@ export default ReportGuideline;
 const styles = StyleSheet.create({
   primaryContainer: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 40,
+    paddingTop: StatusBar.currentHeight || 40,
     marginHorizontal: 20,
   },
   imageContainer: {

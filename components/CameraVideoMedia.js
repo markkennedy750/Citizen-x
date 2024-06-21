@@ -3,107 +3,123 @@ import React, { useEffect, useState } from "react";
 import * as MediaLibrary from "expo-media-library";
 import TextIconButton from "./TextIconButton";
 import { COLORS, SIZES, icons } from "../constants";
-import { CameraView, useCameraPermissions, Camera } from "expo-camera";
 import { Audio } from "expo-av";
+import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
 
 export default function CameraVideoMedia({
   setAlbums,
   setStoredRecording,
   setPhotoUri,
 }) {
+  const navigation = useNavigation();
+
+  //const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions()
   //const [albums, setAlbums] = useState(null);
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
   const [recording, setRecording] = useState();
   //const [storedRecording, setStoredRecording] = useState(null);
   const [audioPermissionResponse, audioRequestPermission] =
     Audio.usePermissions();
-  const [hasPermission, setHasPermission] = useCameraPermissions();
-  const [cameraRef, setCameraRef] = useState(null);
+  //const [hasPermission, setHasPermission] = useCameraPermissions();
+  //const [cameraRef, setCameraRef] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      if (!permissionResponse) {
-        await requestPermission();
-      }
-      if (!audioPermissionResponse) {
-        await audioRequestPermission();
-      }
-      if (!hasPermission) {
-        await setHasPermission();
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     if (!permissionResponse) {
+  //       await requestPermission();
+  //     }
+  //     if (!audioPermissionResponse) {
+  //       await audioRequestPermission();
+  //     }
+  //     if (!hasPermission) {
+  //       await setHasPermission();
+  //     }
+  //   })();
+  // }, []);
 
-  async function getAlbums() {
-    if (permissionResponse.status !== "granted") {
-      await requestPermission();
-    }
-    const fetchedAlbums = await MediaLibrary.getAlbumsAsync({
-      includeSmartAlbums: true,
-    });
-    setAlbums(fetchedAlbums);
-  }
-
-  async function takePicture() {
-    if (hasPermission?.status !== "granted") {
+  const mediaAccess = async () => {
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== "granted") {
       Alert.alert(
-        "Citizen X Permission",
-        "This app requires permission to access the camera",
-        [
-          { text: "Cancel", style: "cancel" },
-          {
-            text: "Grant permission",
-            onPress: async () => await requestCameraPermission(),
-          },
-        ],
-        { cancelable: true }
+        "Sorry, we need media library permissions to access your photos."
       );
       return;
-    }
-    if (cameraRef) {
-      const photo = await cameraRef.takePictureAsync();
-      setPhotoUri(photo.uri);
-    }
-  }
-
-  //Audio Recording
-  async function startRecording() {
-    try {
-      if (audioPermissionResponse.status !== "granted") {
-        console.log("Requesting permission..");
-        Alert.alert(
-          "Citizen X requires permission",
-          "This app requires permission to access media files"
-        );
-        await audioRequestPermission();
-      }
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
+    } else {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
       });
 
-      console.log("Starting recording..");
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
-      setRecording(recording);
-      console.log("Recording started");
-    } catch (err) {
-      console.error("Failed to start recording", err);
-    }
-  }
+      console.log(result);
 
-  async function stopRecording() {
-    console.log("Stopping recording..");
-    setRecording(undefined);
-    await recording.stopAndUnloadAsync();
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-    });
-    const uri = recording.getURI();
-    console.log("Recording stopped and stored at", uri);
-    setStoredRecording(uri);
-  }
+      if (!result.canceled) {
+        setAlbums(result.assets[0].uri);
+      }
+    }
+  };
+  // async function takePicture() {
+  //   if (hasPermission?.status !== "granted") {
+  //     Alert.alert(
+  //       "Citizen X Permission",
+  //       "This app requires permission to access the camera",
+  //       [
+  //         { text: "Cancel", style: "cancel" },
+  //         {
+  //           text: "Grant permission",
+  //           onPress: async () => await requestCameraPermission(),
+  //         },
+  //       ],
+  //       { cancelable: true }
+  //     );
+  //     return;
+  //   }
+  //   if (cameraRef) {
+  //     const photo = await cameraRef.takePictureAsync();
+  //     setPhotoUri(photo.uri);
+  //   }
+  // }
+
+  //Audio Recording
+  // async function startRecording() {
+  //   try {
+  //     if (audioPermissionResponse.status !== "granted") {
+  //       console.log("Requesting permission..");
+  //       Alert.alert(
+  //         "Citizen X requires permission",
+  //         "This app requires permission to access media files"
+  //       );
+  //       await audioRequestPermission();
+  //     }
+  //     await Audio.setAudioModeAsync({
+  //       allowsRecordingIOS: true,
+  //       playsInSilentModeIOS: true,
+  //     });
+
+  //     console.log("Starting recording..");
+  //     const { recording } = await Audio.Recording.createAsync(
+  //       Audio.RecordingOptionsPresets.HIGH_QUALITY
+  //     );
+  //     setRecording(recording);
+  //     console.log("Recording started");
+  //   } catch (err) {
+  //     console.error("Failed to start recording", err);
+  //   }
+  // }
+
+  // async function stopRecording() {
+  //   console.log("Stopping recording..");
+  //   setRecording(undefined);
+  //   await recording.stopAndUnloadAsync();
+  //   await Audio.setAudioModeAsync({
+  //     allowsRecordingIOS: false,
+  //   });
+  //   const uri = recording.getURI();
+  //   console.log("Recording stopped and stored at", uri);
+  //   setStoredRecording(uri);
+  // }
 
   return (
     <View style={{ justifyContent: "flex-start", marginVertical: 15 }}>
@@ -128,10 +144,10 @@ export default function CameraVideoMedia({
           marginLeft: SIZES.radius,
           color: "white",
         }}
-        onPress={() => getAlbums()}
+        onPress={mediaAccess}
       />
-      <CameraView
-        style={{
+      <TextIconButton
+        containerStyle={{
           height: 40,
           alignItems: "center",
           justifyContent: "center",
@@ -140,31 +156,21 @@ export default function CameraVideoMedia({
           backgroundColor: "#0585FA",
           width: 160,
         }}
-        CameraViewRef={(ref) => setCameraRef(ref)}
-      >
-        <TextIconButton
-          containerStyle={{
-            height: 40,
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: SIZES.radius,
-            borderRadius: SIZES.radius,
-            backgroundColor: "#0585FA",
-            width: 160,
-          }}
-          icon={icons.cameraIcon}
-          iconPosition="LEFT"
-          iconStyle={{
-            tintColor: null,
-          }}
-          label="Take a Picture"
-          labelStyle={{
-            marginLeft: SIZES.radius,
-            color: "white",
-          }}
-          onPress={() => takePicture()}
-        />
-      </CameraView>
+        icon={icons.cameraIcon}
+        iconPosition="LEFT"
+        iconStyle={{
+          tintColor: "white",
+          width: 10,
+        }}
+        label="Take a picture"
+        labelStyle={{
+          marginLeft: SIZES.radius,
+          color: "white",
+        }}
+        onPress={() => {
+          navigation.navigate("CameraScreen", { setPhotoUri });
+        }}
+      />
       <TextIconButton
         containerStyle={{
           height: 40,
@@ -181,14 +187,14 @@ export default function CameraVideoMedia({
           tintColor: "white",
           width: 10,
         }}
-        label={recording ? "Stop Recording" : "Record Audio"}
+        label="Record Audio"
         labelStyle={{
           marginLeft: SIZES.radius,
           color: "white",
         }}
-        onPress={() => {
-          recording ? stopRecording() : startRecording();
-        }}
+        onPress={() =>
+          navigation.navigate("AudioRecordScreen", { setStoredRecording })
+        }
       />
     </View>
   );

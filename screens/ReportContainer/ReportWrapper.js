@@ -11,6 +11,7 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { icons, COLORS } from "../../constants";
 import TextButton from "../../components/TextButton";
+import { AntDesign } from "@expo/vector-icons";
 
 const ReportWrapper = ({ children, title }) => {
   const navigation = useNavigation();
@@ -21,7 +22,7 @@ const ReportWrapper = ({ children, title }) => {
           onPress={() => navigation.goBack()}
           style={styles.imageContainer}
         >
-          <Image style={styles.image} source={icons.arrow_back} />
+          <AntDesign name="arrowleft" size={25} color="black" />
         </TouchableOpacity>
         <TouchableOpacity>
           <Text style={styles.saveText}>Save Draft</Text>

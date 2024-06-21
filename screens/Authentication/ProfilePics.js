@@ -1,63 +1,123 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  StatusBar,
+  Alert,
+  Image,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import AuthLayoutSignUp from "./AuthLayoutSignUp";
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { COLORS, SIZES } from "../../constants";
 import TextButton from "../../components/TextButton";
+import * as MediaLibrary from "expo-media-library";
+import * as ImagePicker from "expo-image-picker";
 
 const ProfilePics = ({ navigation }) => {
+  const [media, setMedia] = useState();
+
+  const mediaAccess = async () => {
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Sorry, we need media library permissions to access your photos."
+      );
+      return;
+    } else {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      console.log(result);
+
+      if (!result.canceled) {
+        setMedia(result.assets[0].uri);
+      }
+    }
+  };
   return (
-    <AuthLayoutSignUp
-      steps="Personalization"
-      title="Add Profile Photo"
-      subTitle="Add your preferred picture or avatar "
-      containerStyle={{
-        paddingTop: 35,
-      }}
-      show={false}
-    >
-      <View
+    <View style={styles.container}>
+      <TouchableOpacity
         style={{
-          flex: 1,
-          marginTop: 45,
+          marginTop: 5,
+          justifyContent: "flex-start",
+          //marginBottom: ,
+          marginLeft: 15,
+        }}
+        onPress={() => navigation.navigate("SignUp")}
+      >
+        <AntDesign name="arrowleft" size={25} color="black" />
+      </TouchableOpacity>
+      <AuthLayoutSignUp
+        steps="Personalization"
+        title="Add Profile Photo"
+        subTitle="Add your preferred picture or avatar "
+        containerStyle={{
+          paddingTop: 25,
         }}
       >
-        <TouchableOpacity style={styles.imageContainer} onPress={() => {}}>
-          <Ionicons
-            name="person-circle-outline"
-            size={90}
-            color={COLORS.gray}
+        <View
+          style={{
+            flex: 1,
+            marginTop: 45,
+          }}
+        >
+          <View style={styles.imageContainer}>
+            <TouchableOpacity onPress={mediaAccess}>
+              {media ? (
+                <Image
+                  source={{ uri: media }}
+                  resizeMode="cover"
+                  style={{ width: 90, height: 90, borderRadius: 45 }}
+                />
+              ) : (
+                <Ionicons
+                  name="person-circle-outline"
+                  size={90}
+                  color={COLORS.gray}
+                />
+              )}
+            </TouchableOpacity>
+            <Text style={styles.text}>Add Profile Photo</Text>
+          </View>
+
+          <TextButton
+            label={media ? "Next" : "Skip"}
+            //disabled={isEnableSignUp() ? false : true}
+            buttonContainerStyle={{
+              height: 55,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 35,
+              borderRadius: SIZES.radius,
+              backgroundColor: COLORS.primary,
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 17,
+            }}
+            onPress={() => navigation.navigate("SignUpSuccess")}
           />
-
-          <Text style={styles.text}>Add Profile Photo</Text>
-        </TouchableOpacity>
-
-        <TextButton
-          label="Next"
-          //disabled={isEnableSignUp() ? false : true}
-          buttonContainerStyle={{
-            height: 55,
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 35,
-            borderRadius: SIZES.radius,
-            backgroundColor: COLORS.primary,
-          }}
-          labelStyle={{
-            color: COLORS.white,
-            fontWeight: "700",
-            fontSize: 17,
-          }}
-          onPress={() => navigation.navigate("SignUpSuccess")}
-        />
-      </View>
-    </AuthLayoutSignUp>
+        </View>
+      </AuthLayoutSignUp>
+    </View>
   );
 };
 
 export default ProfilePics;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: StatusBar.currentHeight || 45,
+    backgroundColor: COLORS.white,
+  },
   imageContainer: {
     alignItems: "center",
     justifyContent: "space-between",

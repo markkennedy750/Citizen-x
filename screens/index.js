@@ -40,6 +40,7 @@ import School from "./ReportContainer/School";
 import Hospital from "./ReportContainer/Hospital";
 import CommunityDev from "./ReportContainer/CommunityDev";
 import ReportSuccess from "./ReportContainer/ReportSuccess";
+// Other Pages
 import SignUpSuccess from "./Authentication/SignUpSuccess";
 import UserName from "./Authentication/UserName";
 import ProfilePics from "./Authentication/ProfilePics";
@@ -48,6 +49,8 @@ import EditProfile from "./EditProfile";
 import Coin from "./Coin";
 import HotspotSearch from "./HotspotSearch"
 import SearchScreen from "./SearchScreen";
+import CameraScreen from "./CameraScreen";
+import AudioRecordScreen from "./AudioRecordScreen";
 
 export {
   Home,
@@ -98,5 +101,7 @@ export {
   EditProfile,
   Coin,
   HotspotSearch,
-  SearchScreen
+  SearchScreen,
+  CameraScreen,
+  AudioRecordScreen
 };

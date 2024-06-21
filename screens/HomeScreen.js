@@ -36,7 +36,7 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 45,
+    paddingTop: StatusBar.currentHeight || 45,
     backgroundColor: "white",
   },
   top: {

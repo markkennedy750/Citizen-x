@@ -22,6 +22,7 @@ import {
   Feather,
   Entypo,
   FontAwesome6,
+  AntDesign,
 } from "@expo/vector-icons";
 import { icons, COLORS, SIZES } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
@@ -373,7 +374,7 @@ const Home = ({ navigation }) => {
               onPress={() => toggleModal()}
               style={styles.imageContainer}
             >
-              <Image style={styles.image} source={icons.arrow_back} />
+              <AntDesign name="arrowleft" size={24} color="black" />
             </TouchableOpacity>
           </View>
 

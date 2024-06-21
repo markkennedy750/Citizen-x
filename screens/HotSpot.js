@@ -9,8 +9,10 @@ import {
 import React from "react";
 import { COLORS } from "../constants";
 import { Feather } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
 
 const HotSpot = ({ navigation }) => {
+  const dispatch = useDispatch();
   const ReportContainer = ({ primaryText, scondarytext }) => {
     return (
       <TouchableOpacity
@@ -72,7 +74,7 @@ export default HotSpot;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 45,
+    paddingTop: StatusBar.currentHeight || 45,
     backgroundColor: COLORS.white,
   },
   firstContainer: {
