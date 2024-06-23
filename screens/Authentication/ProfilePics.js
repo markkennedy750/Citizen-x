@@ -14,9 +14,14 @@ import { COLORS, SIZES } from "../../constants";
 import TextButton from "../../components/TextButton";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
+import { useDispatch, useSelector } from "react-redux";
+import { uploadProfile } from "../../Redux/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProfilePics = ({ navigation }) => {
   const [media, setMedia] = useState();
+  const dispatch = useDispatch();
+  const { loading, error, user } = useSelector((state) => state.auth);
 
   const mediaAccess = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -39,6 +44,18 @@ const ProfilePics = ({ navigation }) => {
         setMedia(result.assets[0].uri);
       }
     }
+  };
+
+  const uploadPicFnc = async () => {
+    if (media) {
+      dispatch(uploadProfile(media));
+      await AsyncStorage.setItem("profilePicture", media);
+    }
+    if (error) {
+      Alert.alert(error);
+      return;
+    }
+    navigation.navigate("SignUpSuccess");
   };
   return (
     <View style={styles.container}>
@@ -102,7 +119,7 @@ const ProfilePics = ({ navigation }) => {
               fontWeight: "700",
               fontSize: 17,
             }}
-            onPress={() => navigation.navigate("SignUpSuccess")}
+            onPress={uploadPicFnc}
           />
         </View>
       </AuthLayoutSignUp>

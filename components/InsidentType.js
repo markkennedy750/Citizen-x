@@ -9,6 +9,7 @@ const InsidentType = ({
   //labelType,
   label,
   insident,
+  containerStyle,
 }) => {
   return (
     <View
@@ -16,6 +17,7 @@ const InsidentType = ({
         width: "100%",
         justifyContent: "flex-start",
         paddingVertical: 10,
+        ...containerStyle,
       }}
     >
       <Text

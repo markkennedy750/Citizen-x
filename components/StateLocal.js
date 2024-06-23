@@ -10,6 +10,7 @@ const StateLocal = ({
   selectedLocalGov,
   setSelectedLocalGov,
   localgovernmentstyle,
+  containerStyle,
 }) => {
   const localGovOptions = selectedState ? LocalGovernment[selectedState] : [];
   return (
@@ -20,6 +21,7 @@ const StateLocal = ({
         width: "100%",
         alignItems: "center",
         paddingVertical: 5,
+        ...containerStyle,
       }}
     >
       <View

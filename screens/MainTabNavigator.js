@@ -32,6 +32,9 @@ import reportData from "../data/report";
 
 import Container from "./ReportContainer/Container";
 import TextIconButton from "../components/TextIconButton";
+import { useDispatch, useSelector } from "react-redux";
+import { openModal, closeModal } from "../Redux/modalSlice";
+
 // const CustomBottomTabs = (props) => {
 //   return <CustomBottomTab {...props} />;
 // };
@@ -88,60 +91,27 @@ const CustomTabBarLabel = ({ focused, label }) => (
 
 const Home = ({ navigation }) => {
   const Tab = createBottomTabNavigator();
+  const { isOpen } = useSelector((state) => state.modal);
+  const dispatch = useDispatch();
 
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const footerButton = () => {
-    return (
-      <TextIconButton
-        containerStyle={{
-          height: 50,
-          alignItems: "center",
-          justifyContent: "flex-end",
-
-          //marginTop: SIZES.radius,
-          borderRadius: SIZES.radius,
-          backgroundColor: null,
-          marginTop: SIZES.padding,
-          marginBottom: SIZES.padding,
-        }}
-        icon={icons.arrow_right}
-        iconPosition="RIGHT"
-        iconStyle={{
-          tintColor: null,
-        }}
-        label="View Report Guidelines"
-        labelStyle={{
-          marginRight: SIZES.radius,
-          fontWeight: "700",
-          color: "#0276FF",
-        }}
-        onPress={() => navigation.navigate("GuideLine")}
-      />
-    );
-  };
-
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
+  //const [isModalVisible, setIsModalVisible] = useState(isOpen);
 
   return (
     <>
       <Tab.Navigator
-        screenOptions={{
+        screenOptions={({ route }) => ({
           headerShown: false,
           tabBarShowLabel: false,
-
           tabBarStyle: {
+            display: route.name === "Report" ? "none" : "flex",
             backgroundColor: "white",
             position: "absolute",
             bottom: 10,
             marginHorizontal: 10,
             height: 73,
             borderRadius: 18,
-            // Shadow...
             shadowColor: "#000",
             shadowOpacity: 0.06,
             shadowOffset: {
@@ -150,7 +120,7 @@ const Home = ({ navigation }) => {
             },
             paddingHorizontal: 8,
           },
-        }}
+        })}
       >
         <Tab.Screen
           name="Home"
@@ -239,37 +209,35 @@ const Home = ({ navigation }) => {
           options={{
             tabBarIcon: ({ focused }) => {
               return (
-                <TouchableOpacity onPress={() => toggleModal()}>
-                  <View
+                <View
+                  style={{
+                    width: 62,
+                    height: 62,
+                    backgroundColor: `${COLORS.primary}`,
+                    borderRadius: 30,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginBottom: 67,
+                    //Shadow
+                    shadowColor: "#000000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 4,
+                    },
+                    shadowOpacity: 0.19,
+                    shadowRadius: 5.62,
+                    elevation: 6,
+                  }}
+                >
+                  <Image
+                    source={icons.plus_icon}
                     style={{
-                      width: 62,
-                      height: 62,
-                      backgroundColor: `${COLORS.primary}`,
-                      borderRadius: 30,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      marginBottom: 67,
-                      //Shadow
-                      shadowColor: "#000000",
-                      shadowOffset: {
-                        width: 0,
-                        height: 4,
-                      },
-                      shadowOpacity: 0.19,
-                      shadowRadius: 5.62,
-                      elevation: 6,
+                      width: 40,
+                      height: 40,
+                      tintColor: "white",
                     }}
-                  >
-                    <Image
-                      source={icons.plus_icon}
-                      style={{
-                        width: 40,
-                        height: 40,
-                        tintColor: "white",
-                      }}
-                    />
-                  </View>
-                </TouchableOpacity>
+                  />
+                </View>
               );
             },
             TabBarCustomButton: () => {
@@ -355,41 +323,6 @@ const Home = ({ navigation }) => {
           // })}
         />
       </Tab.Navigator>
-
-      <Modal
-        animationType="slide"
-        transparent={false}
-        visible={isModalVisible}
-        onRequestClose={() => setIsModalVisible(false)}
-        // style={{
-        //   justifyContent: "center",
-        //   alignItems: "center",
-        //   borderWidth: 1,
-        //   borderRadius: 25,
-        // }}
-      >
-        <View style={styles.primaryContainer}>
-          <View>
-            <TouchableOpacity
-              onPress={() => toggleModal()}
-              style={styles.imageContainer}
-            >
-              <AntDesign name="arrowleft" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-
-          <FlatList
-            ListHeaderComponent={HeadeComponent}
-            data={reportData}
-            renderItem={({ item }) => <Container item={item} />}
-            keyExtractor={(item) => item.id}
-            numColumns={3}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ ...styles.itemContainer, flexGrow: 1 }}
-            ListFooterComponent={footerButton}
-          />
-        </View>
-      </Modal>
     </>
   );
 };

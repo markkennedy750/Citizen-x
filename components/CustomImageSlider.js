@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   flatList: {
-    width: viewportWidth,
+    width: viewportWidth * 1.3,
   },
   imageContainer: {
     width: viewportWidth,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: viewportWidth * 0.85,
+    width: viewportWidth * 0.86,
     height: viewportWidth * 0.7, // Adjust based on aspect ratio
     resizeMode: "cover",
     borderRadius: 5,

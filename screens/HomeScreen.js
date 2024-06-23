@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     height: 57,
   },
   itemContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     marginTop: 12,
     marginBottom: "auto",
   },

@@ -113,8 +113,8 @@ const Feed = ({ item }) => {
             flexDirection: "row",
           }}
         >
-          <TouchableOpacity>
-            <Feather name="bookmark" size={16} color="#000000" />
+          <TouchableOpacity style={{ width: 20 }}>
+            <Feather name="bookmark" size={18} color="#000000" />
           </TouchableOpacity>
         </View>
         <View

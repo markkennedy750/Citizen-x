@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import * as MediaLibrary from "expo-media-library";
 import TextIconButton from "./TextIconButton";
 import { COLORS, SIZES, icons } from "../constants";
-import { Audio } from "expo-av";
+
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 
@@ -19,8 +19,7 @@ export default function CameraVideoMedia({
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
   const [recording, setRecording] = useState();
   //const [storedRecording, setStoredRecording] = useState(null);
-  const [audioPermissionResponse, audioRequestPermission] =
-    Audio.usePermissions();
+  
   //const [hasPermission, setHasPermission] = useCameraPermissions();
   //const [cameraRef, setCameraRef] = useState(null);
 
@@ -137,7 +136,10 @@ export default function CameraVideoMedia({
         icon={icons.cloudUpload}
         iconPosition="LEFT"
         iconStyle={{
-          tintColor: null,
+          tintColor: "white",
+          width: 25,
+          resizeMode: "cover",
+          height: 17,
         }}
         label="Upload Media"
         labelStyle={{
@@ -160,7 +162,9 @@ export default function CameraVideoMedia({
         iconPosition="LEFT"
         iconStyle={{
           tintColor: "white",
-          width: 10,
+          width: 28,
+          resizeMode: "cover",
+          height: 27,
         }}
         label="Take a picture"
         labelStyle={{
@@ -185,7 +189,9 @@ export default function CameraVideoMedia({
         iconPosition="LEFT"
         iconStyle={{
           tintColor: "white",
-          width: 10,
+          width: 19,
+          resizeMode: "cover",
+          height: 25,
         }}
         label="Record Audio"
         labelStyle={{

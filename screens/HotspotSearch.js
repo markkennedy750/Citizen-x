@@ -63,13 +63,16 @@ const HotspotSearch = ({ navigation }) => {
           To apply filter select at least one option from the dropdown list.
         </Text>
 
-        <View style={{ paddingHorizontal: 10, gap: 10 }}>
+        <View style={{ paddingHorizontal: 12, gap: 10 }}>
           <InsidentType
             insidenType={reportType}
             setInsidentType={setReportType}
             labelType="Report Type"
             label="Select the Report Type"
             insident={report}
+            containerStyle={{
+              width: "100%",
+            }}
           />
 
           <StateLocal
@@ -79,6 +82,11 @@ const HotspotSearch = ({ navigation }) => {
             setSelectedLocalGov={setSelectedLocalGov}
             localgovernmentstyle={{
               marginTop: 20,
+              //marginHorizontal: 20,
+            }}
+            containerStyle={{
+              width: 270,
+              marginHorizontal: 25,
             }}
           />
         </View>

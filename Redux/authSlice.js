@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { SIGNUP, SIGNIN } from "./URL";
+import { SIGNUP, SIGNIN, PROFILEPICS } from "./URL";
 
 const initialState = {
   user: null,
@@ -13,7 +13,7 @@ const initialState = {
 export const signup = createAsyncThunk(
   "auth/signup",
   async (
-    { fullname, username,telephone ,email, password },
+    { fullname, username, telephone, email, password },
     { rejectWithValue }
   ) => {
     try {
@@ -45,6 +45,19 @@ export const login = createAsyncThunk(
       await AsyncStorage.setItem("refreshToken", refresh_token);
       await AsyncStorage.setItem("fullname", fullname);
       await AsyncStorage.setItem("username", username);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const uploadProfile = createAsyncThunk(
+  "auth/uploadProfile",
+  async ({ profileImage }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(PROFILEPICS, { profileImage });
+      const { message } = response.data;
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -93,6 +106,16 @@ export const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(uploadProfile.pending, (state) => {
+        state.loading = true;
+        state.error = action.payload;
+      })
+      .addCase(uploadProfile.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(uploadProfile.rejected, (state) => {
+        state.loading = false;
       });
   },
 });

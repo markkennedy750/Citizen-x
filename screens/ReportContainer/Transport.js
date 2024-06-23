@@ -23,6 +23,7 @@ const Transport = () => {
   const [location, setLocation] = useState(null);
   const [selectedState, setSelectedState] = useState();
   const [selectedLocalGov, setSelectedLocalGov] = useState();
+  const [selectedId, setSelectedId] = useState();
   const [checked, setChecked] = useState(false);
   const [unchecked, setUnChecked] = useState(false);
   const [checkboxValue, setCheckboxValue] = useState(false);

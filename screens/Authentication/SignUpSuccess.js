@@ -19,7 +19,7 @@ const SignUpSuccess = ({ navigation }) => {
               textAlign: "center",
             }}
           >
-            Verification Successful
+            SignUp Successful
           </Text>
           <Text
             style={{
@@ -29,7 +29,7 @@ const SignUpSuccess = ({ navigation }) => {
               textAlign: "center",
             }}
           >
-            The code has been verified.
+            
           </Text>
         </View>
         <TextButton
