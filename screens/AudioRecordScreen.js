@@ -1,21 +1,21 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Audio } from "expo-av";
+import { FontAwesome } from "@expo/vector-icons";
+import { COLORS } from "../constants";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const AudioRecordScreen = ({ route, navigation }) => {
-  const [recording, setRecording] = useState();
   const { setStoredRecording } = route.params;
+  const [recording, setRecording] = useState();
+  const [permissionResponse, requestPermission] = Audio.usePermissions();
 
   //Audio Recording
   async function startRecording() {
     try {
-      if (audioPermissionResponse.status !== "granted") {
+      if (permissionResponse.status !== "granted") {
         console.log("Requesting permission..");
-        Alert.alert(
-          "Citizen X requires permission",
-          "This app requires permission to access media files"
-        );
-        await audioRequestPermission();
+        await requestPermission();
       }
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
@@ -41,15 +41,40 @@ const AudioRecordScreen = ({ route, navigation }) => {
       allowsRecordingIOS: false,
     });
     const uri = recording.getURI();
-    console.log("Recording stopped and stored at", uri);
-    navigation.goBack();
     setStoredRecording(uri);
+    console.log("Recording stopped and stored at", uri);
+    console.log(recording);
   }
-
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
-        <Text>AudioRecordScreen</Text>
+      <TouchableOpacity
+        style={[
+          styles.parentButtonConatiner,
+          recording ? styles.parentrecordingStop : styles.parentrecordStart,
+        ]}
+        onPress={() => {
+          recording ? stopRecording() : startRecording();
+        }}
+      >
+        <View
+          style={[
+            styles.buttonContainer,
+            recording ? styles.buttonStop : styles.buttonStart,
+          ]}
+        >
+          {recording ? (
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
+              <FontAwesome name="microphone-slash" size={65} color="white" />
+              <Text style={styles.text}>Recording...</Text>
+              <Text style={styles.text}>Click to stop</Text>
+            </View>
+          ) : (
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
+              <FontAwesome name="microphone" size={75} color="white" />
+              <Text style={styles.text}>Start Record</Text>
+            </View>
+          )}
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -63,5 +88,37 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     alignItems: "center",
     justifyContent: "center",
+  },
+  parentButtonConatiner: {
+    backgroundColor: "white",
+    width: 170,
+    height: 170,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 100,
+  },
+  buttonContainer: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  parentrecordStart: {
+    backgroundColor: COLORS.white2,
+  },
+  parentrecordingStop: {
+    backgroundColor: "#28a7c9",
+  },
+  buttonStart: {
+    backgroundColor: COLORS.primary,
+  },
+  buttonStop: {
+    backgroundColor: "#f72346",
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: COLORS.white,
   },
 });

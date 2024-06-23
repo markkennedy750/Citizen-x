@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState,useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import ReportWrapper from "./ReportWrapper";
 import InsidentType from "../../components/InsidentType";
 import TextDesc from "../../components/TextDesc";
@@ -12,6 +12,7 @@ import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
 import { useNavigation } from "@react-navigation/native";
 import RadioGroup from "react-native-radio-buttons-group";
+import DateTime from "../../components/DateTime";
 
 const Election = () => {
   const [insidentType, setInsidentType] = useState("");
@@ -39,7 +40,12 @@ const Election = () => {
   ];
 
   function submitPost() {
-    return insidentType != "" && textInput != "" && selectedState != null && date != null;
+    return (
+      insidentType != "" &&
+      textInput != "" &&
+      selectedState != null &&
+      date != null
+    );
   }
 
   const radioButtons = useMemo(

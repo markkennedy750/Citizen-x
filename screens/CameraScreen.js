@@ -48,6 +48,7 @@ const CameraScreen = ({ route, navigation }) => {
 
   const recordMedia = async () => {
     try {
+      setPhotoUri();
       setIsRecording(true);
       await Camera.requestMicrophonePermissionsAsync();
       let recording = await cameraRef.current.recordAsync();
@@ -55,7 +56,8 @@ const CameraScreen = ({ route, navigation }) => {
       const asset = await MediaLibrary.createAssetAsync(recording.uri);
       await MediaLibrary.createAlbumAsync("CitizenXProject", asset, false);
     } catch (error) {
-      Alert.alert(error.message);
+      //Alert.alert(error.message);
+      console.log(error.message);
     }
   };
 
