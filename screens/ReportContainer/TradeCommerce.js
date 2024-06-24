@@ -10,9 +10,8 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-import { useNavigation } from "@react-navigation/native";
 
-const TradeCommerce = () => {
+const TradeCommerce = ({navigation}) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
   const [albums, setAlbums] = useState(null);
@@ -23,8 +22,9 @@ const TradeCommerce = () => {
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
+  const [videoMedia, setVideoMedia] = useState()
 
-  const { navigation } = useNavigation();
+  
 
   const tradeAndCommerce = [
     { label: "Import Export Regulations", value: "Import Export Regulations" },
@@ -59,6 +59,8 @@ const TradeCommerce = () => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        videoMedia={videoMedia}
+        setVideoMedia={setVideoMedia}
       />
 
       <StateLocal

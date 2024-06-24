@@ -11,10 +11,10 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-import { useNavigation } from "@react-navigation/native";
 import RadioGroup from "react-native-radio-buttons-group";
 
-const Transport = () => {
+
+const Transport = ({navigation}) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
   const [albums, setAlbums] = useState(null);
@@ -30,8 +30,9 @@ const Transport = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
   const [roadName, setRoadName] = useState("");
+  const [videoMedia, setVideoMedia] = useState()
 
-  const { navigation } = useNavigation();
+  
 
   const transport = [
     {
@@ -115,6 +116,8 @@ const Transport = () => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        videoMedia={videoMedia}
+        setVideoMedia={setVideoMedia}
       />
       <FormInput
         label="Road Name"

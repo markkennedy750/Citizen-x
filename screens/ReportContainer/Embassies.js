@@ -26,6 +26,8 @@ const Embassies = () => {
   const [country, setCountry] = useState("");
   const [stateEmbassey, setStateEmbassey] = useState("");
   const [ambassedor, setAmbassedor] = useState("");
+  const [videoMedia, setVideoMedia] = useState()
+
 
   const { navigation } = useNavigation();
 
@@ -104,6 +106,8 @@ const Embassies = () => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        videoMedia={videoMedia}
+        setVideoMedia={setVideoMedia}
       />
       <FormInput
         label="Country"

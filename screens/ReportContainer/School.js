@@ -30,6 +30,8 @@ const School = () => {
   const [address, setAddress] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [schoolHead, setSchoolHead] = useState("");
+  const [videoMedia, setVideoMedia] = useState()
+
 
   const { navigation } = useNavigation();
 
@@ -104,6 +106,8 @@ const School = () => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        videoMedia={videoMedia}
+        setVideoMedia={setVideoMedia}
       />
       <FormInput
         label="Name of school"

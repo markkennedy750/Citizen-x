@@ -27,6 +27,8 @@ const Election = () => {
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
+  const [videoMedia, setVideoMedia] = useState()
+
 
   const { navigation } = useNavigation();
 
@@ -97,6 +99,8 @@ const Election = () => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        videoMedia={videoMedia}
+        setVideoMedia={setVideoMedia}
       />
       <DateTime date={date} setDate={setDate} time={time} setTime={setTime} />
 

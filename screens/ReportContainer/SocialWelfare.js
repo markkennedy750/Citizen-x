@@ -10,10 +10,10 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-import { useNavigation } from "@react-navigation/native";
 
 
-const SocialWelfare = () => {
+
+const SocialWelfare = ({navigation}) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
   const [albums, setAlbums] = useState(null);
@@ -24,8 +24,10 @@ const SocialWelfare = () => {
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
+  const [videoMedia, setVideoMedia]= useState()
+  
 
-  const { navigation } = useNavigation();
+  
 
   const socialwelfare = [
     { label: "Poverty Levels", value: "Poverty Levels" },
@@ -58,6 +60,8 @@ const SocialWelfare = () => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        videoMedia={videoMedia}
+        setVideoMedia={setVideoMedia}
       />
 
       <StateLocal

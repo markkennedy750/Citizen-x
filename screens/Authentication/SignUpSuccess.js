@@ -4,11 +4,23 @@ import { icons, COLORS, SIZES } from "../../constants";
 import { AntDesign } from "@expo/vector-icons";
 import TextButton from "../../components/TextButton";
 
-const SignUpSuccess = ({ navigation }) => {
+const SignUpSuccess = ({ navigation, route }) => {
+  console.log("Route Params:", route.params);
+  const { fullname, email, phoneNumber, password, username } =
+    route.params || {};
+
+  if (!fullname || !email || !phoneNumber || !password || !username) {
+    console.error("Missing signup information");
+    return (
+      <View style={styles.container}>
+        <Text>Error: Missing signup information. Please try again.</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.itemContainer}>
-        {/**<AntDesign name="checkcircle" size={200} color={COLORS.primary} />**/}
         <Image source={icons.SignUpSuccess} style={styles.image} />
         <View style={styles.textConatiner}>
           <Text
@@ -23,21 +35,19 @@ const SignUpSuccess = ({ navigation }) => {
           </Text>
           <Text
             style={{
-              fontWeight: "500",
-              fontSize: 14,
+              fontWeight: "600",
+              fontSize: 17,
               lineHeight: 20,
               textAlign: "center",
             }}
           >
-            
+            Welcome, {fullname}!
           </Text>
         </View>
         <TextButton
           label="Continue"
-          //disabled={isEnableSignUp() ? false : true}
           buttonContainerStyle={{
             height: 55,
-            //marginHorizontal: 15,
             width: 300,
             alignItems: "center",
             justifyContent: "center",
@@ -50,7 +60,7 @@ const SignUpSuccess = ({ navigation }) => {
             fontWeight: "700",
             fontSize: 17,
           }}
-          onPress={() => navigation.navigate("UserName")}
+          onPress={() => navigation.navigate("MainScreen")}
         />
       </View>
     </View>

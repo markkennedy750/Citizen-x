@@ -11,6 +11,8 @@ export default function CameraVideoMedia({
   setAlbums,
   setStoredRecording,
   setPhotoUri,
+  videoMedia,
+  setVideoMedia
 }) {
   const navigation = useNavigation();
 
@@ -172,7 +174,7 @@ export default function CameraVideoMedia({
           color: "white",
         }}
         onPress={() => {
-          navigation.navigate("CameraScreen", { setPhotoUri });
+          navigation.navigate("CameraScreen", { setPhotoUri,videoMedia,setVideoMedia });
         }}
       />
       <TextIconButton

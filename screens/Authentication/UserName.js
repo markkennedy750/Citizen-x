@@ -5,7 +5,7 @@ import AuthLayoutSignUp from "./AuthLayoutSignUp";
 import FormInput from "../../components/FormInput";
 import TextButton from "../../components/TextButton";
 import { useDispatch, useSelector } from "react-redux";
-import { signup } from "../../Redux/authSlice";
+
 
 const UserName = ({ navigation, route }) => {
   const [username, setUsername] = useState("");
@@ -18,14 +18,6 @@ const UserName = ({ navigation, route }) => {
     return username !== "";
   }
 
-  function signUpFnc() {
-    dispatch(signup(fullname, username, phoneNumber, email, password));
-    if (error) {
-      Alert.alert(error);
-      return;
-    }
-    navigation.navigate("ProfilePics");
-  }
   return (
     <AuthLayoutSignUp
       steps="Personalization"
@@ -95,7 +87,15 @@ const UserName = ({ navigation, route }) => {
             fontWeight: "700",
             fontSize: 17,
           }}
-          onPress={() => signUpFnc()}
+          onPress={() =>
+            navigation.navigate("ProfilePics", {
+              fullname,
+              email,
+              phoneNumber,
+              password,
+              username
+            })
+          }
         />
       </View>
     </AuthLayoutSignUp>

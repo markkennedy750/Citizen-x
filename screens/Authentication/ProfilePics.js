@@ -15,13 +15,14 @@ import TextButton from "../../components/TextButton";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
-import { uploadProfile } from "../../Redux/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { signup } from "../../Redux/authSlice";
 
-const ProfilePics = ({ navigation }) => {
-  const [media, setMedia] = useState();
+const ProfilePics = ({ navigation, route }) => {
+  const [profileImage, setProfileImage] = useState();
   const dispatch = useDispatch();
   const { loading, error, user } = useSelector((state) => state.auth);
+  const { fullname, email, phoneNumber, password, username } = route.params;
 
   const mediaAccess = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -41,22 +42,36 @@ const ProfilePics = ({ navigation }) => {
       console.log(result);
 
       if (!result.canceled) {
-        setMedia(result.assets[0].uri);
+        setProfileImage(result.assets[0].uri);
       }
     }
   };
 
-  const uploadPicFnc = async () => {
-    if (media) {
-      dispatch(uploadProfile(media));
-      await AsyncStorage.setItem("profilePicture", media);
-    }
+  function signUpFnc() {
+    dispatch(
+      signup({
+        profileImage,
+        fullname,
+        username,
+        phoneNumber,
+        email,
+        password,
+      })
+    );
     if (error) {
-      Alert.alert(error);
+      //Alert.alert(error);
+      console.log(error)
       return;
     }
-    navigation.navigate("SignUpSuccess");
-  };
+    navigation.navigate("SignUpSuccess", {
+      fullname,
+      email,
+      phoneNumber,
+      password,
+      username,
+    })
+  }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -86,9 +101,9 @@ const ProfilePics = ({ navigation }) => {
         >
           <View style={styles.imageContainer}>
             <TouchableOpacity onPress={mediaAccess}>
-              {media ? (
+              {profileImage ? (
                 <Image
-                  source={{ uri: media }}
+                  source={{ uri: profileImage }}
                   resizeMode="cover"
                   style={{ width: 90, height: 90, borderRadius: 45 }}
                 />
@@ -104,7 +119,7 @@ const ProfilePics = ({ navigation }) => {
           </View>
 
           <TextButton
-            label={media ? "Next" : "Skip"}
+            label={profileImage ? "Next" : "Skip"}
             //disabled={isEnableSignUp() ? false : true}
             buttonContainerStyle={{
               height: 55,
@@ -119,7 +134,7 @@ const ProfilePics = ({ navigation }) => {
               fontWeight: "700",
               fontSize: 17,
             }}
-            onPress={uploadPicFnc}
+            onPress={signUpFnc}
           />
         </View>
       </AuthLayoutSignUp>

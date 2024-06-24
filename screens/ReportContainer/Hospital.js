@@ -29,6 +29,8 @@ const Hospital = () => {
   const [hospitaleAddress, setHospitalAddress] = useState("");
   const [department, setDepartment] = useState("");
   const [departmentNameHead, setDepartmentNameHead] = useState("");
+  const [videoMedia, setVideoMedia] = useState()
+
 
   const { navigation } = useNavigation();
 
@@ -104,6 +106,8 @@ const Hospital = () => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        videoMedia={videoMedia}
+        setVideoMedia={setVideoMedia}
       />
       <FormInput
         label="Hospital Name"

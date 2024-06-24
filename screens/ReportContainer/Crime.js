@@ -30,6 +30,8 @@ const Crime = ({ navigation }) => {
   const [checkboxValue, setCheckboxValue] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
+  const [videoMedia, setVideoMedia] = useState()
+
 
   const crime = [
     { label: "Theft", value: "Theft" },
@@ -72,6 +74,8 @@ const Crime = ({ navigation }) => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        videoMedia={videoMedia}
+        setVideoMedia={setVideoMedia}
       />
       <DateTime date={date} setDate={setDate} time={time} setTime={setTime} />
       <StateLocal

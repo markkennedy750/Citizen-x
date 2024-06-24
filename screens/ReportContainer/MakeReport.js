@@ -23,6 +23,8 @@ const MakeReport = () => {
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
+  const [videoMedia, setVideoMedia] = useState()
+
 
   const { navigation } = useNavigation();
 
@@ -56,6 +58,8 @@ const MakeReport = () => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        videoMedia={videoMedia}
+        setVideoMedia={setVideoMedia}
       />
 
       <StateLocal

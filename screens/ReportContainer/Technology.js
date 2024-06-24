@@ -10,9 +10,9 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-import { useNavigation } from "@react-navigation/native";
 
-const Technology = () => {
+
+const Technology = ({navigation}) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
   const [albums, setAlbums] = useState(null);
@@ -23,8 +23,8 @@ const Technology = () => {
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
+  const [videoMedia, setVideoMedia] = useState()
 
-  const { navigation } = useNavigation();
 
   const technology = [
     { label: "Internet Connectivity", value: "Internet Connectivity" },
@@ -62,6 +62,8 @@ const Technology = () => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        videoMedia={videoMedia}
+        setVideoMedia={setVideoMedia}
       />
 
       <StateLocal

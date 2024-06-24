@@ -14,7 +14,7 @@ import * as MediaLibrary from "expo-media-library";
 import { Ionicons } from "@expo/vector-icons";
 
 const CameraScreen = ({ route, navigation }) => {
-  const { setPhotoUri } = route.params;
+  const { setPhotoUri, videoMedia, setVideoMedia } = route.params;
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [type, setType] = useState(CameraType.back);
   const [flashMode, setFlashMode] = useState(FlashMode.on);
@@ -42,19 +42,19 @@ const CameraScreen = ({ route, navigation }) => {
       const asset = await MediaLibrary.createAssetAsync(photo.uri);
       await MediaLibrary.createAlbumAsync("CitizenXProject", asset, false);
     } catch (error) {
-      Alert.alert(error.message);
+      console.log(error);
     }
   };
 
   const recordMedia = async () => {
     try {
-      setPhotoUri();
       setIsRecording(true);
       await Camera.requestMicrophonePermissionsAsync();
       let recording = await cameraRef.current.recordAsync();
 
       const asset = await MediaLibrary.createAssetAsync(recording.uri);
       await MediaLibrary.createAlbumAsync("CitizenXProject", asset, false);
+      setVideoMedia(asset);
     } catch (error) {
       //Alert.alert(error.message);
       console.log(error.message);

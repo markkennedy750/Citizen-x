@@ -29,6 +29,7 @@ const Airport = () => {
   const [terminal, setTerminal] = useState("");
   const [airline, setAirline] = useState("");
   const [queueTime, setQueueTime] = useState("");
+  const [videoMedia, setVideoMedia] = useState()
 
   const { navigation } = useNavigation();
 
@@ -105,6 +106,8 @@ const Airport = () => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        videoMedia={videoMedia}
+        setVideoMedia={setVideoMedia}
       />
       <FormInput
         label="Airport"
