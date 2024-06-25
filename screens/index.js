@@ -47,10 +47,12 @@ import ProfilePics from "./Authentication/ProfilePics";
 import FeedDetail from "./FeedDetail";
 import EditProfile from "./EditProfile";
 import Coin from "./Coin";
-import HotspotSearch from "./HotspotSearch"
+import HotspotSearch from "./HotspotSearch";
 import SearchScreen from "./SearchScreen";
 import CameraScreen from "./CameraScreen";
 import AudioRecordScreen from "./AudioRecordScreen";
+import ImageScreen from "./ImageScreen";
+import Settings from "./Settings";
 
 export {
   Home,
@@ -103,5 +105,7 @@ export {
   HotspotSearch,
   SearchScreen,
   CameraScreen,
-  AudioRecordScreen
+  AudioRecordScreen,
+  ImageScreen,
+  Settings
 };

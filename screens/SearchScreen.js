@@ -45,7 +45,9 @@ const SearchScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
-      <View style={styles.numberOfSearch}></View>
+      <View style={styles.numberOfSearch}>
+        <Text style={styles.searchText}>Over 120 reports</Text>
+      </View>
 
       <FlatList
         data={DummyFeedData}
@@ -97,6 +99,15 @@ const styles = StyleSheet.create({
   },
   numberOfSearch: {
     width: "100%",
-    height: 40,
+    height: 36,
+    backgroundColor: COLORS.gray3,
+    alignItems: "flex-start",
+    justifyContent: "center",
+    paddingLeft: 15,
+  },
+  searchText: {
+    fontWeight: "600",
+    fontSize: 14,
+    lineHeight: 19,
   },
 });

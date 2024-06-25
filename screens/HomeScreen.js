@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-end",
     height: 57,
+    
   },
   itemContainer: {
     paddingHorizontal: 15,

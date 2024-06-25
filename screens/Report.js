@@ -91,9 +91,10 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gray2,
   },
   imageContainer: {
-    width: 32,
-    height: 30,
+    width: 40,
+    height: 40,
     marginTop: 15,
+    
   },
   image: {
     flex: 1,

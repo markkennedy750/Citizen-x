@@ -14,43 +14,52 @@ import { useNavigation } from "@react-navigation/native";
 
 const Feed = ({ item }) => {
   const navigation = useNavigation();
+  const images = item.image;
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => navigation.navigate("FeedDetail", { feed: item })}
-    >
-      <View style={styles.profileContainer}>
-        <Image source={item.user.profileImage} style={styles.profileImg} />
-        <View style={{ marginLeft: 10 }}>
-          <View style={styles.usernameContainer}>
-            <Text style={styles.fulName}>{item.user.fullname}</Text>
-            <Text style={styles.usename}>@{item.user.username}</Text>
-            <View style={styles.verify}>
-              <Text style={styles.verifyText}>verified</Text>
-              <AntDesign name="checkcircle" size={12} color="white" />
+    <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("FeedDetail", { feed: item })}
+      >
+        <View style={styles.profileContainer}>
+          <Image source={item.user.profileImage} style={styles.profileImg} />
+          <View style={{ marginLeft: 10 }}>
+            <View style={styles.usernameContainer}>
+              <Text style={styles.fulName}>{item.user.fullname}</Text>
+              <Text style={styles.usename}>@{item.user.username}</Text>
+              <View style={styles.verify}>
+                <Text style={styles.verifyText}>verified</Text>
+                <AntDesign name="checkcircle" size={12} color="white" />
+              </View>
+            </View>
+            <View style={styles.reportDaTim}>
+              <Text style={styles.date}>{item.createdAt}</Text>
+              <View
+                style={{
+                  width: 2,
+                  height: 14,
+                  backgroundColor: COLORS.gray,
+                  marginHorizontal: 5,
+                }}
+              />
+              <MaterialIcons name="place" size={15} color="red" />
+              <Text style={styles.placeStyle}>{item.place}</Text>
             </View>
           </View>
-          <View style={styles.reportDaTim}>
-            <Text style={styles.date}>{item.createdAt}</Text>
-            <View
-              style={{
-                width: 2,
-                height: 14,
-                backgroundColor: COLORS.gray,
-                marginHorizontal: 5,
-              }}
-            />
-            <MaterialIcons name="place" size={15} color="red" />
-            <Text style={styles.placeStyle}>{item.place}</Text>
-          </View>
         </View>
-      </View>
-      <View style={styles.reporttype}>
-        <Text style={styles.reportText}>{item.reportType}</Text>
-      </View>
+        <View style={styles.reporttype}>
+          <Text style={styles.reportText}>{item.reportType}</Text>
+        </View>
+      </TouchableOpacity>
       <View style={{ marginRight: 10 }}>
         <TextComponent text={item.content} />
-        {item.image && <CustomImageSlider images={item.image} />}
+
+        {item.image && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ImageScreen", { images })}
+          >
+            <CustomImageSlider images={item.image} />
+          </TouchableOpacity>
+        )}
       </View>
       <View style={styles.iconContainer}>
         <View
@@ -88,6 +97,7 @@ const Feed = ({ item }) => {
               alignItems: "center",
               justifyContent: "space-between",
             }}
+            onPress={() => navigation.navigate("FeedDetail", { feed: item })}
           >
             <MaterialCommunityIcons
               name="swap-horizontal-variant"
@@ -150,7 +160,7 @@ const Feed = ({ item }) => {
           </TouchableOpacity>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 

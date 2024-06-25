@@ -53,6 +53,8 @@ import {
   SearchScreen,
   CameraScreen,
   AudioRecordScreen,
+  ImageScreen,
+  Settings,
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -62,7 +64,7 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="SplashScreen"
+          initialRouteName="MainScreen"
           screenOptions={{
             headerShown: false,
           }}
@@ -72,6 +74,30 @@ export default function App() {
           <Stack.Screen name="Onboarding" component={OnboardingScreen} />
           <Stack.Screen name="SignIn" component={SignIn} />
           <Stack.Screen name="SignUp" component={SignUp} />
+
+          <Stack.Screen name="Interest" component={Interest} />
+          <Stack.Screen name="ReportSuccess" component={ReportSuccess} />
+          <Stack.Screen name="SignUpMethod" component={SignUpMethod} />
+          <Stack.Screen name="GuideLine" component={ReportGuideline} />
+          <Stack.Screen name="InitialSignUp" component={InitialSignUp} />
+          <Stack.Screen name="Otp" component={Otp} />
+          <Stack.Screen name="MainScreen" component={Home} />
+          <Stack.Screen name="ForgotPassword" component={ForgetPassword} />
+          <Stack.Screen name="SignUpSuccess" component={SignUpSuccess} />
+          <Stack.Screen name="UserName" component={UserName} />
+          <Stack.Screen name="ProfilePics" component={ProfilePics} />
+          <Stack.Screen name="FeedDetail" component={FeedDetail} />
+          <Stack.Screen name="EditProfile" component={EditProfile} />
+          <Stack.Screen name="Coin" component={Coin} />
+          <Stack.Screen name="HotspotSearch" component={HotspotSearch} />
+          <Stack.Screen name="SearchScreen" component={SearchScreen} />
+          <Stack.Screen name="CameraScreen" component={CameraScreen} />
+          <Stack.Screen name="ImageScreen" component={ImageScreen} />
+          <Stack.Screen name="Settings" component={Settings} />
+          <Stack.Screen
+            name="AudioRecordScreen"
+            component={AudioRecordScreen}
+          />
 
           {/**Report start */}
 
@@ -99,28 +125,6 @@ export default function App() {
           <Stack.Screen name="CommunityDev" component={CommunityDev} />
 
           {/**Report end */}
-
-          <Stack.Screen name="Interest" component={Interest} />
-          <Stack.Screen name="ReportSuccess" component={ReportSuccess} />
-          <Stack.Screen name="SignUpMethod" component={SignUpMethod} />
-          <Stack.Screen name="GuideLine" component={ReportGuideline} />
-          <Stack.Screen name="InitialSignUp" component={InitialSignUp} />
-          <Stack.Screen name="Otp" component={Otp} />
-          <Stack.Screen name="MainScreen" component={Home} />
-          <Stack.Screen name="ForgotPassword" component={ForgetPassword} />
-          <Stack.Screen name="SignUpSuccess" component={SignUpSuccess} />
-          <Stack.Screen name="UserName" component={UserName} />
-          <Stack.Screen name="ProfilePics" component={ProfilePics} />
-          <Stack.Screen name="FeedDetail" component={FeedDetail} />
-          <Stack.Screen name="EditProfile" component={EditProfile} />
-          <Stack.Screen name="Coin" component={Coin} />
-          <Stack.Screen name="HotspotSearch" component={HotspotSearch} />
-          <Stack.Screen name="SearchScreen" component={SearchScreen} />
-          <Stack.Screen name="CameraScreen" component={CameraScreen} />
-          <Stack.Screen
-            name="AudioRecordScreen"
-            component={AudioRecordScreen}
-          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

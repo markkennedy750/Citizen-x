@@ -71,6 +71,7 @@ const FeedDetail = ({ route, navigation }) => {
       </View>
     );
   };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -351,6 +352,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    paddingBottom:10
+    paddingBottom: 10,
   },
 });

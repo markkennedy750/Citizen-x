@@ -5,7 +5,6 @@ import { AntDesign } from "@expo/vector-icons";
 import TextButton from "../../components/TextButton";
 
 const SignUpSuccess = ({ navigation, route }) => {
-  console.log("Route Params:", route.params);
   const { fullname, email, phoneNumber, password, username } =
     route.params || {};
 
@@ -60,7 +59,7 @@ const SignUpSuccess = ({ navigation, route }) => {
             fontWeight: "700",
             fontSize: 17,
           }}
-          onPress={() => navigation.navigate("MainScreen")}
+          onPress={() => navigation.navigate("SignIn")}
         />
       </View>
     </View>
