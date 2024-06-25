@@ -53,6 +53,9 @@ import CameraScreen from "./CameraScreen";
 import AudioRecordScreen from "./AudioRecordScreen";
 import ImageScreen from "./ImageScreen";
 import Settings from "./Settings";
+import Theme from "./Theme";
+import NotifcationSetting from "./NotifcationSetting";
+import DataSaver from "./DataSaver";
 
 export {
   Home,
@@ -107,5 +110,8 @@ export {
   CameraScreen,
   AudioRecordScreen,
   ImageScreen,
-  Settings
+  Settings,
+  Theme,
+  NotifcationSetting,
+  DataSaver
 };

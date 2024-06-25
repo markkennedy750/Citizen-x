@@ -18,31 +18,6 @@ https://ashishnoob.medium.com/docker-basic-cheatsheet-011b8ccf78fc
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-<Modal
-animationType="slide"
-transparent={false}
-visible={isOpen}
-onRequestClose={() => dispatch(closeModal())}
-// style={{
-        //   justifyContent: "center",
-        //   alignItems: "center",
-        //   borderWidth: 1,
-        //   borderRadius: 25,
-        // }}
-
-> </Modal>
-
-navigation.navigate('Signup', { username });
-
-const SignupScreen = ({ route }) => {
-const { username } = route.params;
-
-For the feed section
-
-Share
-import { AntDesign } from '@expo/vector-icons';
-<AntDesign name="sharealt" size={24} color="black" />
-
 /////////////////////////////////////////////////////////////////////////////////////
 Like button
 import { Octicons } from '@expo/vector-icons';

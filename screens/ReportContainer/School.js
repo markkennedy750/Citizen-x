@@ -30,8 +30,8 @@ const School = () => {
   const [address, setAddress] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [schoolHead, setSchoolHead] = useState("");
-  const [videoMedia, setVideoMedia] = useState()
-
+  const [videoMedia, setVideoMedia] = useState();
+  const [selectedId, setSelectedId] = useState("");
 
   const { navigation } = useNavigation();
 
@@ -43,7 +43,7 @@ const School = () => {
     {
       label: "Extracurricular Activities",
       value: "Extracurricular Activities",
-    }
+    },
   ];
 
   function submitPost() {

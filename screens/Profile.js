@@ -99,7 +99,10 @@ const Profile = ({ navigation }) => {
             <AntDesign name="solution1" size={22} color={COLORS.primary} />
             <Text style={styles.buttonText}>Edit Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.editButton}>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => navigation.navigate("Settings")}
+          >
             <SimpleLineIcons name="settings" size={22} color={COLORS.primary} />
             <Text style={styles.buttonText}>Settings</Text>
           </TouchableOpacity>
@@ -116,8 +119,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    marginTop: StatusBar.currentHeight || 45,
-    padding: 12,
+    paddingTop: StatusBar.currentHeight || 45,
+    paddingHorizontal: 12,
   },
   profileContiner: {
     flexDirection: "row",

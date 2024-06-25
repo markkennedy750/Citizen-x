@@ -11,6 +11,7 @@ import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
 import { useNavigation } from "@react-navigation/native";
+import { RadioGroup } from "react-native-radio-buttons-group";
 
 const HealthCare = () => {
   const [insidentType, setInsidentType] = useState("");
@@ -23,8 +24,8 @@ const HealthCare = () => {
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
-  const [videoMedia, setVideoMedia] = useState()
-
+  const [videoMedia, setVideoMedia] = useState();
+  const [selectedId, setSelectedId] = useState("");
 
   const { navigation } = useNavigation();
 

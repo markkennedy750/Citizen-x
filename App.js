@@ -55,6 +55,9 @@ import {
   AudioRecordScreen,
   ImageScreen,
   Settings,
+  Theme,
+  NotifcationSetting,
+  DataSaver,
 } from "./screens";
 
 const Stack = createStackNavigator();
@@ -94,6 +97,12 @@ export default function App() {
           <Stack.Screen name="CameraScreen" component={CameraScreen} />
           <Stack.Screen name="ImageScreen" component={ImageScreen} />
           <Stack.Screen name="Settings" component={Settings} />
+          <Stack.Screen name="Theme" component={Theme} />
+          <Stack.Screen name="DataSaver" component={DataSaver} />
+          <Stack.Screen
+            name="NotifcationSetting"
+            component={NotifcationSetting}
+          />
           <Stack.Screen
             name="AudioRecordScreen"
             component={AudioRecordScreen}

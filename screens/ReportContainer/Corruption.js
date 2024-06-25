@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState,useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import ReportWrapper from "./ReportWrapper";
 import InsidentType from "../../components/InsidentType";
 import TextDesc from "../../components/TextDesc";
@@ -24,7 +24,8 @@ const Corruption = () => {
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
-  const [videoMedia, setVideoMedia] = useState()
+  const [videoMedia, setVideoMedia] = useState();
+  const [selectedId, setSelectedId] = useState("");
 
   const { navigation } = useNavigation();
 
