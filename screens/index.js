@@ -56,6 +56,7 @@ import Settings from "./Settings";
 import Theme from "./Theme";
 import NotifcationSetting from "./NotifcationSetting";
 import DataSaver from "./DataSaver";
+import Medialibrary from "./Media-library";
 
 export {
   Home,
@@ -113,5 +114,6 @@ export {
   Settings,
   Theme,
   NotifcationSetting,
-  DataSaver
+  DataSaver,
+  Medialibrary,
 };

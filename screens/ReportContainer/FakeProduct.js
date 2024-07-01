@@ -26,7 +26,7 @@ const FakeProduct = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
   const [productName, setProductName] = useState("");
-  const [videoMedia, setVideoMedia] = useState()
+  const [videoMedia, setVideoMedia] = useState("")
 
 
   const { navigation } = useNavigation();

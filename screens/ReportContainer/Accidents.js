@@ -31,7 +31,7 @@ const Accidents = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
   const [causeOfAccident, setCauseOfAccident] = useState("");
-  const [videoMedia, setVideoMedia] = useState()
+  const [videoMedia, setVideoMedia] = useState("");
 
   const { navigation } = useNavigation();
 

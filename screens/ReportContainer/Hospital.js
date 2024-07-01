@@ -29,7 +29,7 @@ const Hospital = () => {
   const [hospitaleAddress, setHospitalAddress] = useState("");
   const [department, setDepartment] = useState("");
   const [departmentNameHead, setDepartmentNameHead] = useState("");
-  const [videoMedia, setVideoMedia] = useState()
+  const [videoMedia, setVideoMedia] = useState("")
 
 
   const { navigation } = useNavigation();

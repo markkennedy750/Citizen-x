@@ -12,11 +12,15 @@
       "resizeMode": "contain",
       "backgroundColor": "#0E9C67"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": ["audio"]
+        "UIBackgroundModes": [
+          "audio"
+        ]
       }
     },
     "android": {
@@ -65,7 +69,8 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-      ]
+      ],
+      "expo-video"
     ]
   }
 }

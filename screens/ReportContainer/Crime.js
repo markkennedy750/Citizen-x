@@ -30,7 +30,7 @@ const Crime = ({ navigation }) => {
   const [checkboxValue, setCheckboxValue] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
-  const [videoMedia, setVideoMedia] = useState()
+  const [videoMedia, setVideoMedia] = useState("")
 
 
   const crime = [

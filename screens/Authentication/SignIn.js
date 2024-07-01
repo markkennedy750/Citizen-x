@@ -10,17 +10,32 @@ import TextIconButton from "../../components/TextIconButton";
 import AuthLayoutSignUp from "./AuthLayoutSignUp";
 import { StatusBar } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../Redux/authSlice";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
+  const { loading, error, user,accessToken,refreshToken } = useSelector((state) => state.auth);
 
   const [showPass, setShowPass] = useState(false);
   const [saveMe, setSaveMe] = useState(false);
 
   function isEnableSignIn() {
     return email != "" && password != "" && emailError == "";
+  }
+
+  function signInFn() {
+    dispatch(
+      login({
+        email,
+        password,
+      })
+    );
+    if(refreshToken || accessToken){
+      navigation.navigate("MainScreen")
+    }
   }
   return (
     <View style={styles.container}>
@@ -135,7 +150,7 @@ const SignIn = ({ navigation }) => {
               color: COLORS.gray,
               fontWeight: "600",
             }}
-            onPress={() => navigation.navigate("ForgotPassword")}
+            onPress={signInFn}
           />
         </View>
         {/** Sign In */}

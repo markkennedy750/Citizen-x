@@ -29,7 +29,7 @@ const Airport = () => {
   const [terminal, setTerminal] = useState("");
   const [airline, setAirline] = useState("");
   const [queueTime, setQueueTime] = useState("");
-  const [videoMedia, setVideoMedia] = useState()
+  const [videoMedia, setVideoMedia] = useState("")
 
   const { navigation } = useNavigation();
 

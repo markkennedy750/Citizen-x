@@ -13,8 +13,7 @@ import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
 import RadioGroup from "react-native-radio-buttons-group";
 
-
-const Transport = ({navigation}) => {
+const Transport = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
   const [albums, setAlbums] = useState(null);
@@ -30,9 +29,7 @@ const Transport = ({navigation}) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
   const [roadName, setRoadName] = useState("");
-  const [videoMedia, setVideoMedia] = useState()
-
-  
+  const [videoMedia, setVideoMedia] = useState("");
 
   const transport = [
     {

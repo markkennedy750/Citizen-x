@@ -9,6 +9,7 @@ background: #0E9C67;
 > > git remote -v
 
 > > git add .
+
 > > git commit -m "Your commit message here"
 
 > > git push origin main
@@ -17,6 +18,7 @@ https://github.com/react-native-clipboard/clipboard?tab=readme-ov-file#readme
 https://ashishnoob.medium.com/docker-basic-cheatsheet-011b8ccf78fc
 
 ////////////////////////////////////////////////////////////////////////////////////
+expoicons: ComponentProps<typeof Ionicons>["name"]
 
 /////////////////////////////////////////////////////////////////////////////////////
 Like button

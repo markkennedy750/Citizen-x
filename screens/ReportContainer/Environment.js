@@ -23,7 +23,7 @@ const Environment = () => {
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
-  const [videoMedia, setVideoMedia] = useState()
+  const [videoMedia, setVideoMedia] = useState("")
 
 
   const { navigation } = useNavigation();

@@ -26,7 +26,7 @@ const Embassies = () => {
   const [country, setCountry] = useState("");
   const [stateEmbassey, setStateEmbassey] = useState("");
   const [ambassedor, setAmbassedor] = useState("");
-  const [videoMedia, setVideoMedia] = useState()
+  const [videoMedia, setVideoMedia] = useState("")
 
 
   const { navigation } = useNavigation();

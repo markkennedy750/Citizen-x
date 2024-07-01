@@ -32,7 +32,7 @@ const Roads = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
   const [roadName, setRoadName] = useState("");
-  const [videoMedia, setVideoMedia] = useState()
+  const [videoMedia, setVideoMedia] = useState("")
 
 
   const { navigation } = useNavigation();
