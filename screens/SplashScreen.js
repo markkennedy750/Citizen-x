@@ -8,9 +8,12 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MotiView, MotiImage } from "moti";
+import { useDispatch } from "react-redux";
+import { logout } from "../Redux/authSlice";
 
 const SplashScreen = ({ navigation }) => {
   const { width } = useWindowDimensions();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const checkSplashScreen = async () => {
@@ -35,10 +38,16 @@ const SplashScreen = ({ navigation }) => {
     checkSplashScreen();
   }, [navigation]);
 
+  useEffect(() => {
+    function clearLogs() {
+      dispatch(logout());
+    }
+    clearLogs();
+  }, []);
   return (
     <View style={styles.container}>
       <MotiImage
-        source={require("../assets/citizenx.png")} // Provide the path to your image
+        source={require("../assets/citizenx.png")}
         style={{ width: width * 0.3, height: width * 0.3 }}
         from={{ opacity: 0, translateY: 50 }}
         animate={{ opacity: 1, translateY: 0 }}

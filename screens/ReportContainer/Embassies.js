@@ -10,10 +10,13 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-import { useNavigation } from "@react-navigation/native";
 import RadioGroup from "react-native-radio-buttons-group";
+import { useDispatch, useSelector } from "react-redux";
+import { createReport } from "../../Redux/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingImage from "../../components/loadingStates/LoadingImage";
 
-const Embassies = () => {
+const Embassies = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
   const [albums, setAlbums] = useState(null);
@@ -26,10 +29,62 @@ const Embassies = () => {
   const [country, setCountry] = useState("");
   const [stateEmbassey, setStateEmbassey] = useState("");
   const [ambassedor, setAmbassedor] = useState("");
-  const [videoMedia, setVideoMedia] = useState("")
+  const [videoMedia, setVideoMedia] = useState("");
+  const { loading, error, status, report } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [token, setToken] = useState(null);
 
+  const categ = "Embassies";
 
-  const { navigation } = useNavigation();
+  useEffect(() => {
+    if (report && status === "OK") {
+      navigation.navigate("SignUpSuccess");
+    }
+  }, [report, status, navigation]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("access_token");
+        setToken(value);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Login Failed", error.message);
+    }
+  }, [error]);
+
+  function submitReport() {
+    dispatch(
+      createReport({
+        token,
+        insidentType,
+        textInput,
+        albums,
+        storedRecording,
+        photoUri,
+        videoMedia,
+        location,
+        selectedId,
+        address,
+        isEnabled,
+        country,
+        stateEmbassey,
+        ambassedor,
+        categ,
+      })
+    );
+
+    if (status === "OK") {
+      navigation.navigate("ReportSuccess");
+    }
+  }
 
   const embassies = [
     {
@@ -54,7 +109,8 @@ const Embassies = () => {
       textInput != "" &&
       country != "" &&
       stateEmbassey != "" &&
-      ambassedor != ""
+      ambassedor != "" &&
+      loading === false
     );
   }
   const radioButtons = useMemo(
@@ -88,6 +144,7 @@ const Embassies = () => {
     []
   );
 
+  if (loading) return <LoadingImage />;
   return (
     <ReportWrapper title="Hospitals">
       <InsidentType
@@ -214,7 +271,7 @@ const Embassies = () => {
           fontWeight: "700",
           fontSize: 17,
         }}
-        onPress={() => navigation.navigate("MainScreen")}
+        onPress={submitReport}
       />
     </ReportWrapper>
   );

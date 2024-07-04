@@ -1,5 +1,12 @@
-import { Text, View, TouchableOpacity, Image, StyleSheet } from "react-native";
-import React, { useState } from "react";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import React, { useState, useEffect } from "react";
 //import { AuthLayout } from "../";
 import { SIZES, COLORS, icons } from "../../constants";
 import FormInput from "../../components/FormInput";
@@ -7,17 +14,20 @@ import { utils } from "../../utils";
 import CustomSwitch from "../../components/CustomSwitch";
 import TextButton from "../../components/TextButton";
 import TextIconButton from "../../components/TextIconButton";
-import AuthLayoutSignUp from "./AuthLayoutSignUp";
 import { StatusBar } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../Redux/authSlice";
+import LoadingImage from "../../components/loadingStates/LoadingImage";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
-  const { loading, error, user,accessToken,refreshToken } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { loading, error, refresh_token, access_token } = useSelector(
+    (state) => state.auth
+  );
 
   const [showPass, setShowPass] = useState(false);
   const [saveMe, setSaveMe] = useState(false);
@@ -26,6 +36,18 @@ const SignIn = ({ navigation }) => {
     return email != "" && password != "" && emailError == "";
   }
 
+  useEffect(() => {
+    if (access_token) {
+      navigation.navigate("MainScreen");
+    }
+  }, [access_token]);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Login Failed", error);
+    }
+  }, [error]);
+
   function signInFn() {
     dispatch(
       login({
@@ -33,10 +55,10 @@ const SignIn = ({ navigation }) => {
         password,
       })
     );
-    if(refreshToken || accessToken){
-      navigation.navigate("MainScreen")
-    }
   }
+
+  if (loading) return <LoadingImage />;
+
   return (
     <View style={styles.container}>
       <TouchableOpacity

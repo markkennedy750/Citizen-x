@@ -11,16 +11,19 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-import { useNavigation } from "@react-navigation/native";
 import RadioGroup from "react-native-radio-buttons-group";
+import { useDispatch, useSelector } from "react-redux";
+import { createReport } from "../../Redux/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingImage from "../../components/loadingStates/LoadingImage";
 
-const School = () => {
+const School = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
-  const [albums, setAlbums] = useState(null);
-  const [storedRecording, setStoredRecording] = useState(null);
-  const [photoUri, setPhotoUri] = useState(null);
-  const [location, setLocation] = useState(null);
+  const [albums, setAlbums] = useState("");
+  const [storedRecording, setStoredRecording] = useState("");
+  const [photoUri, setPhotoUri] = useState("");
+  const [location, setLocation] = useState("");
   const [selectedState, setSelectedState] = useState();
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [checked, setChecked] = useState(false);
@@ -32,8 +35,62 @@ const School = () => {
   const [schoolHead, setSchoolHead] = useState("");
   const [videoMedia, setVideoMedia] = useState("");
   const [selectedId, setSelectedId] = useState("");
+  const { loading, error, status, report } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [token, setToken] = useState(null);
 
-  const { navigation } = useNavigation();
+  const categ = "School";
+
+  useEffect(() => {
+    if (report && status === "OK") {
+      navigation.navigate("SignUpSuccess");
+    }
+  }, [report, status, navigation]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("access_token");
+        setToken(value);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Login Failed", error.message);
+    }
+  }, [error]);
+
+  function submitReport() {
+    dispatch(
+      createReport({
+        token,
+        insidentType,
+        textInput,
+        albums,
+        storedRecording,
+        photoUri,
+        videoMedia,
+        location,
+        isEnabled,
+        selectedState,
+        selectedLocalGov,
+        schoolName,
+        schoolHead,
+        address,
+        selectedId,
+        categ,
+      })
+    );
+
+    if (status === "OK") {
+      navigation.navigate("ReportSuccess");
+    }
+  }
 
   const school = [
     { label: "Academic Performance", value: "Academic Performance" },
@@ -53,7 +110,8 @@ const School = () => {
       selectedState != null &&
       schoolName != "" &&
       schoolHead != "" &&
-      address != ""
+      address != "" &&
+      loading === false
     );
   }
 
@@ -88,6 +146,7 @@ const School = () => {
     []
   );
 
+  if (loading) return <LoadingImage />;
   return (
     <ReportWrapper title="Schools">
       <InsidentType
@@ -205,7 +264,7 @@ const School = () => {
           fontWeight: "700",
           fontSize: 17,
         }}
-        onPress={() => navigation.navigate("MainScreen")}
+        onPress={submitReport}
       />
     </ReportWrapper>
   );

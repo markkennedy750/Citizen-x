@@ -12,7 +12,7 @@ export default function CameraVideoMedia({
   setStoredRecording,
   setPhotoUri,
   videoMedia,
-  setVideoMedia
+  setVideoMedia,
 }) {
   const navigation = useNavigation();
 
@@ -21,7 +21,7 @@ export default function CameraVideoMedia({
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
   const [recording, setRecording] = useState();
   //const [storedRecording, setStoredRecording] = useState(null);
-  
+
   //const [hasPermission, setHasPermission] = useCameraPermissions();
   //const [cameraRef, setCameraRef] = useState(null);
 
@@ -54,7 +54,7 @@ export default function CameraVideoMedia({
         quality: 1,
       });
 
-      console.log(result);
+      //console.log(result);
 
       if (!result.canceled) {
         setAlbums(result.assets[0].uri);
@@ -174,7 +174,11 @@ export default function CameraVideoMedia({
           color: "white",
         }}
         onPress={() => {
-          navigation.navigate("CameraScreen", { setPhotoUri,videoMedia,setVideoMedia });
+          navigation.navigate("CameraScreen", {
+            setPhotoUri,
+            videoMedia,
+            setVideoMedia,
+          });
         }}
       />
       <TextIconButton

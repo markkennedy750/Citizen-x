@@ -10,16 +10,19 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-import { useNavigation } from "@react-navigation/native";
 import RadioGroup from "react-native-radio-buttons-group";
+import { useDispatch, useSelector } from "react-redux";
+import { createReport } from "../../Redux/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingImage from "../../components/loadingStates/LoadingImage";
 
-const Airport = () => {
+const Airport = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
-  const [albums, setAlbums] = useState(null);
+  const [albums, setAlbums] = useState("");
   const [storedRecording, setStoredRecording] = useState(null);
-  const [photoUri, setPhotoUri] = useState(null);
-  const [location, setLocation] = useState(null);
+  const [photoUri, setPhotoUri] = useState("");
+  const [location, setLocation] = useState("");
   const [selectedState, setSelectedState] = useState();
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
@@ -29,9 +32,36 @@ const Airport = () => {
   const [terminal, setTerminal] = useState("");
   const [airline, setAirline] = useState("");
   const [queueTime, setQueueTime] = useState("");
-  const [videoMedia, setVideoMedia] = useState("")
+  const [videoMedia, setVideoMedia] = useState("");
+  const { loading, error, status, report } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [token, setToken] = useState(null);
 
-  const { navigation } = useNavigation();
+  const categ = "Airports";
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("access_token");
+        setToken(value);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (report && status === "OK") {
+      navigation.navigate("SignUpSuccess");
+    }
+  }, [report, status, navigation]);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Login Failed", error.message);
+    }
+  }, [error]);
 
   const airport = [
     {
@@ -54,7 +84,8 @@ const Airport = () => {
       selectedState != null &&
       airportName != "" &&
       terminal != "" &&
-      airline != ""
+      airline != "" &&
+      loading === false
     );
   }
   const radioButtons = useMemo(
@@ -88,6 +119,34 @@ const Airport = () => {
     []
   );
 
+  function submitReport() {
+    dispatch(
+      createReport({
+        token,
+        insidentType,
+        textInput,
+        albums,
+        storedRecording,
+        photoUri,
+        videoMedia,
+        airportName,
+        terminal,
+        airline,
+        airportName,
+        queueTime,
+        date,
+        selectedState,
+        selectedLocalGov,
+        address,
+        location,
+        selectedId,
+        isEnabled,
+        categ,
+      })
+    );
+  }
+
+  if (loading) return <LoadingImage />;
   return (
     <ReportWrapper title="Hospitals">
       <InsidentType
@@ -110,13 +169,13 @@ const Airport = () => {
         setVideoMedia={setVideoMedia}
       />
       <FormInput
-        label="Airport"
+        label="Terminal"
         //keyboardType="text"
         onChange={(value) => {
-          setAirportName(value);
+          setTerminal(value);
         }}
         autoCapitalize="words"
-        value={airportName}
+        value={terminal}
         formInputStyle={{
           //height: 40,
           borderWidth: 1,
@@ -125,13 +184,13 @@ const Airport = () => {
         }}
       />
       <FormInput
-        label="Terminal"
+        label="Airport"
         //keyboardType="text"
         onChange={(value) => {
-          setTerminal(value);
+          setAirportName(value);
         }}
         autoCapitalize="words"
-        value={terminal}
+        value={airportName}
         formInputStyle={{
           //height: 40,
           borderWidth: 1,
@@ -234,7 +293,7 @@ const Airport = () => {
           fontWeight: "700",
           fontSize: 17,
         }}
-        onPress={() => navigation.navigate("MainScreen")}
+        onPress={submitReport}
       />
     </ReportWrapper>
   );

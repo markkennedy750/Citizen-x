@@ -10,10 +10,12 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
+import { useDispatch, useSelector } from "react-redux";
+import { createReport } from "../../Redux/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingImage from "../../components/loadingStates/LoadingImage";
 
-
-
-const SocialWelfare = ({navigation}) => {
+const SocialWelfare = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
   const [albums, setAlbums] = useState(null);
@@ -24,24 +26,85 @@ const SocialWelfare = ({navigation}) => {
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
-  const [videoMedia, setVideoMedia]= useState("")
-  
+  const [videoMedia, setVideoMedia] = useState("");
+  const { loading, error, status, report } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [token, setToken] = useState(null);
+ 
 
-  
+  const categ = "Social Welfare";
+
+  useEffect(() => {
+    if (report && status === "OK") {
+      navigation.navigate("SignUpSuccess");
+    }
+  }, [report, status, navigation]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("access_token");
+        setToken(value);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Login Failed", error.message);
+    }
+  }, [error]);
+
+  function submitReport() {
+    dispatch(
+      createReport({
+        token,
+        insidentType,
+        textInput,
+        albums,
+        storedRecording,
+        photoUri,
+        videoMedia,
+        location,
+        isEnabled,
+        selectedState,
+        selectedLocalGov,
+        schoolName,
+        schoolHead,
+        address,
+        selectedId,
+        categ
+      })
+    );
+
+    if (status === "OK") {
+      navigation.navigate("ReportSuccess");
+    }
+  }
 
   const socialwelfare = [
     { label: "Poverty Levels", value: "Poverty Levels" },
     { label: "Homelessness Incidents", value: "Homelessness Incidents" },
-    { label: "Social Assistance Programs", value: "Social assistance Programs" },
+    {
+      label: "Social Assistance Programs",
+      value: "Social assistance Programs",
+    },
     { label: "Elderly Care Service", value: "Elderly Care Service" },
     { label: "Child Welfare", value: "Child Welfare" },
   ];
 
   function submitPost() {
-    return insidentType != "" && textInput != "" && selectedState != null;
+    return (
+      insidentType != "" &&
+      textInput != "" &&
+      selectedState != null &&
+      loading === false
+    );
   }
-
-  
+  if (loading) return <LoadingImage />;
   return (
     <ReportWrapper title="Social Welfare">
       <InsidentType
@@ -105,12 +168,10 @@ const SocialWelfare = ({navigation}) => {
           fontWeight: "700",
           fontSize: 17,
         }}
-        onPress={() => navigation.navigate("MainScreen")}
+        onPress={submitReport}
       />
     </ReportWrapper>
   );
 };
 
 export default SocialWelfare;
-
-

@@ -418,3 +418,19 @@ fontSize: 15,
 lineHeight: 20,
 },
 });
+
+
+Build expo application
+1) >> npm install -g eas-cli
+2) >> eas login
+3) >> eas whoami
+4) >> eas build:configure
+5) "preview":{
+  "ios":{
+    "simulator":true
+  },
+  "android":{
+    "buildType":"apk"
+  }
+}
+5) >> eas build -p android --profile preview

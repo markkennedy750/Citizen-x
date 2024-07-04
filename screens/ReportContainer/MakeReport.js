@@ -10,12 +10,15 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { createReport } from "../../Redux/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingImage from "../../components/loadingStates/LoadingImage";
 
-const MakeReport = () => {
+const MakeReport = ({ navigation }) => {
   const [reportType, setReportType] = useState("");
   const [textInput, setTextInput] = useState("");
-  const [albums, setAlbums] = useState(null);
+  const [albums, setAlbums] = useState("");
   const [storedRecording, setStoredRecording] = useState(null);
   const [photoUri, setPhotoUri] = useState(null);
   const [location, setLocation] = useState(null);
@@ -23,15 +26,68 @@ const MakeReport = () => {
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
-  const [videoMedia, setVideoMedia] = useState("")
+  const [videoMedia, setVideoMedia] = useState("");
+  const { loading, error, status, report } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [token, setToken] = useState(null);
 
+  const categ = "Others";
 
-  const { navigation } = useNavigation();
+  useEffect(() => {
+    if (report && status === "OK") {
+      navigation.navigate("SignUpSuccess");
+    }
+  }, [report, status, navigation]);
 
-  function submitPost() {
-    return reportType != "" && textInput != "" && selectedState != null;
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("access_token");
+        setToken(value);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Login Failed", error.message);
+    }
+  }, [error]);
+
+  function submitReport() {
+    dispatch(
+      createReport({
+        token,
+        reportType,
+        textInput,
+        albums,
+        storedRecording,
+        photoUri,
+        videoMedia,
+        address,
+        location,
+        isEnabled,
+        categ,
+      })
+    );
+
+    if (status === "OK") {
+      navigation.navigate("ReportSuccess");
+    }
   }
 
+  function submitPost() {
+    return (
+      reportType != "" &&
+      textInput != "" &&
+      selectedState != null &&
+      loading === false
+    );
+  }
+  if (loading) return <LoadingImage />;
   return (
     <ReportWrapper title="Others">
       <FormInput
@@ -103,7 +159,7 @@ const MakeReport = () => {
           fontWeight: "700",
           fontSize: 17,
         }}
-        onPress={() => navigation.navigate("MainScreen")}
+        onPress={submitReport}
       />
     </ReportWrapper>
   );

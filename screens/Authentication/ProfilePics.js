@@ -17,11 +17,12 @@ import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { signup } from "../../Redux/authSlice";
+import LoadingImage from "../../components/loadingStates/LoadingImage";
 
 const ProfilePics = ({ navigation, route }) => {
   const [profileImage, setProfileImage] = useState();
   const dispatch = useDispatch();
-  const { loading, error, user } = useSelector((state) => state.auth);
+  const { loading, error, user, status } = useSelector((state) => state.auth);
   const { fullname, email, phoneNumber, password, username } = route.params;
 
   const mediaAccess = async () => {
@@ -39,13 +40,28 @@ const ProfilePics = ({ navigation, route }) => {
         quality: 1,
       });
 
-      console.log(result);
-
       if (!result.canceled) {
         setProfileImage(result.assets[0].uri);
       }
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Sign Up failed,", "The was an issue signing you up");
+    }
+  }, [error]);
+  useEffect(() => {
+    if (user && status === "Created") {
+      navigation.navigate("SignUpSuccess", {
+        fullname,
+        email,
+        phoneNumber,
+        password,
+        username,
+      });
+    }
+  }, [user, status, navigation]);
 
   function signUpFnc() {
     dispatch(
@@ -58,19 +74,9 @@ const ProfilePics = ({ navigation, route }) => {
         password,
       })
     );
-    if (error) {
-      //Alert.alert(error);
-      console.log(error)
-      return;
-    }
-    navigation.navigate("SignUpSuccess", {
-      fullname,
-      email,
-      phoneNumber,
-      password,
-      username,
-    })
   }
+
+  if (loading) return <LoadingImage />;
 
   return (
     <View style={styles.container}>

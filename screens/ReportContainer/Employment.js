@@ -10,24 +10,76 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { createReport } from "../../Redux/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingImage from "../../components/loadingStates/LoadingImage";
 
-
-const Employment = () => {
+const Employment = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
-  const [albums, setAlbums] = useState(null);
+  const [albums, setAlbums] = useState("");
   const [storedRecording, setStoredRecording] = useState(null);
-  const [photoUri, setPhotoUri] = useState(null);
-  const [location, setLocation] = useState(null);
+  const [photoUri, setPhotoUri] = useState("");
+  const [location, setLocation] = useState("");
   const [selectedState, setSelectedState] = useState();
   const [selectedLocalGov, setSelectedLocalGov] = useState();
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
-  const [videoMedia, setVideoMedia] = useState("")
+  const [videoMedia, setVideoMedia] = useState("");
+  const { loading, error, status, report } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [token, setToken] = useState(null);
 
+  const categ = "Employment";
 
-  const { navigation } = useNavigation();
+  useEffect(() => {
+    if (report && status === "OK") {
+      navigation.navigate("SignUpSuccess");
+    }
+  }, [report, status, navigation]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("access_token");
+        setToken(value);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Login Failed", error.message);
+    }
+  }, [error]);
+
+  function submitReport() {
+    dispatch(
+      createReport({
+        token,
+        insidentType,
+        textInput,
+        albums,
+        storedRecording,
+        photoUri,
+        videoMedia,
+        location,
+        address,
+        selectedState,
+        selectedLocalGov,
+        isEnabled,
+        categ,
+      })
+    );
+
+    if (status === "OK") {
+      navigation.navigate("ReportSuccess");
+    }
+  }
 
   const employment = [
     { label: "Unemployment Rates", value: "Unemployment Rates" },
@@ -38,10 +90,15 @@ const Employment = () => {
   ];
 
   function submitPost() {
-    return insidentType != "" && textInput != "" && selectedState != null;
+    return (
+      insidentType != "" &&
+      textInput != "" &&
+      selectedState != null &&
+      loading === false
+    );
   }
 
-  
+  if (loading) return <LoadingImage />;
   return (
     <ReportWrapper title="Employments">
       <InsidentType
@@ -105,7 +162,7 @@ const Employment = () => {
           fontWeight: "700",
           fontSize: 17,
         }}
-        onPress={() => navigation.navigate("MainScreen")}
+        onPress={submitReport}
       />
     </ReportWrapper>
   );

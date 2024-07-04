@@ -15,14 +15,15 @@ const UserLocation = ({ location, setLocation }) => {
       return;
     }
 
-    let location = await Location.getCurrentPositionAsync({});
-    setLocation(location);
-    let text = "Waiting..";
-    if (errorMsg) {
-      text = errorMsg;
-    } else if (location) {
-      text = JSON.stringify(location);
-      setLocation(text);
+    let mylocation = await Location.getCurrentPositionAsync({});
+    if (mylocation) {
+      setLocation(mylocation);
+      setLocation({
+        latitude: mylocation.coords.latitude,
+        longitude: mylocation.coords.longitude,
+      });
+    } else if (errorMsg) {
+      console.log(errorMsg);
     }
   }
   return (

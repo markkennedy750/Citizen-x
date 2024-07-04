@@ -12,7 +12,10 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-//import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { createReport } from "../../Redux/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingImage from "../../components/loadingStates/LoadingImage";
 
 const Crime = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -30,8 +33,30 @@ const Crime = ({ navigation }) => {
   const [checkboxValue, setCheckboxValue] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
-  const [videoMedia, setVideoMedia] = useState("")
+  const [videoMedia, setVideoMedia] = useState("");
+  const { loading, error, status, report } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [token, setToken] = useState(null);
 
+  const categ = "Accidents";
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("access_token");
+        setToken(value);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Login Failed", error.message);
+    }
+  }, [error]);
 
   const crime = [
     { label: "Theft", value: "Theft" },
@@ -42,8 +67,44 @@ const Crime = ({ navigation }) => {
   ];
 
   function submitPost() {
-    return insidentType != "" && textInput != "" && selectedState != null;
+    return (
+      insidentType != "" &&
+      textInput != "" &&
+      selectedState != null &&
+      loading === false
+    );
   }
+
+  useEffect(() => {
+    if (report && status === "OK") {
+      navigation.navigate("SignUpSuccess");
+    }
+  }, [report, status, navigation]);
+  
+  function submitReport() {
+    dispatch(
+      createReport({
+        token,
+        insidentType,
+        textInput,
+        albums,
+        storedRecording,
+        photoUri,
+        videoMedia,
+        location,
+        date,
+        selectedState,
+        selectedLocalGov,
+        address,
+        isEnabled,
+        time,
+        categ
+      })
+    );
+
+    
+  }
+
   const checkedBoxFucn = (value) => {
     if (value === checked) {
       setChecked(true);
@@ -55,7 +116,7 @@ const Crime = ({ navigation }) => {
       setCheckboxValue(false);
     }
   };
-
+  if (loading) return <LoadingImage />;
   return (
     <ReportWrapper title="Crime & Safety">
       <InsidentType
@@ -142,7 +203,7 @@ const Crime = ({ navigation }) => {
           fontWeight: "700",
           fontSize: 17,
         }}
-        onPress={() => navigation.navigate("MainScreen")}
+        onPress={submitReport}
       />
     </ReportWrapper>
   );

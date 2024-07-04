@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState, useMemo } from "react";
 import ReportWrapper from "./ReportWrapper";
 import InsidentType from "../../components/InsidentType";
@@ -10,17 +10,20 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-import { useNavigation } from "@react-navigation/native";
 import RadioGroup from "react-native-radio-buttons-group";
 import DateTime from "../../components/DateTime";
+import { useDispatch, useSelector } from "react-redux";
+import { createReport } from "../../Redux/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingImage from "../../components/loadingStates/LoadingImage";
 
-const Election = () => {
+const Election = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
-  const [albums, setAlbums] = useState(null);
-  const [storedRecording, setStoredRecording] = useState(null);
-  const [photoUri, setPhotoUri] = useState(null);
-  const [location, setLocation] = useState(null);
+  const [albums, setAlbums] = useState("");
+  const [storedRecording, setStoredRecording] = useState("");
+  const [photoUri, setPhotoUri] = useState("");
+  const [location, setLocation] = useState([]);
   const [selectedState, setSelectedState] = useState();
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -29,8 +32,35 @@ const Election = () => {
   const [address, setAddress] = useState("");
   const [videoMedia, setVideoMedia] = useState("");
   const [selectedId, setSelectedId] = useState("");
+  const { loading, error, status, report } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [token, setToken] = useState(null);
 
-  const { navigation } = useNavigation();
+  const categ = "Election";
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("access_token");
+        setToken(value);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (report && status === "OK") {
+      navigation.navigate("SignUpSuccess");
+    }
+  }, [report, status, navigation]);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Login Failed", error.message);
+    }
+  }, [error]);
 
   const elections = [
     { label: "Voter Intimidation", value: "Voter Intimidation" },
@@ -46,8 +76,42 @@ const Election = () => {
       insidentType != "" &&
       textInput != "" &&
       selectedState != null &&
-      date != null
+      date != null &&
+      loading === false
     );
+  }
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Error", error);
+    }
+  }, [error]);
+
+  function submitReport() {
+    dispatch(
+      createReport({
+        token,
+        insidentType,
+        textInput,
+        videoMedia,
+        photoUri,
+        storedRecording,
+        albums,
+        location,
+        address,
+        selectedId,
+        date,
+        isEnabled,
+        selectedState,
+        selectedLocalGov,
+        time,
+        categ,
+      })
+    );
+
+    if (status === "OK") {
+      navigation.navigate("ReportSuccess");
+    }
   }
 
   const radioButtons = useMemo(
@@ -81,6 +145,8 @@ const Election = () => {
     []
   );
 
+  if (loading) return <LoadingImage />;
+
   return (
     <ReportWrapper title="Elections">
       <InsidentType
@@ -90,11 +156,13 @@ const Election = () => {
         label="Election Report Type"
         insident={elections}
       />
+
       <TextDesc
         onChange={setTextInput}
         value={textInput}
         placeholder="Enter Description"
       />
+
       <CameraVideoMedia
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
@@ -170,7 +238,7 @@ const Election = () => {
           fontWeight: "700",
           fontSize: 17,
         }}
-        onPress={() => navigation.navigate("MainScreen")}
+        onPress={submitReport}
       />
     </ReportWrapper>
   );

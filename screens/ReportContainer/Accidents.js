@@ -12,14 +12,17 @@ import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
-import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { createReport } from "../../Redux/authSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingImage from "../../components/loadingStates/LoadingImage";
 
-const Accidents = () => {
+const Accidents = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
-  const [albums, setAlbums] = useState(null);
+  const [albums, setAlbums] = useState("");
   const [storedRecording, setStoredRecording] = useState(null);
-  const [photoUri, setPhotoUri] = useState(null);
+  const [photoUri, setPhotoUri] = useState("");
   const [location, setLocation] = useState(null);
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
@@ -32,8 +35,29 @@ const Accidents = () => {
   const [address, setAddress] = useState("");
   const [causeOfAccident, setCauseOfAccident] = useState("");
   const [videoMedia, setVideoMedia] = useState("");
+  const { loading, error, status, report } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [token, setToken] = useState(null);
 
-  const { navigation } = useNavigation();
+  const categ = "Accidents";
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("access_token");
+        setToken(value);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (report && status === "OK") {
+      navigation.navigate("SignUpSuccess");
+    }
+  }, [report, status, navigation]);
 
   const Accidents = [
     { label: "Car Accidents", value: "Car Accidents" },
@@ -47,7 +71,12 @@ const Accidents = () => {
   ];
 
   function submitPost() {
-    return insidentType != "" && textInput != "" && selectedState != null;
+    return (
+      insidentType != "" &&
+      textInput != "" &&
+      selectedState != null &&
+      loading === false
+    );
   }
   const checkedBoxFucn = (value) => {
     if (value === checked) {
@@ -61,6 +90,37 @@ const Accidents = () => {
     }
   };
 
+  useEffect(() => {
+    if (error) {
+      Alert.alert("Login Failed", error.message);
+    }
+  }, [error]);
+
+  function submitReport() {
+    dispatch(
+      createReport({
+        token,
+        insidentType,
+        textInput,
+        albums,
+        storedRecording,
+        photoUri,
+        videoMedia,
+        causeOfAccident,
+        date,
+        selectedState,
+        selectedLocalGov,
+        location,
+        address,
+        checkboxValue,
+        isEnabled,
+        time,
+        categ,
+      })
+    );
+  }
+
+  if (loading) return <LoadingImage />;
   return (
     <ReportWrapper title="Accidents">
       <InsidentType
@@ -162,7 +222,7 @@ const Accidents = () => {
           fontWeight: "700",
           fontSize: 17,
         }}
-        onPress={() => navigation.navigate("MainScreen")}
+        onPress={submitReport}
       />
     </ReportWrapper>
   );
