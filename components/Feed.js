@@ -78,7 +78,6 @@ const Feed = ({ item }) => {
               fontSize: 14,
               marginHorizontal: 5,
               lineHeight: 17,
-              marginHorizontal: 5,
             }}
           >
             {item.numOfLike}

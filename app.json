@@ -3,7 +3,6 @@
     "name": "citixenx",
     "slug": "citixenx",
     "version": "1.0.0",
-    "entryPoint": "./App.js",
     "orientation": "portrait",
     "icon": "./assets/citizenx.png",
     "userInterfaceStyle": "light",
@@ -12,22 +11,19 @@
       "resizeMode": "contain",
       "backgroundColor": "#0E9C67"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": [
-          "audio"
-        ]
+        "UIBackgroundModes": ["audio"]
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/citizenx.png",
         "backgroundColor": "#0E9C67"
-      }
+      },
+      "package": "com.kennedy757.citixenx"
     },
     "web": {
       "favicon": "./assets/citizenx.png"

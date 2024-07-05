@@ -4,17 +4,17 @@ import {
   Image,
   TouchableOpacity,
   Animated,
-  //Dimensions,
-  Modal,
-  FlatList,
-  //SafeAreaView,
   StyleSheet,
   //StatusBar,
   // ScrollView,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { HomeScreen, HotSpot, Report, Notification, Profile } from "./";
+import HomeScreen from "./HomeScreen";
+import HotSpot from "./HotSpot";
+import Report from "./Report";
+import Notification from "./Notification";
+import Profile from "./Profile";
 import "react-native-gesture-handler";
 import {
   Ionicons,
@@ -28,12 +28,7 @@ import { icons, COLORS, SIZES } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
 
 //import { SIZES, COLORS, icons } from "../constants";
-import reportData from "../data/report";
-
-import Container from "./ReportContainer/Container";
-import TextIconButton from "../components/TextIconButton";
 import { useDispatch, useSelector } from "react-redux";
-import { openModal, closeModal } from "../Redux/modalSlice";
 
 // const CustomBottomTabs = (props) => {
 //   return <CustomBottomTab {...props} />;
@@ -91,8 +86,7 @@ const CustomTabBarLabel = ({ focused, label }) => (
 
 const Home = ({ navigation }) => {
   const Tab = createBottomTabNavigator();
-  const { isOpen } = useSelector((state) => state.modal);
-  const dispatch = useDispatch();
+  
 
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
 

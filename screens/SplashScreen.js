@@ -38,12 +38,6 @@ const SplashScreen = ({ navigation }) => {
     checkSplashScreen();
   }, [navigation]);
 
-  useEffect(() => {
-    function clearLogs() {
-      dispatch(logout());
-    }
-    clearLogs();
-  }, []);
   return (
     <View style={styles.container}>
       <MotiImage

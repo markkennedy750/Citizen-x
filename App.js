@@ -5,62 +5,59 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Provider } from "react-redux";
 import { store } from "./Redux/store";
+import SplashScreen from "./screens/SplashScreen";
+import WelcomeScreen from "./screens/WelcomeScreen";
+import OnboardingScreen from "./screens/OnboardingScreen";
+import SignUp from "./screens/Authentication/SignUp";
+import SignIn from "./screens/Authentication/SignIn";
+import Interest from "./screens/Authentication/Interest";
+import ReportSuccess from "./screens/ReportContainer/ReportSuccess";
+import SignUpMethod from "./screens/Authentication/SignUpMethod";
+import ReportGuideline from "./screens/ReportContainer/ReportGuideline";
+import InitialSignUp from "./screens/InitialSignUp";
+import Otp from "./screens/Authentication/Otp";
+import Home from "./screens/MainTabNavigator";
+import ForgetPassword from "./screens/Authentication/ForgotPassword";
+import SignUpSuccess from "./screens/Authentication/SignUpSuccess";
+import UserName from "./screens/Authentication/UserName";
+import ProfilePics from "./screens/Authentication/ProfilePics";
+import FeedDetail from "./screens/FeedDetail";
+import EditProfile from "./screens/EditProfile";
+import Coin from "./screens/Coin";
+import HotspotSearch from "./screens/HotspotSearch";
+import SearchScreen from "./screens/SearchScreen";
+import CameraScreen from "./screens/CameraScreen";
+import Medialibrary from "./screens/Media-library";
+import ImageScreen from "./screens/ImageScreen";
+import Settings from "./screens/Settings";
+import Theme from "./screens/Theme";
+import DataSaver from "./screens/DataSaver";
+import NotifcationSetting from "./screens/NotifcationSetting";
+import AudioRecordScreen from "./screens/AudioRecordScreen";
+import Crime from "./screens/ReportContainer/Crime";
+import FakeProduct from "./screens/ReportContainer/FakeProduct";
+import Election from "./screens/ReportContainer/Election";
+import MakeReport from "./screens/ReportContainer/MakeReport";
+import Roads from "./screens/ReportContainer/Roads";
+import Accidents from "./screens/ReportContainer/Accidents";
+import Power from "./screens/ReportContainer/Power";
+import PortableWater from "./screens/ReportContainer/PortableWater";
+import Petrol from "./screens/ReportContainer/Petrol";
+import Airport from "./screens/ReportContainer/Airport";
+import Transport from "./screens/ReportContainer/Transport";
+import Embassies from "./screens/ReportContainer/Embassies";
+import Corruption from "./screens/ReportContainer/Corruption";
+import Employment from "./screens/ReportContainer/Employment";
+import SocialWelfare from "./screens/ReportContainer/SocialWelfare";
+import TradeCommerce from "./screens/ReportContainer/TradeCommerce";
+import HealthCare from "./screens/ReportContainer/HealthCare";
+import Technology from "./screens/ReportContainer/Technology";
+import Environment from "./screens/ReportContainer/Environment";
+import School from "./screens/ReportContainer/School";
+import Hospital from "./screens/ReportContainer/Hospital";
+import CommunityDev from "./screens/ReportContainer/CommunityDev";
 
 //import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  Home,
-  OnboardingScreen,
-  SplashScreen,
-  WelcomeScreen,
-  SignIn,
-  ForgetPassword,
-  SignUp,
-  Otp,
-  SignUpMethod,
-  InitialSignUp,
-  ReportGuideline,
-  Crime,
-  FakeProduct,
-  MakeReport,
-  Roads,
-  Election,
-  Accidents,
-  Power,
-  PortableWater,
-  Petrol,
-  Airport,
-  Transport,
-  Embassies,
-  Corruption,
-  Employment,
-  SocialWelfare,
-  TradeCommerce,
-  HealthCare,
-  Technology,
-  Environment,
-  School,
-  Hospital,
-  CommunityDev,
-  Interest,
-  ReportSuccess,
-  SignUpSuccess,
-  UserName,
-  ProfilePics,
-  FeedDetail,
-  EditProfile,
-  Coin,
-  HotspotSearch,
-  SearchScreen,
-  CameraScreen,
-  AudioRecordScreen,
-  ImageScreen,
-  Settings,
-  Theme,
-  NotifcationSetting,
-  DataSaver,
-  Medialibrary,
-} from "./screens";
-
 const Stack = createStackNavigator();
 
 export default function App() {

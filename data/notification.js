@@ -1,7 +1,7 @@
 export default notification = [
   {
     id: 1,
-    image: require("../assets/notify/FRSC.png"),
+    image: require("../assets/notify/NAFDAC.png"),
     text: "2 New comment from FRSC on accident report",
     agency: "FRSC",
     time: "2hrs ago",
@@ -20,11 +20,5 @@ export default notification = [
     agency: "POLICE",
     time: "1hrs ago",
   },
-  {
-    id: 4,
-    image: require("../assets/notify/army.png"),
-    text: "4 New comment from Nigerian army on crime report",
-    agency: "ARMY",
-    time: "5hrs ago",
-  },
+  
 ];

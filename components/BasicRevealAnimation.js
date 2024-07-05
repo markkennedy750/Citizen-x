@@ -12,10 +12,24 @@ import {
 } from "react-native";
 import { MotiView, MotiImage } from "moti";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const BasicRevealAnimation = () => {
   const navigation = useNavigation();
   const { width } = useWindowDimensions();
+
+  async function navFunction() {
+    try {
+      const value = await AsyncStorage.getItem("access_token");
+      if (value !== null) {
+        navigation.navigate("MainScreen");
+      }
+      navigation.navigate("Onboarding");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <MotiImage
@@ -38,11 +52,7 @@ const BasicRevealAnimation = () => {
           accountability, and positive change in our communities.
         </Text>
       </MotiView>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          navigation.navigate("Onboarding");
-        }}
-      >
+      <TouchableWithoutFeedback onPress={navFunction}>
         <MotiView
           style={[styles.button, { width: width * 0.8 }]}
           from={{ opacity: 0, translateY: 50 }}
