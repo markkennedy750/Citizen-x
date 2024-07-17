@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import * as Font from 'expo-font';
 
 export default function CheckBox({ checked, setChecked, label }) {
   function MyCheckbox({ onChange, checked }) {
@@ -14,6 +15,16 @@ export default function CheckBox({ checked, setChecked, label }) {
       </Pressable>
     );
   }
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...MaterialIcons.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
   return (
     <View
       style={{
@@ -43,6 +54,6 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 20,
     lineHeight: 20,
-    marginLeft:8
+    marginLeft: 8,
   },
 });

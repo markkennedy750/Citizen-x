@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import AuthLayoutSignUp from "./AuthLayoutSignUp";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { COLORS, SIZES } from "../../constants";
+import { COLORS, icons, SIZES } from "../../constants";
 import TextButton from "../../components/TextButton";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
@@ -18,9 +18,10 @@ import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { signup } from "../../Redux/authSlice";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
+import * as Font from "expo-font";
 
 const ProfilePics = ({ navigation, route }) => {
-  const [profileImage, setProfileImage] = useState();
+  const [profileImage, setProfileImage] = useState("");
   const dispatch = useDispatch();
   const { loading, error, user, status } = useSelector((state) => state.auth);
   const { fullname, email, phoneNumber, password, username } = route.params;
@@ -47,6 +48,15 @@ const ProfilePics = ({ navigation, route }) => {
   };
 
   useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+    loadFonts();
+  }, []);
+
+  useEffect(() => {
     if (error) {
       Alert.alert("Sign Up failed,", "The was an issue signing you up");
     }
@@ -63,17 +73,33 @@ const ProfilePics = ({ navigation, route }) => {
     }
   }, [user, status, navigation]);
 
+  function isEnableSignIn() {
+    return profileImage != "";
+  }
+
   function signUpFnc() {
-    dispatch(
-      signup({
-        profileImage,
-        fullname,
-        username,
-        phoneNumber,
-        email,
-        password,
-      })
-    );
+    if (profileImage) {
+      dispatch(
+        signup({
+          profileImage,
+          fullname,
+          username,
+          phoneNumber,
+          email,
+          password,
+        })
+      );
+    } else {
+      dispatch(
+        signup({
+          fullname,
+          username,
+          phoneNumber,
+          email,
+          password,
+        })
+      );
+    }
   }
 
   if (loading) return <LoadingImage />;
@@ -114,11 +140,26 @@ const ProfilePics = ({ navigation, route }) => {
                   style={{ width: 90, height: 90, borderRadius: 45 }}
                 />
               ) : (
-                <Ionicons
-                  name="person-circle-outline"
-                  size={90}
-                  color={COLORS.gray}
-                />
+                <View
+                  style={{
+                    width: 85,
+                    height: 85,
+                    borderRadius: 47,
+                    backgroundColor: "#E6E6E6",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Image
+                    source={icons.uploadProfile}
+                    resizeMode="cover"
+                    style={{
+                      width: 75,
+                      height: 75,
+                      alignSelf: "center",
+                    }}
+                  />
+                </View>
               )}
             </TouchableOpacity>
             <Text style={styles.text}>Add Profile Photo</Text>
@@ -126,7 +167,7 @@ const ProfilePics = ({ navigation, route }) => {
 
           <TextButton
             label={profileImage ? "Next" : "Skip"}
-            //disabled={isEnableSignUp() ? false : true}
+            disabled={isEnableSignIn() ? false : true}
             buttonContainerStyle={{
               height: 55,
               alignItems: "center",
@@ -134,6 +175,7 @@ const ProfilePics = ({ navigation, route }) => {
               marginTop: 35,
               borderRadius: SIZES.radius,
               backgroundColor: COLORS.primary,
+              backgroundColor: isEnableSignIn() ? "#0E9C67" : COLORS.invisible,
             }}
             labelStyle={{
               color: COLORS.white,

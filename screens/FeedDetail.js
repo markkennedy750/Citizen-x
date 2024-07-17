@@ -7,7 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { COLORS, SIZES } from "../constants";
 import {
   MaterialIcons,
@@ -23,6 +23,7 @@ import TextDesc from "../components/TextDesc";
 import CameraVideoMedia from "../components/CameraVideoMedia";
 import TextButton from "../components/TextButton";
 import AnonymousPost from "../components/AnonymousPost";
+import * as Font from "expo-font";
 
 const FeedDetail = ({ route, navigation }) => {
   const [albums, setAlbums] = useState(null);
@@ -35,6 +36,19 @@ const FeedDetail = ({ route, navigation }) => {
     return textInput != "";
   }
   const { feed } = route.params;
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...MaterialIcons.font,
+        ...AntDesign.font,
+        ...Octicons.font,
+        ...Feather.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
 
   const renderFollowUp = ({ item }) => {
     return (

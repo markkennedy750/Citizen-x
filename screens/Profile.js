@@ -7,14 +7,26 @@ import {
   Image,
   ImageBackground,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import feeds from "../data/DummyFeedData";
 import { COLORS, icons } from "../constants";
 import BottomTabFeed from "../components/BottomTabFeed";
+import * as Font from "expo-font";
 
 const Profile = ({ navigation }) => {
   const profile = feeds[3];
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+        ...SimpleLineIcons.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
   return (
     <View style={styles.container}>
       <TouchableOpacity>

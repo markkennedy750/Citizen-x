@@ -6,11 +6,13 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { FONTS, SIZES, COLORS } from "../../constants";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import * as Font from "expo-font";
+
 
 const AuthLayout = ({
   title,
@@ -20,6 +22,14 @@ const AuthLayout = ({
   containerStyle,
 }) => {
   const { navigation } = useNavigation();
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+    loadFonts();
+  }, []);
   return (
     <View
       style={{

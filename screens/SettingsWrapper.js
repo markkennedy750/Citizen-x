@@ -6,13 +6,23 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { COLORS } from "../constants";
+import * as Font from "expo-font";
+
 
 const SettingsWrapper = ({ title, containerStyle, children }) => {
   const navigation = useNavigation();
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+    loadFonts();
+  }, []);
   return (
     <View style={{ ...styles.container, ...containerStyle }}>
       <View style={styles.titleContainer}>

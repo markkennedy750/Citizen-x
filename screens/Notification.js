@@ -6,13 +6,25 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { COLORS, SIZES } from "../constants";
 import notification from "../data/notification";
 import { AntDesign } from "@expo/vector-icons";
+import * as Font from "expo-font";
+
 
 const IconButton = ({ onPress }) => {
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
   return (
     <TouchableOpacity
       onPress={onPress}

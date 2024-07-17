@@ -6,12 +6,24 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import { COLORS, icons } from "../constants";
 import PointInvite from "../components/PointInvite";
+import * as Font from "expo-font";
 
 const Coin = ({ navigation }) => {
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...SimpleLineIcons.font,
+        ...AntDesign.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>

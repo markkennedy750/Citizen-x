@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,8 +11,19 @@ import { SIZES, COLORS, icons } from "../../constants";
 import TextButton from "../../components/TextButton";
 import TextIconButton from "../../components/TextIconButton";
 import { AntDesign } from "@expo/vector-icons";
+import * as Font from "expo-font";
+
 
 const SignUpMethods = ({ navigation }) => {
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+    loadFonts();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.miniContainer}>

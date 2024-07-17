@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   Alert,
+  ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 //import { AuthLayout } from "../";
@@ -19,6 +20,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../Redux/authSlice";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
+import * as Font from "expo-font";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -37,14 +39,15 @@ const SignIn = ({ navigation }) => {
   }
 
   useEffect(() => {
-    if (access_token) {
+    if (access_token !== null) {
       navigation.navigate("MainScreen");
     }
+    console.log("The is an access token This is it", access_token);
   }, [access_token]);
 
   useEffect(() => {
     if (error) {
-      Alert.alert("Login Failed", error);
+      Alert.alert("Login Failed", error.errors);
     }
   }, [error]);
 
@@ -57,13 +60,22 @@ const SignIn = ({ navigation }) => {
     );
   }
 
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+    loadFonts();
+  }, []);
+
   if (loading) return <LoadingImage />;
 
   return (
-    <View style={styles.container}>
+    <ScrollView containerStyle={styles.container}>
       <TouchableOpacity
         style={{
-          marginTop: 5,
+          marginTop: 15,
           justifyContent: "flex-start",
           marginBottom: 10,
           marginLeft: 15,
@@ -172,7 +184,9 @@ const SignIn = ({ navigation }) => {
               color: COLORS.gray,
               fontWeight: "600",
             }}
-            onPress={signInFn}
+            onPress={() => {
+              console.log("forget password");
+            }}
           />
         </View>
         {/** Sign In */}
@@ -192,7 +206,7 @@ const SignIn = ({ navigation }) => {
             fontWeight: "700",
             fontSize: 17,
           }}
-          onPress={() => navigation.navigate("MainScreen")}
+          onPress={signInFn}
         />
         {/** Sign up */}
 
@@ -202,8 +216,8 @@ const SignIn = ({ navigation }) => {
             marginTop: SIZES.radius,
             justifyContent: "center",
             alignItems: "center",
-            marginTop: "auto",
-            marginBottom: 10,
+            marginTop: 25,
+            //marginBottom: "auto",
           }}
         >
           <Text
@@ -233,7 +247,7 @@ const SignIn = ({ navigation }) => {
       </View>
 
       {/** Footer */}
-    </View>
+    </ScrollView>
   );
 };
 

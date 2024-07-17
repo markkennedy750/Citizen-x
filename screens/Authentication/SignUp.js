@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { SIZES, COLORS, icons } from "../../constants";
 import FormInput from "../../components/FormInput";
@@ -7,6 +7,8 @@ import { utils } from "../../utils";
 import AuthLayoutSignUp from "./AuthLayoutSignUp";
 import { AntDesign } from "@expo/vector-icons";
 import { StatusBar } from "react-native";
+import * as Font from "expo-font";
+
 
 const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -31,6 +33,15 @@ const SignUp = ({ navigation }) => {
       fullNameError === ""
     );
   }
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+    loadFonts();
+  }, []);
   return (
     <View style={styles.container}>
       <TouchableOpacity

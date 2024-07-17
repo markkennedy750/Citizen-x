@@ -5,18 +5,27 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { COLORS, SIZES } from "../constants";
 import { AntDesign } from "@expo/vector-icons";
 import InsidentType from "../components/InsidentType";
 import StateLocal from "../components/StateLocal";
 import TextButton from "../components/TextButton";
+import * as Font from "expo-font";
 
 const HotspotSearch = ({ navigation }) => {
   const [reportType, setReportType] = useState("");
   const [selectedState, setSelectedState] = useState();
   const [selectedLocalGov, setSelectedLocalGov] = useState();
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
 
+    loadFonts();
+  }, []);
   const report = [
     { label: "Crime", value: "Crime" },
     { label: "Fake Product", value: "Fake Product" },

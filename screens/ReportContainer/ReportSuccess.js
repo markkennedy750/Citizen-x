@@ -5,12 +5,24 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import TextButton from "../../components/TextButton";
 import { COLORS, SIZES } from "../../constants";
+import * as Font from "expo-font";
+
 
 const ReportSuccess = ({ navigation }) => {
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+    loadFonts();
+  }, []);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity

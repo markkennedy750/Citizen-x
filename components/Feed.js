@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { COLORS, icons } from "../constants";
 import {
@@ -11,10 +11,25 @@ import {
 import CustomImageSlider from "./CustomImageSlider";
 import TextComponent from "./TextComponent";
 import { useNavigation } from "@react-navigation/native";
+import * as Font from "expo-font";
 
 const Feed = ({ item }) => {
   const navigation = useNavigation();
   const images = item.image;
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...MaterialIcons.font,
+        ...AntDesign.font,
+        ...Octicons.font,
+        ...MaterialCommunityIcons.font,
+        ...Feather.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
   return (
     <View style={styles.container}>
       <TouchableOpacity

@@ -8,7 +8,7 @@ import {
   //StatusBar,
   // ScrollView,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState,useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./HomeScreen";
 import HotSpot from "./HotSpot";
@@ -27,8 +27,10 @@ import {
 import { icons, COLORS, SIZES } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
 
+
 //import { SIZES, COLORS, icons } from "../constants";
 import { useDispatch, useSelector } from "react-redux";
+import * as Font from "expo-font";
 
 // const CustomBottomTabs = (props) => {
 //   return <CustomBottomTab {...props} />;
@@ -86,7 +88,19 @@ const CustomTabBarLabel = ({ focused, label }) => (
 
 const Home = ({ navigation }) => {
   const Tab = createBottomTabNavigator();
-  
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...Ionicons.font,
+        ...Octicons.font,
+        ...Feather.font,
+        ...Entypo.font,
+        ...FontAwesome6.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
 
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
 

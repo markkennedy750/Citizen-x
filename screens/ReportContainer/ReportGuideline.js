@@ -7,13 +7,24 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { SIZES, COLORS, icons } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
+import * as Font from "expo-font";
+
 
 const ReportGuideline = () => {
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+    loadFonts();
+  }, []);
   return (
     <SafeAreaView style={styles.primaryContainer}>
       <TouchableOpacity

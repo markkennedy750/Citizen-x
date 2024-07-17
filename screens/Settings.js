@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { COLORS } from "../constants";
 import SettingsWrapper from "./SettingsWrapper";
 import {
@@ -16,8 +16,23 @@ import {
   AntDesign,
   Feather,
 } from "@expo/vector-icons";
+import * as Font from "expo-font";
 
 const Settings = ({ navigation }) => {
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...MaterialCommunityIcons.font,
+        ...FontAwesome6.font,
+        ...MaterialIcons.font,
+        ...FontAwesome5.font,
+        ...AntDesign.font,
+        ...Feather.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
   return (
     <SettingsWrapper title="Settings">
       <TouchableOpacity

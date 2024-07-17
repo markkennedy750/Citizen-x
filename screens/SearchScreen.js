@@ -6,13 +6,24 @@ import {
   View,
   FlatList,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { COLORS, SIZES } from "../constants";
 import { AntDesign } from "@expo/vector-icons";
 import DummyFeedData from "../data/DummyFeedData";
 import Feed from "../components/Feed";
+import * as Font from "expo-font";
+
 
 const SearchScreen = ({ navigation }) => {
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>

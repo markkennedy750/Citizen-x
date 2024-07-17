@@ -34,6 +34,7 @@ const audioRecord = require("../assets/icons/icon/audioRecord.png");
 const anonymous = require("../assets/icons/icon/anonymous.png");
 const SignUpSuccess = require("../assets/icons/icon/signUp-success.png");
 const coin_bg = require("../assets/icons/icon/coin_bg.png");
+const uploadProfile = require("../assets/icons/icon/uploadprofile.png");
 const swap = require("../assets/icons/icon/swap.svg");
 const citizenx = require("../assets/citizenx.png");
 
@@ -76,4 +77,5 @@ export default {
   coin_bg,
   citizenx,
   swap,
+  uploadProfile,
 };

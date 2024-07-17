@@ -1,9 +1,19 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { COLORS } from "../constants";
+import * as Font from "expo-font";
 
 const BookMark = () => {
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...FontAwesome6.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
   return (
     <View style={styles.container}>
       <View style={{ alignItems: "center", paddingTop: 70, flex: 1 }}>

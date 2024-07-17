@@ -1,7 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { SIGNUP, SIGNIN, LOGIN_WITH_GOOGLE, CREATE_REPORT } from "./URL";
+import {
+  SIGNUP,
+  SIGNIN,
+  LOGIN_WITH_GOOGLE,
+  CREATE_REPORT,
+  AUTH_FEEDS,
+} from "./URL";
 
 const initialState = {
   user: null,
@@ -11,6 +17,7 @@ const initialState = {
   refresh_token: null,
   status: "",
   report: null,
+  auth_feed: null,
 };
 
 export const signup = createAsyncThunk(
@@ -241,7 +248,7 @@ export const createReport = createAsyncThunk(
       console.log("report created successfully:", response.data);
       return response.data;
     } catch (error) {
-      console.log("Signup error response data:", error.response.data);
+      console.log("report error:", error.response.data);
       return rejectWithValue(error.response.data);
     }
   }
@@ -259,8 +266,28 @@ export const login = createAsyncThunk(
 
       await AsyncStorage.setItem("access_token", access_token);
       await AsyncStorage.setItem("refresh_token", refresh_token);
+      //console.log(response.data);
       return response.data;
     } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const authFeed = createAsyncThunk(
+  "auth/authFeed",
+  async ({ access_token }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(AUTH_FEEDS, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      console.log("Auth Feeds successfully gotten:", response.data);
+      return response.data;
+    } catch (error) {
+      console.log("Error fetching feed", error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -350,6 +377,19 @@ export const authSlice = createSlice({
         state.status = action.payload.status;
       })
       .addCase(createReport.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(authFeed.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(authFeed.fulfilled, (state, action) => {
+        state.loading = false;
+        state.auth_feed = action.payload.data;
+        //state.status = action.payload.status;
+      })
+      .addCase(authFeed.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

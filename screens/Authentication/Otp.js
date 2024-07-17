@@ -11,6 +11,8 @@ import { SIZES, COLORS } from "../../constants";
 import TextButton from "../../components/TextButton";
 import OTPInputView from "@twotalltotems/react-native-otp-input";
 import { AntDesign } from "@expo/vector-icons";
+import * as Font from "expo-font";
+
 
 const Otp = ({ navigation }) => {
   const [timer, setTimer] = useState(60);
@@ -26,6 +28,15 @@ const Otp = ({ navigation }) => {
       });
     }, 1000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+    loadFonts();
   }, []);
 
   return (

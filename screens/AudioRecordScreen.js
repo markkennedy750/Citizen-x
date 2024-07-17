@@ -1,14 +1,27 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Audio } from "expo-av";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, } from "@expo/vector-icons";
 import { COLORS } from "../constants";
 import { MaterialIcons } from "@expo/vector-icons";
+import * as Font from "expo-font";
+
 
 const AudioRecordScreen = ({ route, navigation }) => {
   const { setStoredRecording } = route.params;
   const [recording, setRecording] = useState();
   const [permissionResponse, requestPermission] = Audio.usePermissions();
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...FontAwesome.font,
+        ...MaterialIcons.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
 
   //Audio Recording
   async function startRecording() {

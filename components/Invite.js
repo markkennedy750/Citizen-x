@@ -1,14 +1,19 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { COLORS } from "../constants";
 import { FontAwesome6 } from "@expo/vector-icons";
+import * as Font from "expo-font";
 
 const Invite = () => {
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...FontAwesome6.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>

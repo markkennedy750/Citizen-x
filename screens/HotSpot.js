@@ -6,13 +6,25 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { COLORS } from "../constants";
 import { Feather } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
+import * as Font from 'expo-font';
 
 const HotSpot = ({ navigation }) => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...Feather.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
+
   const ReportContainer = ({ primaryText, scondarytext }) => {
     return (
       <TouchableOpacity

@@ -5,14 +5,24 @@ import {
   View,
   FlatList,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import Container from "./ReportContainer/Container";
 import { COLORS, SIZES, icons } from "../constants";
 import reportData from "../data/report";
 import TextIconButton from "../components/TextIconButton";
+import * as Font from "expo-font";
 
 const Report = ({ navigation }) => {
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
   const footerButton = () => {
     return (
       <TextIconButton
@@ -94,7 +104,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginTop: 15,
-    
   },
   image: {
     flex: 1,

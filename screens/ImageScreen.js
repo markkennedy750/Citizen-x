@@ -1,12 +1,22 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { StatusBar } from "react-native";
 import CustomImageSlider from "../components/CustomImageSlider";
 import { COLORS } from "../constants";
+import * as Font from "expo-font";
 
 const ImageScreen = ({ navigation, route }) => {
   const { images } = route.params;
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
   return (
     <View style={styles.container}>
       <TouchableOpacity

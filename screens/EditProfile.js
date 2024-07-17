@@ -13,6 +13,8 @@ import { COLORS, icons, SIZES } from "../constants";
 import feeds from "../data/DummyFeedData";
 import { utils } from "../utils";
 import FormInput from "../components/FormInput";
+import * as Font from "expo-font";
+
 
 const EditProfile = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -27,6 +29,15 @@ const EditProfile = ({ navigation }) => {
   const [fullNameError, setFullNameError] = useState("");
 
   const profile = feeds[3];
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...AntDesign.font,
+      });
+    };
+
+    loadFonts();
+  }, []);
 
   return (
     <View style={styles.container}>

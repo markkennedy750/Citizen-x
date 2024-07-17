@@ -1,8 +1,9 @@
 import { View, Text, TouchableOpacity, Platform } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Fontisto, Feather } from "@expo/vector-icons";
 import { COLORS } from "../constants";
+import * as Font from 'expo-font';
 
 const DateTime = ({ date, setDate, time, setTime }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -27,7 +28,16 @@ const DateTime = ({ date, setDate, time, setTime }) => {
   const showTimeMode = () => {
     setShowTimePicker(true);
   };
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        ...Fontisto.font,
+        ...Feather.font,
+      })
+    };
 
+    loadFonts();
+  }, []);
   return (
     <>
       <View
