@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import ReportWrapper from "./ReportWrapper";
 import InsidentType from "../../components/InsidentType";
@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createReport } from "../../Redux/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
+//import { Alert } from "react-native";
 
 const FakeProduct = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -33,8 +34,15 @@ const FakeProduct = ({ navigation }) => {
   const { loading, error, status, report } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [token, setToken] = useState(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const categ = "Fake products";
+
+  useEffect(() => {
+    // Update currentDate when the component mounts
+    const now = new Date();
+    setCurrentDate(now);
+  }, []);
 
   useEffect(() => {
     if (report && status === "OK") {
@@ -56,15 +64,17 @@ const FakeProduct = ({ navigation }) => {
 
   useEffect(() => {
     if (error) {
-      Alert.alert("Login Failed", error.message);
+      Alert.alert("Login Failed", error.error);
     }
   }, [error]);
 
   function submitReport() {
+    console.log("Submitting report...");
     dispatch(
       createReport({
         token,
         insidentType,
+        currentDate,
         textInput,
         albums,
         storedRecording,
@@ -78,10 +88,7 @@ const FakeProduct = ({ navigation }) => {
         categ,
       })
     );
-
-    if (status === "OK") {
-      navigation.navigate("ReportSuccess");
-    }
+    console.log("Submit function executed");
   }
 
   const crime = [

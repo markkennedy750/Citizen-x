@@ -37,7 +37,7 @@ const CustomImageSlider = ({ images, contentContainerStyle }) => {
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
         ref={flatListRef}
-        contentContainerStyle={contentContainerStyle}
+        contentContainerStyle={[styles.flatList, contentContainerStyle]}
         snapToAlignment="center"
         decelerationRate="fast"
       />
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   flatList: {
-    width: viewportWidth * 1.3,
+    width: viewportWidth,
   },
   imageContainer: {
     width: viewportWidth,
@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    width: viewportWidth * 0.86,
-    height: viewportWidth * 0.7, // Adjust based on aspect ratio
+    width: viewportWidth,
+    height: viewportWidth * 0.92,
     resizeMode: "cover",
     borderRadius: 5,
   },
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   dot: {
     fontSize: 19,
-    //marginHorizontal: 1,
+    marginHorizontal: 1,
   },
 });
 

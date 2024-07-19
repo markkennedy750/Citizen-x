@@ -103,6 +103,9 @@ export const createReport = createAsyncThunk(
   ) => {
     try {
       const formData = new FormData();
+
+      formData.append("date_of_incidence", currentDate);
+
       if (insidentType) {
         formData.append("sub_report_type", insidentType);
       }
@@ -110,7 +113,9 @@ export const createReport = createAsyncThunk(
         formData.append("category", categ);
       }
       formData.append("description", textInput);
-      formData.append("date_of_incidence", date);
+      if (date) {
+        formData.append("date_of_incidence", date);
+      }
       if (selectedState) {
         formData.append("state_name", selectedState);
         formData.append("lga_name", selectedLocalGov);
@@ -135,116 +140,34 @@ export const createReport = createAsyncThunk(
       if (causeOfAccident) {
         formData.append("accident_cause", causeOfAccident);
       }
-      if (checkboxValue) {
-        formData.append("is_response", checkboxValue);
-      }
-      if (airportName) {
-        formData.append("airport_name", airportName);
-      }
-      if (time) {
-        formData.append("time_of_incidence", time);
-      }
-      if (country) {
-        formData.append("country", country);
-      }
-      if (stateEmbassey) {
-        formData.append("state_embassy_location", stateEmbassey);
-      }
-      if (ambassedor) {
-        formData.append("ambassedor_name", ambassedor);
-      }
 
-      if (terminal) {
-        //TODO: fill in later
-      }
-      if (queueTime) {
-        //TODO: fill in later
-      }
-      if (airline) {
-        formData.append("airline_name", airline);
-      }
-
-      if (schoolName) {
-        formData.append("school_name", schoolName);
-      }
-      if (hospitalName) {
-        formData.append("hospital_name", hospitalName);
-      }
-      if (hospitaleAddress) {
-        formData.append("hospital_address", hospitaleAddress);
-      }
-      if (roadName) {
-        formData.append("road_name", roadName);
-      }
-      if (schoolHead) {
-        formData.append("vice_principal", schoolHead);
-      }
-      if (department) {
-        formData.append("department", department);
-      }
-      if (departmentNameHead) {
-        formData.append("department_head_name", departmentNameHead);
-      }
-      if (productName) {
-        formData.append("product_name", productName);
-      }
-      if (autageLength) {
-        formData.append("outage_length", autageLength);
-      }
-      if (albums) {
-        const fileType = albums.substring(albums.lastIndexOf(".") + 1);
-        const mimeType =
-          fileType === "jpg" || fileType === "jpeg"
-            ? "image/jpeg"
-            : fileType === "png"
-            ? "image/png"
-            : fileType === "mp4"
-            ? "video/mp4"
-            : "audio/mpeg";
-        formData.append("media_type", {
-          uri: albums,
-          type: mimeType,
-          name: albums,
-        });
-      }
-
-      const appendFileToFormData = (uri, index, typePrefix) => {
-        if (uri) {
-          const fileType = uri.substring(uri.lastIndexOf(".") + 1);
-          const mimeType =
-            fileType === "jpg" || fileType === "jpeg"
-              ? "image/jpeg"
-              : fileType === "png"
-              ? "image/png"
-              : fileType === "mp4"
-              ? "video/mp4"
-              : "audio/mpeg";
-          formData.append(`mediaFiles`, {
-            uri: uri,
-            type: mimeType,
-            name: `${typePrefix}_${index}.${fileType}`,
-          });
-        }
-      };
-
-      if (photoUri) {
-        appendFileToFormData(photoUri, 0, "photo");
-      }
-
-      if (videoMedia) {
-        appendFileToFormData(videoMedia, 1, "video");
-      }
-
-      if (storedRecording) {
-        appendFileToFormData(storedRecording, 2, "audio");
-      }
-
-      const response = await axios.post(CREATE_REPORT, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+      //console.log("Form Data", formData);
+      const response = await axios.post(
+        CREATE_REPORT,
+        {
+          sub_report_type: insidentType,
+          category: categ,
+          description:textInput,
+          date_of_incidence:date,
+          state_name: selectedState,
+          lga_name:selectedLocalGov,
+          landmark:address,
+          rating:selectedId,
+          is_anonymous:isEnabled,
+          latitude:location.latitude,
+          longitude:location.longitude,
+          accident_cause:causeOfAccident,
+          is_response:checkboxValue,
+          airport_name:airportName,
+          
         },
-      });
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log("report created successfully:", response.data);
       return response.data;
     } catch (error) {

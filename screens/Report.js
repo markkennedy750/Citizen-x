@@ -57,7 +57,7 @@ const Report = ({ navigation }) => {
     <View style={styles.textContainer}>
       <Text style={styles.title}>Make a report</Text>
       <Text style={styles.subTitle}>
-        Please select the category of report you want to make{" "}
+        Please select the category of report you want to make
       </Text>
     </View>
   );
@@ -112,24 +112,24 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flexDirection: "column",
-    marginTop: 20,
+    marginTop: 5,
     justifyContent: "flex-end",
   },
   title: {
     color: `${COLORS.primary}`,
     fontWeight: "700",
-    fontSize: 25,
+    fontSize: 19,
     lineHeight: 28,
   },
   subTitle: {
     color: "#000000",
     fontWeight: "500",
-    fontSize: 14,
+    fontSize: 12,
     lineHeight: 19.6,
   },
   itemContainer: {
     width: 327,
-    marginTop: 10,
+    marginTop: 2,
     alignSelf: "center",
     alignItems: "center",
   },

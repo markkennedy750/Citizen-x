@@ -66,7 +66,9 @@ const Feed = ({ item }) => {
         </View>
       </TouchableOpacity>
       <View style={{ marginRight: 10 }}>
-        <TextComponent text={item.content} />
+        <View style={{ paddingHorizontal: 10 }}>
+          <TextComponent text={item.content} />
+        </View>
 
         {item.image && (
           <TouchableOpacity
@@ -193,6 +195,7 @@ const styles = StyleSheet.create({
     height: 45,
     flexDirection: "row",
     alignItems: "center",
+    paddingHorizontal: 10,
   },
   profileImg: {
     width: 44,
@@ -242,6 +245,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 25,
     borderColor: COLORS.primary,
+    marginHorizontal: 12,
   },
   reportText: {
     color: COLORS.primary,

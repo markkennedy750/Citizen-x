@@ -448,79 +448,153 @@ const [refreshing, setRefreshing] = useState(false);
 Expo has guided us to use react-native-background-geolocation if we want to track user's locations in the background. 
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-2024-07-08 08:38:38.006 23900-23946/? E/AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
-    Process: com.kennedy757.citixenx, PID: 23900
-    com.facebook.react.common.JavascriptException: Invariant Violation: requireNativeComponent: "RNSScreen" was not found in the UIManager.
-    
-    This error is located at:
-        in RNSScreen
-        in Unknown
-        in Suspender
-        in Suspense
-        in Freeze
-        in DelayedFreeze
-        in InnerScreen
-        in Screen
-        in MaybeScreen
-        in RNSScreenContainer
-        in ScreenContainer
-        in MaybeScreenContainer
-        in RCTView
-        in Unknown
-        in Background
-        in CardStack
-        in RNCSafeAreaProvider
-        in SafeAreaProvider
-        in SafeAreaProviderCompat
-        in RNGestureHandlerRootView
-        in GestureHandlerRootView
-        in StackView
-        in PreventRemoveProvider
-        in NavigationContent
-        in Unknown
-        in StackNavigator
-        in EnsureSingleNavigator
-        in BaseNavigationContainer
-        in ThemeProvider
-        in NavigationContainerInner
-        in Provider
-        in App
-        in RCTView
-        in Unknown
-        in AppContainer, js engine: hermes, stack:
-    invariant@1:128992
-    getNativeComponentAttributes@1:155744
-    anonymous@1:155049
-    get@1:152132
-    completeWork@1:431050
-    completeUnitOfWork@1:448045
-    performUnitOfWork@1:447313
-    workLoopSync@1:446408
-    renderRootSync@1:446239
-    flushSyncWorkAcrossRoots_impl@1:402679
-    scheduleUpdateOnFiber@1:443744
-    updateContainer@1:452863
-    anonymous@1:461965
-    renderElement@1:139290
-    renderApplication@1:373257
-    anonymous@1:364955
-    runApplication@1:365380
-    __callFunction@1:131966
-    anonymous@1:130406
-    __guard@1:131347
-    callFunctionReturnFlushedQueue@1:130364
-    
-        at com.facebook.react.modules.core.ExceptionsManagerModule.reportException(ExceptionsManagerModule.java:65)
-        at java.lang.reflect.Method.invoke(Native Method)
-        at com.facebook.react.bridge.JavaMethodWrapper.invoke(JavaMethodWrapper.java:372)
-        at com.facebook.react.bridge.JavaModuleWrapper.invoke(JavaModuleWrapper.java:146)
-        at com.facebook.jni.NativeRunnable.run(Native Method)
-        at android.os.Handler.handleCallback(Handler.java:883)
-        at android.os.Handler.dispatchMessage(Handler.java:100)
-        at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.java:27)
-        at android.os.Looper.loop(Looper.java:214)
-        at com.facebook.react.bridge.queue.MessageQueueThreadImpl$4.run(MessageQueueThreadImpl.java:233)
-        at java.lang.Thread.run(Thread.java:919)
+const formData = new FormData();
+      if (insidentType) {
+        formData.append("sub_report_type", insidentType);
+      }
+      if (categ) {
+        formData.append("category", categ);
+      }
+      formData.append("description", textInput);
+      formData.append("date_of_incidence", date);
+      if (selectedState) {
+        formData.append("state_name", selectedState);
+        formData.append("lga_name", selectedLocalGov);
+      }
+      if (address) {
+        formData.append("landmark", address);
+      }
+      if (selectedId) {
+        formData.append("rating", selectedId);
+      }
+      if (isEnabled) {
+        formData.append("is_anonymous", isEnabled);
+      }
+      if (location) {
+        if (location.latitude) {
+          formData.append("latitude", location.latitude);
+        }
+        if (location.longitude) {
+          formData.append("longitude", location.longitude);
+        }
+      }
+      if (causeOfAccident) {
+        formData.append("accident_cause", causeOfAccident);
+      }
+      //stopped
+      if (checkboxValue) {
+        formData.append("is_response", checkboxValue);
+      }
+      if (airportName) {
+        formData.append("airport_name", airportName);
+      }
+      if (time) {
+        formData.append("time_of_incidence", time);
+      }
+      if (country) {
+        formData.append("country", country);
+      }
+      if (stateEmbassey) {
+        formData.append("state_embassy_location", stateEmbassey);
+      }
+      if (ambassedor) {
+        formData.append("ambassedor_name", ambassedor);
+      }
+
+      if (terminal) {
+        //TODO: fill in later
+      }
+      if (queueTime) {
+        //TODO: fill in later
+      }
+      if (airline) {
+        formData.append("airline_name", airline);
+      }
+
+      if (schoolName) {
+        formData.append("school_name", schoolName);
+      }
+      if (hospitalName) {
+        formData.append("hospital_name", hospitalName);
+      }
+      if (hospitaleAddress) {
+        formData.append("hospital_address", hospitaleAddress);
+      }
+      if (roadName) {
+        formData.append("road_name", roadName);
+      }
+      if (schoolHead) {
+        formData.append("vice_principal", schoolHead);
+      }
+      if (department) {
+        formData.append("department", department);
+      }
+      if (departmentNameHead) {
+        formData.append("department_head_name", departmentNameHead);
+      }
+      if (productName) {
+        formData.append("product_name", productName);
+      }
+      if (autageLength) {
+        formData.append("outage_length", autageLength);
+      }
+      if (albums) {
+        const fileType = albums.substring(albums.lastIndexOf(".") + 1);
+        const mimeType =
+          fileType === "jpg" || fileType === "jpeg"
+            ? "image/jpeg"
+            : fileType === "png"
+            ? "image/png"
+            : fileType === "mp4"
+            ? "video/mp4"
+            : "audio/mpeg";
+        formData.append("media_type", {
+          uri: albums,
+          type: mimeType,
+          name: albums,
+        });
+      }
+
+      const appendFileToFormData = (uri, index, typePrefix) => {
+        if (uri) {
+          const fileType = uri.substring(uri.lastIndexOf(".") + 1);
+          const mimeType =
+            fileType === "jpg" || fileType === "jpeg"
+              ? "image/jpeg"
+              : fileType === "png"
+              ? "image/png"
+              : fileType === "mp4"
+              ? "video/mp4"
+              : "audio/mpeg";
+          formData.append(`mediaFiles`, {
+            uri: uri,
+            type: mimeType,
+            name: `${typePrefix}_${index}.${fileType}`,
+          });
+        }
+      };
+
+      if (photoUri) {
+        appendFileToFormData(photoUri, 0, "photo");
+      }
+
+      if (videoMedia) {
+        appendFileToFormData(videoMedia, 1, "video");
+      }
+
+      if (storedRecording) {
+        appendFileToFormData(storedRecording, 2, "audio");
+      }
+
+      console.log("This is actially calling");
+      const response = await axios.post(CREATE_REPORT, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("report created successfully:", response.data);
+      return response.data;
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 Build expo application

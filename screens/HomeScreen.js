@@ -45,11 +45,10 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-end",
     height: 57,
-    
   },
   itemContainer: {
-    paddingHorizontal: 15,
-    marginTop: 12,
+    //paddingHorizontal: 6,
+    marginTop: 8,
     marginBottom: "auto",
   },
 });
