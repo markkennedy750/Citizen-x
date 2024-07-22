@@ -448,6 +448,7 @@ const [refreshing, setRefreshing] = useState(false);
 Expo has guided us to use react-native-background-geolocation if we want to track user's locations in the background. 
 
 /////////////////////////////////////////////////////////////////////////////////////////////
+try{
 const formData = new FormData();
       if (insidentType) {
         formData.append("sub_report_type", insidentType);
@@ -595,6 +596,10 @@ const formData = new FormData();
       });
       console.log("report created successfully:", response.data);
       return response.data;
+} catch (error) {
+      console.log("report error:", error.response.data);
+      return rejectWithValue(error.response.data);
+}
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 Build expo application

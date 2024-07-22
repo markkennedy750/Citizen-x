@@ -17,6 +17,8 @@ import { createReport } from "../../Redux/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
 //import { Alert } from "react-native";
+import { CREATE_REPORT } from "../../Redux/URL";
+import axios from "axios";
 
 const FakeProduct = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -31,10 +33,10 @@ const FakeProduct = ({ navigation }) => {
   const [address, setAddress] = useState("");
   const [productName, setProductName] = useState("");
   const [videoMedia, setVideoMedia] = useState("");
-  const { loading, error, status, report } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
   const [token, setToken] = useState(null);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const categ = "Fake products";
 
@@ -43,12 +45,6 @@ const FakeProduct = ({ navigation }) => {
     const now = new Date();
     setCurrentDate(now);
   }, []);
-
-  useEffect(() => {
-    if (report && status === "OK") {
-      navigation.navigate("SignUpSuccess");
-    }
-  }, [report, status, navigation]);
 
   useEffect(() => {
     const getData = async () => {
@@ -68,27 +64,89 @@ const FakeProduct = ({ navigation }) => {
     }
   }, [error]);
 
-  function submitReport() {
-    console.log("Submitting report...");
-    dispatch(
-      createReport({
-        token,
-        insidentType,
-        currentDate,
-        textInput,
-        albums,
-        storedRecording,
-        photoUri,
-        videoMedia,
-        location,
-        selectedState,
-        selectedLocalGov,
-        productName,
-        address,
-        categ,
-      })
-    );
-    console.log("Submit function executed");
+  async function submitReport() {
+    try {
+      setLoading(true);
+      const data = {};
+      data.category = categ;
+      data.sub_report_type = insidentType;
+      data.description = textInput;
+      data.state_name = selectedState;
+      data.lga_name = selectedLocalGov;
+      data.is_anonymous = isEnabled;
+      data.landmark = address;
+      data.product_name = productName;
+
+      if (location) {
+        data.latitude = location.latitude;
+        data.longitude = location.longitude;
+      }
+      if (albums) {
+        const fileType = albums.substring(albums.lastIndexOf(".") + 1);
+        const mimeType =
+          fileType === "jpg" || fileType === "jpeg"
+            ? "image/jpeg"
+            : fileType === "png"
+            ? "image/png"
+            : fileType === "mp4"
+            ? "video/mp4"
+            : "audio/mpeg";
+        data.media_type = {
+          uri: albums,
+          type: mimeType,
+          name: albums,
+        };
+      }
+
+      const appendFileToData = (uri, index, typePrefix) => {
+        if (uri) {
+          const fileType = uri.substring(uri.lastIndexOf(".") + 1);
+          const mimeType =
+            fileType === "jpg" || fileType === "jpeg"
+              ? "image/jpeg"
+              : fileType === "png"
+              ? "image/png"
+              : fileType === "mp4"
+              ? "video/mp4"
+              : "audio/mpeg";
+          data[`mediaFiles_${index}`] = {
+            uri: uri,
+            type: mimeType,
+            name: `${typePrefix}_${index}.${fileType}`,
+          };
+        }
+      };
+
+      if (photoUri) {
+        appendFileToData(photoUri, 0, "photo");
+      }
+
+      if (videoMedia) {
+        appendFileToData(videoMedia, 1, "video");
+      }
+
+      if (storedRecording) {
+        appendFileToData(storedRecording, 2, "audio");
+      }
+
+      const response = await axios.post(CREATE_REPORT, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("report created successfully:", response.data);
+      setLoading(false);
+      if (response.data.status === "Created") {
+        navigation.navigate("ReportSuccess");
+      }
+      return response.data;
+    } catch (error) {
+      console.log("report error:", error.response.data);
+      setError(error.response.data);
+      return rejectWithValue(error.response.data);
+    }
   }
 
   const crime = [

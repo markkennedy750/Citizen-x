@@ -148,7 +148,7 @@ export const createReport = createAsyncThunk(
           sub_report_type: insidentType,
           category: categ,
           description:textInput,
-          date_of_incidence:date,
+          date_of_incidence:currentDate,
           state_name: selectedState,
           lga_name:selectedLocalGov,
           landmark:address,

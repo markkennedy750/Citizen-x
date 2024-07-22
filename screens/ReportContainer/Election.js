@@ -12,10 +12,10 @@ import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
 import RadioGroup from "react-native-radio-buttons-group";
 import DateTime from "../../components/DateTime";
-import { useDispatch, useSelector } from "react-redux";
-import { createReport } from "../../Redux/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
+import { CREATE_REPORT } from "../../Redux/URL";
+import axios from "axios";
 
 const Election = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -32,8 +32,8 @@ const Election = ({ navigation }) => {
   const [address, setAddress] = useState("");
   const [videoMedia, setVideoMedia] = useState("");
   const [selectedId, setSelectedId] = useState("");
-  const { loading, error, status, report } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
 
   const categ = "Election";
@@ -49,12 +49,6 @@ const Election = ({ navigation }) => {
     };
     getData();
   }, []);
-
-  useEffect(() => {
-    if (report && status === "OK") {
-      navigation.navigate("SignUpSuccess");
-    }
-  }, [report, status, navigation]);
 
   useEffect(() => {
     if (error) {
@@ -87,30 +81,89 @@ const Election = ({ navigation }) => {
     }
   }, [error]);
 
-  function submitReport() {
-    dispatch(
-      createReport({
-        token,
-        insidentType,
-        textInput,
-        videoMedia,
-        photoUri,
-        storedRecording,
-        albums,
-        location,
-        address,
-        selectedId,
-        date,
-        isEnabled,
-        selectedState,
-        selectedLocalGov,
-        time,
-        categ,
-      })
-    );
+  async function submitReport() {
+    try {
+      setLoading(true);
+      const data = {};
+      data.category = categ;
+      data.sub_report_type = insidentType;
+      data.description = textInput;
+      data.state_name = selectedState;
+      data.lga_name = selectedLocalGov;
+      data.is_anonymous = isEnabled;
+      data.landmark = address;
+      data.date_of_incidence = date;
+      data.rating = selectedId;
 
-    if (status === "OK") {
-      navigation.navigate("ReportSuccess");
+      if (location) {
+        data.latitude = location.latitude;
+        data.longitude = location.longitude;
+      }
+      if (albums) {
+        const fileType = albums.substring(albums.lastIndexOf(".") + 1);
+        const mimeType =
+          fileType === "jpg" || fileType === "jpeg"
+            ? "image/jpeg"
+            : fileType === "png"
+            ? "image/png"
+            : fileType === "mp4"
+            ? "video/mp4"
+            : "audio/mpeg";
+        data.media_type = {
+          uri: albums,
+          type: mimeType,
+          name: albums,
+        };
+      }
+
+      const appendFileToData = (uri, index, typePrefix) => {
+        if (uri) {
+          const fileType = uri.substring(uri.lastIndexOf(".") + 1);
+          const mimeType =
+            fileType === "jpg" || fileType === "jpeg"
+              ? "image/jpeg"
+              : fileType === "png"
+              ? "image/png"
+              : fileType === "mp4"
+              ? "video/mp4"
+              : "audio/mpeg";
+          data[`mediaFiles_${index}`] = {
+            uri: uri,
+            type: mimeType,
+            name: `${typePrefix}_${index}.${fileType}`,
+          };
+        }
+      };
+
+      if (photoUri) {
+        appendFileToData(photoUri, 0, "photo");
+      }
+
+      if (videoMedia) {
+        appendFileToData(videoMedia, 1, "video");
+      }
+
+      if (storedRecording) {
+        appendFileToData(storedRecording, 2, "audio");
+      }
+
+      const response = await axios.post(CREATE_REPORT, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("report created successfully:", response.data);
+      setLoading(false);
+      if (response.data.status === "Created") {
+        navigation.navigate("ReportSuccess");
+      }
+      return response.data;
+    } catch (error) {
+      console.log("report error:", error.response.data);
+      setError(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   }
 
