@@ -23,7 +23,8 @@
         "foregroundImage": "./assets/citizenx.png",
         "backgroundColor": "#0E9C67"
       },
-      "package": "com.kennedy757.citixenx"
+      "package": "com.kennedy757.citixenx",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/citizenx.png"

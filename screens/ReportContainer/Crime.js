@@ -80,6 +80,7 @@ const Crime = ({ navigation }) => {
   async function submitReport() {
     try {
       setLoading(true);
+      console.log(textInput);
       const data = {};
       data.category = categ;
       data.sub_report_type = insidentType;

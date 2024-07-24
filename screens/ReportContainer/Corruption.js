@@ -154,6 +154,7 @@ const Corruption = ({ navigation }) => {
     } catch (error) {
       console.log("report error:", error.response.data);
       setError(error.response.data);
+      
       return rejectWithValue(error.response.data);
     }
   }

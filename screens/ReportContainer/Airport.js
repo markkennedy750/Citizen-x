@@ -131,10 +131,18 @@ const Airport = ({ navigation }) => {
       data.state_name = selectedState;
       data.lga_name = selectedLocalGov;
       data.is_anonymous = isEnabled;
-      data.landmark = address;
-      data.airport_name = airportName;
-      data.airline_name = airline;
-      data.rating = selectedId;
+      if (address) {
+        data.landmark = address;
+      }
+      if (airportName) {
+        data.airport_name = airportName;
+      }
+      if (airline) {
+        data.airline_name = airline;
+      }
+      if (selectedId) {
+        data.rating = selectedId;
+      }
 
       if (location) {
         data.latitude = location.latitude;
@@ -203,6 +211,7 @@ const Airport = ({ navigation }) => {
       return response.data;
     } catch (error) {
       console.log("report error:", error.response.data);
+      setLoading(false);
       setError(error.response.data);
       return rejectWithValue(error.response.data);
     }

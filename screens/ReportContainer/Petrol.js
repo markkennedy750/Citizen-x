@@ -69,7 +69,7 @@ const Petrol = ({ navigation }) => {
       data.is_anonymous = isEnabled;
       data.landmark = address;
       data.rating = selectedId;
-      data.department = department;
+  
       data.is_response = checkboxValue;
 
       if (location) {

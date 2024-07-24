@@ -91,7 +91,9 @@ const CommunityDev = ({ navigation }) => {
       data.state_name = selectedState;
       data.lga_name = selectedLocalGov;
       data.is_anonymous = isEnabled;
-      data.landmark = address;
+      if (address) {
+        data.landmark = address;
+      }
 
       if (location) {
         data.latitude = location.latitude;
@@ -160,6 +162,7 @@ const CommunityDev = ({ navigation }) => {
       return response.data;
     } catch (error) {
       console.log("report error:", error.response.data);
+      setLoading(false);
       setError(error.response.data);
       return rejectWithValue(error.response.data);
     }

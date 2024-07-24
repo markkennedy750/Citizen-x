@@ -103,7 +103,9 @@ const Accidents = ({ navigation }) => {
       data.category = categ;
       data.sub_report_type = insidentType;
       data.description = textInput;
-      data.accident_cause = causeOfAccident;
+      if (causeOfAccident) {
+        data.accident_cause = causeOfAccident;
+      }
       data.date_of_incidence = date;
       data.state_name = selectedState;
       data.lga_name = selectedLocalGov;
@@ -178,6 +180,7 @@ const Accidents = ({ navigation }) => {
       return response.data;
     } catch (error) {
       console.log("report error:", error.response.data);
+      setLoading(false);
       setError(error.response.data);
       return rejectWithValue(error.response.data);
     }
