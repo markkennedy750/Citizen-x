@@ -6,6 +6,8 @@ import {
   Dimensions,
   StyleSheet,
   Text,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from "react-native";
 
 const { width: viewportWidth } = Dimensions.get("window");
@@ -17,6 +19,7 @@ const CustomImageSlider = ({ images, contentContainerStyle }) => {
   const handleScroll = (event) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const index = Math.round(contentOffsetX / viewportWidth);
+    console.log("Scroll Event: ", contentOffsetX, " Index: ", index);
     setActiveIndex(index);
   };
 
@@ -40,6 +43,7 @@ const CustomImageSlider = ({ images, contentContainerStyle }) => {
         contentContainerStyle={[styles.flatList, contentContainerStyle]}
         snapToAlignment="center"
         decelerationRate="fast"
+        scrollEventThrottle={16} // Add this line
       />
       <View style={styles.pagination}>
         {images.map((_, index) => (

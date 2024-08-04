@@ -11,19 +11,11 @@ import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { icons, COLORS } from "../../constants";
 import TextButton from "../../components/TextButton";
-import { AntDesign } from "@expo/vector-icons";
 import * as Font from "expo-font";
 
 const ReportWrapper = ({ children, title }) => {
   const navigation = useNavigation();
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-    loadFonts();
-  }, []);
+
   return (
     <ScrollView style={styles.parentContainer}>
       <View style={styles.topContainer}>
@@ -31,7 +23,10 @@ const ReportWrapper = ({ children, title }) => {
           onPress={() => navigation.goBack()}
           style={styles.imageContainer}
         >
-          <AntDesign name="arrowleft" size={25} color="black" />
+          <Image
+            source={icons.arrowleft}
+            style={{ width: 20, height: 20, tintColor: "black" }}
+          />
         </TouchableOpacity>
         <TouchableOpacity>
           <Text style={styles.saveText}>Save Draft</Text>

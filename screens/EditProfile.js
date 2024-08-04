@@ -7,14 +7,11 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
+import React, { useState } from "react";
 import { COLORS, icons, SIZES } from "../constants";
 import feeds from "../data/DummyFeedData";
 import { utils } from "../utils";
 import FormInput from "../components/FormInput";
-import * as Font from "expo-font";
-
 
 const EditProfile = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -29,21 +26,15 @@ const EditProfile = ({ navigation }) => {
   const [fullNameError, setFullNameError] = useState("");
 
   const profile = feeds[3];
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-
-    loadFonts();
-  }, []);
 
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="arrowleft" size={30} color="black" />
+          <Image
+            source={icons.arrowleft}
+            style={{ width: 20, height: 20, tintColor: "black" }}
+          />
         </TouchableOpacity>
         <Text style={styles.editProfileText}>EditProfile</Text>
       </View>

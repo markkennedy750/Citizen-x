@@ -1,9 +1,8 @@
-import { View, Text, TouchableOpacity, Platform } from "react-native";
+import { View, Text, TouchableOpacity, Platform, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { Fontisto, Feather } from "@expo/vector-icons";
-import { COLORS } from "../constants";
-import * as Font from 'expo-font';
+import { COLORS, icons } from "../constants";
+
 
 const DateTime = ({ date, setDate, time, setTime }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -28,16 +27,7 @@ const DateTime = ({ date, setDate, time, setTime }) => {
   const showTimeMode = () => {
     setShowTimePicker(true);
   };
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...Fontisto.font,
-        ...Feather.font,
-      })
-    };
-
-    loadFonts();
-  }, []);
+  
   return (
     <>
       <View
@@ -74,7 +64,11 @@ const DateTime = ({ date, setDate, time, setTime }) => {
             onPress={showDateMode}
           >
             <Text style={{ fontSize: 16 }}>{date.toLocaleDateString()}</Text>
-            <Fontisto name="date" size={24} color={COLORS.primary} />
+            <Image
+              source={icons.datePicker}
+              style={{ width: 24, height: 24, tintColor: COLORS.primary }}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
         </View>
         <View>
@@ -103,7 +97,11 @@ const DateTime = ({ date, setDate, time, setTime }) => {
             onPress={showTimeMode}
           >
             <Text style={{ fontSize: 16 }}>{time.toLocaleTimeString()}</Text>
-            <Feather name="watch" size={24} color={COLORS.primary} />
+            <Image
+              source={icons.watchicon}
+              style={{ width: 24, height: 24, tintColor: COLORS.primary }}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
         </View>
         {showDatePicker && (

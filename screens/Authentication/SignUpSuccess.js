@@ -1,9 +1,7 @@
 import { View, Text, StyleSheet, StatusBar, Image } from "react-native";
 import React, { useEffect } from "react";
 import { icons, COLORS, SIZES } from "../../constants";
-import { AntDesign } from "@expo/vector-icons";
 import TextButton from "../../components/TextButton";
-import * as Font from "expo-font";
 
 
 const SignUpSuccess = ({ navigation, route }) => {
@@ -18,15 +16,6 @@ const SignUpSuccess = ({ navigation, route }) => {
       </View>
     );
   }
-
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-    loadFonts();
-  }, []);
 
   return (
     <View style={styles.container}>

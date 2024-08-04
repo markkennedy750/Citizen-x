@@ -2,7 +2,7 @@
   "expo": {
     "name": "citixenx",
     "slug": "citixenx",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/citizenx.png",
     "userInterfaceStyle": "light",
@@ -24,7 +24,7 @@
         "backgroundColor": "#0E9C67"
       },
       "package": "com.kennedy757.citixenx",
-      "versionCode": 1
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/citizenx.png"

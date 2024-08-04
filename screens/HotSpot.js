@@ -5,25 +5,14 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from "react-native";
-import React, { useEffect } from "react";
-import { COLORS } from "../constants";
-import { Feather } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
-import * as Font from 'expo-font';
+import React from "react";
+import { COLORS, icons } from "../constants";
+import { useDispatch  } from "react-redux";
 
 const HotSpot = ({ navigation }) => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...Feather.font,
-      });
-    };
-
-    loadFonts();
-  }, []);
+  //const dispatch = useDispatch();
 
   const ReportContainer = ({ primaryText, scondarytext }) => {
     return (
@@ -48,7 +37,11 @@ const HotSpot = ({ navigation }) => {
           style={styles.seachContainer}
           onPress={() => navigation.navigate("HotspotSearch")}
         >
-          <Feather name="search" size={25} color={COLORS.gray} />
+          <Image
+            source={icons.searchsharp}
+            style={{ height: 25, width: 25, tintColor: `${COLORS.gray}` }}
+          />
+
           <Text style={styles.filterReportText}>Filter Reports HotSpot</Text>
         </TouchableOpacity>
 
@@ -86,11 +79,11 @@ export default HotSpot;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight || 45,
+    paddingTop: StatusBar.currentHeight || 25,
     backgroundColor: COLORS.white,
   },
   firstContainer: {
-    height: 55,
+    height: 35,
     width: "100%",
     alignItems: "flex-start",
     justifyContent: "flex-end",
@@ -100,8 +93,8 @@ const styles = StyleSheet.create({
   hotSpotText: {
     color: COLORS.primary,
     fontWeight: "700",
-    fontSize: 25,
-    lineHeight: 28,
+    fontSize: 20,
+    lineHeight: 20,
     marginLeft: 15,
   },
   seachContainer: {

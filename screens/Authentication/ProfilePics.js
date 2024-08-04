@@ -6,10 +6,10 @@ import {
   StatusBar,
   Alert,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import AuthLayoutSignUp from "./AuthLayoutSignUp";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { COLORS, icons, SIZES } from "../../constants";
 import TextButton from "../../components/TextButton";
 import * as MediaLibrary from "expo-media-library";
@@ -18,20 +18,22 @@ import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { signup } from "../../Redux/authSlice";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
-import * as Font from "expo-font";
 
 const ProfilePics = ({ navigation, route }) => {
   const [profileImage, setProfileImage] = useState("");
+  const [imageLoading, setImageLoading] = useState(false);
   const dispatch = useDispatch();
   const { loading, error, user, status } = useSelector((state) => state.auth);
   const { fullname, email, phoneNumber, password, username } = route.params;
 
   const mediaAccess = async () => {
+    setImageLoading(true);
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status !== "granted") {
       Alert.alert(
         "Sorry, we need media library permissions to access your photos."
       );
+      setImageLoading(false);
       return;
     } else {
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -43,18 +45,10 @@ const ProfilePics = ({ navigation, route }) => {
 
       if (!result.canceled) {
         setProfileImage(result.assets[0].uri);
+        setImageLoading(false);
       }
     }
   };
-
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-    loadFonts();
-  }, []);
 
   useEffect(() => {
     if (error) {
@@ -115,7 +109,10 @@ const ProfilePics = ({ navigation, route }) => {
         }}
         onPress={() => navigation.navigate("SignUp")}
       >
-        <AntDesign name="arrowleft" size={25} color="black" />
+        <Image
+          source={icons.arrowleft}
+          style={{ width: 20, height: 20, tintColor: "black" }}
+        />
       </TouchableOpacity>
       <AuthLayoutSignUp
         steps="Personalization"
@@ -133,7 +130,9 @@ const ProfilePics = ({ navigation, route }) => {
         >
           <View style={styles.imageContainer}>
             <TouchableOpacity onPress={mediaAccess}>
-              {profileImage ? (
+              {imageLoading ? (
+                <ActivityIndicator size="large" color={`${COLORS.primary}`} />
+              ) : profileImage ? (
                 <Image
                   source={{ uri: profileImage }}
                   resizeMode="cover"
@@ -154,8 +153,8 @@ const ProfilePics = ({ navigation, route }) => {
                     source={icons.uploadProfile}
                     resizeMode="cover"
                     style={{
-                      width: 75,
-                      height: 75,
+                      width: 85,
+                      height: 85,
                       alignSelf: "center",
                     }}
                   />

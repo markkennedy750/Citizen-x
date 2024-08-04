@@ -8,6 +8,7 @@ import {
   ScrollView,
   FlatList,
   SafeAreaView,
+  Image,
 } from "react-native";
 import {
   getAlbumsAsync,
@@ -22,22 +23,12 @@ import {
 } from "expo-camera";
 import * as WebBrowser from "expo-web-browser";
 import { SymbolView } from "expo-symbols";
-import {
-  Ionicons,
-  Feather,
-  FontAwesome6,
-  MaterialIcons,
-  AntDesign,
-} from "@expo/vector-icons";
-import { COLORS } from "../constants";
-import { Image } from "expo-image";
+import { COLORS, icons } from "../constants";
 import { shareAsync } from "expo-sharing";
-import * as Font from "expo-font";
 
 //import {  VideoView } from "expo-video";
 
 function IconButton(
-  androidName,
   iosName,
   containerStyle,
   height,
@@ -66,9 +57,6 @@ function IconButton(
         size={ICON_SIZE}
         style={width && height ? { width, height } : {}}
         tintColor={"white"}
-        fallback={
-          <Ionicons size={ICON_SIZE} name={androidName} color="white" />
-        }
       />
     </TouchableOpacity>
   );
@@ -132,15 +120,20 @@ function MainRowActions({ cameraMode, handleTakePicture, isRecording }) {
           }}
           fallback={
             cameraMode === "picture" ? (
-              <FontAwesome6 name="dot-circle" size={90} color="white" />
+              <Image
+                source={icons.dotcircle}
+                style={{ height: 100, width: 100, tintColor: "white" }}
+              />
             ) : isRecording ? (
-              <FontAwesome6
-                name="circle-stop"
-                size={90}
-                color={COLORS.primary}
+              <Image
+                source={icons.circlestop}
+                style={{ height: 100, width: 100, tintColor: "white" }}
               />
             ) : (
-              <Feather name="play-circle" size={90} color="white" />
+              <Image
+                source={icons.playcircle}
+                style={{ width: 90, height: 90, tintColor: "white" }}
+              />
             )
           }
         />
@@ -151,15 +144,9 @@ function MainRowActions({ cameraMode, handleTakePicture, isRecording }) {
         showsHorizontalScrollIndicator={false}
       >
         {[0, 1, 2, 3].map((item) => (
-          <SymbolView
-            key={item}
-            name="face.dashed"
-            size={40}
-            type="hierarchical"
-            tintColor={"white"}
-            fallback={
-              <MaterialIcons name="tag-faces" size={40} color="white" />
-            }
+          <Image
+            source={icons.tagfaces}
+            style={{ width: 50, height: 50, tintColor: "white" }}
           />
         ))}
       </ScrollView>
@@ -224,7 +211,10 @@ function CameraTools({
           },
         ]}
       >
-        <Ionicons name="flash" size={ICON_SIZE} color="white" />
+        <Image
+          source={icons.flashicon}
+          style={{ width: ICON_SIZE, height: ICON_SIZE, tintColor: "white" }}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -244,10 +234,9 @@ function CameraTools({
           },
         ]}
       >
-        <Ionicons
-          name="camera-reverse-outline"
-          size={ICON_SIZE}
-          color="white"
+        <Image
+          source={icons.camerareverseicon}
+          style={{ width: ICON_SIZE, height: ICON_SIZE, tintColor: "white" }}
         />
       </TouchableOpacity>
 
@@ -266,7 +255,10 @@ function CameraTools({
           },
         ]}
       >
-        <Ionicons name="flashlight-outline" size={ICON_SIZE} color="white" />
+        <Image
+          source={icons.flashlightoutline}
+          style={{ height: ICON_SIZE, width: ICON_SIZE, tintColor: "white" }}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -286,7 +278,10 @@ function CameraTools({
           },
         ]}
       >
-        <Ionicons name="add-circle-outline" size={ICON_SIZE} color="white" />
+        <Image
+          source={icons.addcircleoutline}
+          style={{ width: ICON_SIZE, height: ICON_SIZE, tintColor: "white" }}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -306,7 +301,10 @@ function CameraTools({
           },
         ]}
       >
-        <AntDesign name="minuscircleo" size={22} color="white" />
+        <Image
+          source={icons.minuscircleo}
+          style={{ width: 30, height: 30, tintColor: "white" }}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -330,21 +328,6 @@ const CameraScreen = ({ route, navigation }) => {
   const [cameraFacing, setCameraFacing] = useState("back");
   const [picture, setPicture] = useState("");
   const [video, setVideo] = useState("");
-
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...Ionicons.font,
-        ...MaterialIcons.font,
-        ...Feather.font,
-        ...AntDesign.font,
-        ...FontAwesome6.font,
-      });
-    };
-
-    loadFonts();
-  }, []);
-
 
   function PictureView({ picture, setPicture }) {
     const CONTAINER_PADDING = 5;
@@ -378,7 +361,14 @@ const CameraScreen = ({ route, navigation }) => {
               },
             ]}
           >
-            <Ionicons name="save-outline" size={ICON_SIZE} color="white" />
+            <Image
+              source={icons.saveoutline}
+              style={{
+                width: ICON_SIZE,
+                height: ICON_SIZE,
+                tintColor: "white",
+              }}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -394,7 +384,14 @@ const CameraScreen = ({ route, navigation }) => {
               },
             ]}
           >
-            <AntDesign name="delete" size={ICON_SIZE} color="white" />
+            <Image
+              source={icons.deleteIcon}
+              style={{
+                width: ICON_SIZE,
+                height: ICON_SIZE,
+                tintColor: "white",
+              }}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -410,10 +407,14 @@ const CameraScreen = ({ route, navigation }) => {
               },
             ]}
           >
-            <Ionicons
-              name="share-social-outline"
-              size={ICON_SIZE}
-              color="white"
+            <Image
+              source={icons.sharesocialoutline}
+              style={{
+                width: ICON_SIZE,
+                height: ICON_SIZE,
+                tintColor: "white",
+              }}
+              resizeMode="contain"
             />
           </TouchableOpacity>
         </View>
@@ -442,10 +443,13 @@ const CameraScreen = ({ route, navigation }) => {
               },
             ]}
           >
-            <Ionicons
-              name="close-circle-outline"
-              size={ICON_SIZE}
-              color="white"
+            <Image
+              source={icons.closecircleoutline}
+              style={{
+                width: ICON_SIZE,
+                height: ICON_SIZE,
+                tintColor: "white",
+              }}
             />
           </TouchableOpacity>
         </View>
@@ -496,7 +500,10 @@ const CameraScreen = ({ route, navigation }) => {
             },
           ]}
         >
-          <Ionicons name="folder-outline" size={25} color="white" />
+          <Image
+            source={icons.folderoutline}
+            style={{ width: 25, height: 25, tintColor: "white" }}
+          />
         </TouchableOpacity>
 
         <View style={styles.directionRowItemsCenter}>
@@ -534,7 +541,11 @@ const CameraScreen = ({ route, navigation }) => {
             },
           ]}
         >
-          <Ionicons name="search-sharp" size={24} color="white" />
+          <Image
+            source={icons.searchsharp}
+            style={{ width: 24, height: 24, tintColor: "white" }}
+            resizeMode="contain"
+          />
         </TouchableOpacity>
       </View>
     );

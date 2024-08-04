@@ -4,28 +4,19 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Image,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { COLORS, SIZES } from "../constants";
-import { AntDesign } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { COLORS, icons, SIZES } from "../constants";
 import InsidentType from "../components/InsidentType";
 import StateLocal from "../components/StateLocal";
 import TextButton from "../components/TextButton";
-import * as Font from "expo-font";
 
 const HotspotSearch = ({ navigation }) => {
   const [reportType, setReportType] = useState("");
   const [selectedState, setSelectedState] = useState();
   const [selectedLocalGov, setSelectedLocalGov] = useState();
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
 
-    loadFonts();
-  }, []);
   const report = [
     { label: "Crime", value: "Crime" },
     { label: "Fake Product", value: "Fake Product" },
@@ -62,7 +53,10 @@ const HotspotSearch = ({ navigation }) => {
           onPress={() => navigation.navigate("MainScreen")}
           style={styles.goBackButton}
         >
-          <AntDesign name="arrowleft" size={28} color="black" />
+          <Image
+            source={icons.arrowleft}
+            style={{ width: 20, height: 20, tintColor: "black" }}
+          />
         </TouchableOpacity>
       </View>
 

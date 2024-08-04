@@ -4,25 +4,15 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  Image,
 } from "react-native";
 import React, { useEffect } from "react";
-import { AntDesign } from "@expo/vector-icons";
 import Container from "./ReportContainer/Container";
 import { COLORS, SIZES, icons } from "../constants";
 import reportData from "../data/report";
 import TextIconButton from "../components/TextIconButton";
-import * as Font from "expo-font";
 
 const Report = ({ navigation }) => {
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-
-    loadFonts();
-  }, []);
   const footerButton = () => {
     return (
       <TextIconButton
@@ -68,7 +58,10 @@ const Report = ({ navigation }) => {
           onPress={() => navigation.goBack()}
           style={styles.imageContainer}
         >
-          <AntDesign name="arrowleft" size={24} color="black" />
+          <Image
+            source={icons.arrowleft}
+            style={{ width: 20, height: 20, tintColor: "black" }}
+          />
         </TouchableOpacity>
       </View>
 

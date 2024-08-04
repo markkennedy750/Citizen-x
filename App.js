@@ -56,6 +56,7 @@ import Environment from "./screens/ReportContainer/Environment";
 import School from "./screens/ReportContainer/School";
 import Hospital from "./screens/ReportContainer/Hospital";
 import CommunityDev from "./screens/ReportContainer/CommunityDev";
+import NonAuthFeed from "./screens/NonAuthFeed";
 
 //import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Stack = createStackNavigator();
@@ -144,6 +145,13 @@ export default function App() {
           <Stack.Screen
             name="Medialibrary"
             component={Medialibrary}
+            options={{
+              animation: "fade",
+            }}
+          />
+          <Stack.Screen
+            name="NonAuthFeed"
+            component={NonAuthFeed}
             options={{
               animation: "fade",
             }}

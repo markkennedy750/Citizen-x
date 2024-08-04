@@ -14,13 +14,10 @@ import FormInput from "../../components/FormInput";
 import { utils } from "../../utils";
 import CustomSwitch from "../../components/CustomSwitch";
 import TextButton from "../../components/TextButton";
-import TextIconButton from "../../components/TextIconButton";
 import { StatusBar } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../Redux/authSlice";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
-import * as Font from "expo-font";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -39,17 +36,16 @@ const SignIn = ({ navigation }) => {
   }
 
   useEffect(() => {
+    if (error) {
+      Alert.alert("Login Failed", error.errors);
+    }
+  }, [error]);
+  useEffect(() => {
     if (access_token !== null) {
       navigation.navigate("MainScreen");
     }
     console.log("The is an access token This is it", access_token);
   }, [access_token]);
-
-  useEffect(() => {
-    if (error) {
-      Alert.alert("Login Failed", error.errors);
-    }
-  }, [error]);
 
   function signInFn() {
     dispatch(
@@ -58,16 +54,12 @@ const SignIn = ({ navigation }) => {
         password,
       })
     );
-  }
 
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-    loadFonts();
-  }, []);
+    if (access_token !== null) {
+      navigation.navigate("MainScreen");
+    }
+    console.log("The is an access token This is it", access_token);
+  }
 
   if (loading) return <LoadingImage />;
 
@@ -82,7 +74,10 @@ const SignIn = ({ navigation }) => {
         }}
         onPress={() => navigation.navigate("SignUp")}
       >
-        <AntDesign name="arrowleft" size={27} color="black" />
+        <Image
+          source={icons.arrowleft}
+          style={{ width: 20, height: 20, tintColor: "black" }}
+        />
       </TouchableOpacity>
       <View
         style={{

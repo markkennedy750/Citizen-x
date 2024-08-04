@@ -60,7 +60,7 @@ const InitialSignIn = ({ navigation }) => {
               fontSize: 17,
               textAlign: "center",
             }}
-            onPress={() => navigation.navigate("MainScreen")}
+            onPress={() => navigation.navigate("NonAuthFeed")}
           />
         </View>
 

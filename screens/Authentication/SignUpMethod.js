@@ -10,20 +10,8 @@ import {
 import { SIZES, COLORS, icons } from "../../constants";
 import TextButton from "../../components/TextButton";
 import TextIconButton from "../../components/TextIconButton";
-import { AntDesign } from "@expo/vector-icons";
-import * as Font from "expo-font";
-
 
 const SignUpMethods = ({ navigation }) => {
-
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-    loadFonts();
-  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.miniContainer}>
@@ -31,7 +19,10 @@ const SignUpMethods = ({ navigation }) => {
           onPress={() => navigation.navigate("InitialSignUp")}
           style={styles.imageContainer}
         >
-          <AntDesign name="arrowleft" size={30} color="black" />
+          <Image
+            source={icons.arrowleft}
+            style={{ width: 20, height: 20, tintColor: "black" }}
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.textContainer}>

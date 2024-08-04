@@ -4,25 +4,13 @@ import {
   View,
   StatusBar,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import React, { useEffect } from "react";
-import { AntDesign } from "@expo/vector-icons";
 import TextButton from "../../components/TextButton";
-import { COLORS, SIZES } from "../../constants";
-import * as Font from "expo-font";
-
+import { COLORS, SIZES, icons } from "../../constants";
 
 const ReportSuccess = ({ navigation }) => {
-
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-    loadFonts();
-  }, []);
-
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -33,12 +21,18 @@ const ReportSuccess = ({ navigation }) => {
         }}
         onPress={() => navigation.navigate("MainScreen")}
       >
-        <AntDesign name="arrowleft" size={35} color="black" />
+        <Image
+          source={icons.arrowleft}
+          style={{ width: 20, height: 20, tintColor: "black" }}
+        />
       </TouchableOpacity>
       <View style={{ alignItems: "center", justifyContent: "center" }}>
         <View style={styles.topCircle}>
           <View style={styles.innerCircle}>
-            <AntDesign name="star" size={80} color="#d49013" />
+            <Image
+              source={icons.staricon}
+              style={{ width: 85, height: 85, tintColor: "#d49013" }}
+            />
           </View>
         </View>
 

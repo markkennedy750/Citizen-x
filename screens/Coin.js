@@ -2,33 +2,89 @@ import {
   StyleSheet,
   Text,
   View,
-  StatusBar,
   TouchableOpacity,
   ImageBackground,
+  Image,
 } from "react-native";
-import React, { useEffect } from "react";
-import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
-import { COLORS, icons } from "../constants";
+import React, { useEffect, useState } from "react";
+import { COLORS, icons, SIZES } from "../constants";
 import PointInvite from "../components/PointInvite";
-import * as Font from "expo-font";
+import { useDispatch, useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingImage from "../components/loadingStates/LoadingImage";
+import { rewardCount } from "../Redux/authSlice";
+import ErrorImage from "../components/loadingStates/ErrorImage";
+import axios from "axios";
+import { USER_REWARD } from "../Redux/URL";
+import TextButton from "../components/TextButton";
 
 const Coin = ({ navigation }) => {
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...SimpleLineIcons.font,
-        ...AntDesign.font,
-      });
-    };
+  const [access_token, setAccess_token] = useState("");
 
-    loadFonts();
+  const dispatch = useDispatch();
+  const { loading, error, availableCoins } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("access_token");
+        setAccess_token(value);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
   }, []);
 
+  useEffect(() => {
+    dispatch(rewardCount({ access_token }));
+  }, [dispatch]);
+
+  function refreshBtn() {
+    dispatch(rewardCount({ access_token }));
+  }
+
+  if (loading) return <LoadingImage />;
+
+  if (error)
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          Failed to load your profile, please check your network connection or
+          click to refresh
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Refresh"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={refreshBtn}
+          />
+        </View>
+      </View>
+    );
+
+  console.log("reward coins:", availableCoins);
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="arrowleft" size={30} color="black" />
+          <Image
+            source={icons.arrowleft}
+            style={{ width: 20, height: 20, tintColor: "black" }}
+          />
         </TouchableOpacity>
 
         <Text style={styles.pointText}>X points & Rewards</Text>
@@ -41,11 +97,16 @@ const Coin = ({ navigation }) => {
       >
         <View style={styles.topCircle}>
           <View style={styles.innerCircle}>
-            <AntDesign name="star" size={50} color="#d49013" />
+            <Image
+              source={icons.staricon}
+              style={{ width: 53, height: 53, tintColor: "#d49013" }}
+            />
           </View>
         </View>
         <View style={{ marginLeft: 30 }}>
-          <Text style={styles.pointNumber}>35</Text>
+          <Text style={styles.pointNumber}>
+            {availableCoins?.total_balance}
+          </Text>
           <Text style={styles.pointX}>X Point</Text>
         </View>
       </ImageBackground>
@@ -60,13 +121,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    marginTop: StatusBar.currentHeight || 40,
+    marginTop: 12,
     paddingHorizontal: 12,
     backgroundColor: COLORS.white,
   },
   topContainer: {
     flexDirection: "row",
-    paddingVertical: 12,
+    paddingVertical: 9,
     alignItems: "center",
   },
   pointText: {
@@ -119,5 +180,11 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 20,
     color: COLORS.white,
+  },
+  errorStyle: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
   },
 });

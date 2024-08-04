@@ -1,35 +1,14 @@
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { COLORS, icons } from "../constants";
-import {
-  MaterialIcons,
-  AntDesign,
-  Octicons,
-  MaterialCommunityIcons,
-  Feather,
-} from "@expo/vector-icons";
 import CustomImageSlider from "./CustomImageSlider";
 import TextComponent from "./TextComponent";
 import { useNavigation } from "@react-navigation/native";
-import * as Font from "expo-font";
 
 const Feed = ({ item }) => {
   const navigation = useNavigation();
   const images = item.image;
 
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...MaterialIcons.font,
-        ...AntDesign.font,
-        ...Octicons.font,
-        ...MaterialCommunityIcons.font,
-        ...Feather.font,
-      });
-    };
-
-    loadFonts();
-  }, []);
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -43,7 +22,14 @@ const Feed = ({ item }) => {
               <Text style={styles.usename}>@{item.user.username}</Text>
               <View style={styles.verify}>
                 <Text style={styles.verifyText}>verified</Text>
-                <AntDesign name="checkcircle" size={12} color="white" />
+                <Image
+                  source={icons.checkbox}
+                  style={{
+                    width: 12,
+                    height: 12,
+                    tintColor: "white",
+                  }}
+                />
               </View>
             </View>
             <View style={styles.reportDaTim}>
@@ -56,7 +42,14 @@ const Feed = ({ item }) => {
                   marginHorizontal: 5,
                 }}
               />
-              <MaterialIcons name="place" size={15} color="red" />
+              <Image
+                source={icons.hotspots}
+                style={{
+                  width: 15,
+                  height: 15,
+                  tintColor: "red",
+                }}
+              />
               <Text style={styles.placeStyle}>{item.place}</Text>
             </View>
           </View>
@@ -86,8 +79,16 @@ const Feed = ({ item }) => {
             flexDirection: "row",
           }}
         >
-          <TouchableOpacity style={{ width: 25 }}>
-            <Octicons name="thumbsup" size={18} color="#000000" />
+          <TouchableOpacity style={{ width: 25, paddingBottom: 2 }}>
+            <Image
+              source={icons.likeicon}
+              style={{
+                width: 25,
+                height: 25,
+                tintColor: "#000000",
+              }}
+              resizeMode="contain"
+            />
           </TouchableOpacity>
           <Text
             style={{
@@ -115,16 +116,19 @@ const Feed = ({ item }) => {
             }}
             onPress={() => navigation.navigate("FeedDetail", { feed: item })}
           >
-            <MaterialCommunityIcons
-              name="swap-horizontal-variant"
-              size={16}
-              color="#000000"
+            <Image
+              source={icons.swipeicon}
+              style={{
+                width: 45,
+                height: 45,
+                tintColor: "#000000",
+              }}
             />
             <Text
               style={{
                 fontWeight: "500",
                 fontSize: 14,
-                marginHorizontal: 5,
+                marginHorizontal: 3,
                 lineHeight: 17,
               }}
             >
@@ -140,7 +144,14 @@ const Feed = ({ item }) => {
           }}
         >
           <TouchableOpacity style={{ width: 20 }}>
-            <Feather name="bookmark" size={18} color="#000000" />
+            <Image
+              source={icons.bookmarkicon}
+              style={{
+                width: 19,
+                height: 19,
+                tintColor: "#000000",
+              }}
+            />
           </TouchableOpacity>
         </View>
         <View
@@ -151,7 +162,14 @@ const Feed = ({ item }) => {
           }}
         >
           <TouchableOpacity>
-            <Feather name="eye" size={16} color="#000000" />
+            <Image
+              source={icons.eyeseenicon}
+              style={{
+                width: 20,
+                height: 20,
+                tintColor: "#000000",
+              }}
+            />
           </TouchableOpacity>
           <Text
             style={{
@@ -172,7 +190,14 @@ const Feed = ({ item }) => {
           }}
         >
           <TouchableOpacity>
-            <AntDesign name="sharealt" size={19} color="#000000" />
+            <Image
+              source={icons.shareicon}
+              style={{
+                width: 20,
+                height: 20,
+                tintColor: "#000000",
+              }}
+            />
           </TouchableOpacity>
         </View>
       </View>

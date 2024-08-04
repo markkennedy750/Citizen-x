@@ -6,13 +6,11 @@ import {
   StyleSheet,
   StatusBar,
   Alert,
+  Image,
 } from "react-native";
-import { SIZES, COLORS } from "../../constants";
+import { SIZES, COLORS, icons } from "../../constants";
 import TextButton from "../../components/TextButton";
 import OTPInputView from "@twotalltotems/react-native-otp-input";
-import { AntDesign } from "@expo/vector-icons";
-import * as Font from "expo-font";
-
 
 const Otp = ({ navigation }) => {
   const [timer, setTimer] = useState(60);
@@ -30,15 +28,6 @@ const Otp = ({ navigation }) => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-    loadFonts();
-  }, []);
-
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -49,7 +38,10 @@ const Otp = ({ navigation }) => {
         }}
         onPress={() => navigation.goBack()}
       >
-        <AntDesign name="arrowleft" size={25} color="black" />
+        <Image
+          source={icons.arrowleft}
+          style={{ width: 20, height: 20, tintColor: "black" }}
+        />
       </TouchableOpacity>
       <Text
         style={{

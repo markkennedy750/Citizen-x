@@ -6,25 +6,12 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { COLORS, SIZES } from "../constants";
+import { COLORS, SIZES, icons } from "../constants";
 import notification from "../data/notification";
-import { AntDesign } from "@expo/vector-icons";
-import * as Font from "expo-font";
-
 
 const IconButton = ({ onPress }) => {
-
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-
-    loadFonts();
-  }, []);
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -39,7 +26,10 @@ const IconButton = ({ onPress }) => {
         marginLeft: 10,
       }}
     >
-      <AntDesign name="delete" size={38} color={COLORS.white} />
+      <Image
+        source={icons.deleteIcon}
+        style={{ width: 37, height: 37, tintColor: `${COLORS.white}` }}
+      />
     </TouchableOpacity>
   );
 };
@@ -131,11 +121,11 @@ export default Notification;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 40,
+    paddingTop: 25,
     backgroundColor: COLORS.white,
   },
   headerContainer: {
-    height: 50,
+    height: 25,
     width: "100%",
     alignItems: "flex-start",
     justifyContent: "flex-end",
@@ -146,8 +136,8 @@ const styles = StyleSheet.create({
   notifyText: {
     color: COLORS.primary,
     fontWeight: "700",
-    fontSize: 25,
-    lineHeight: 28,
+    fontSize: 19,
+    lineHeight: 23,
     marginLeft: 15,
   },
   caryItemContainer: {

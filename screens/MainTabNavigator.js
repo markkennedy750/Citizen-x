@@ -8,7 +8,7 @@ import {
   //StatusBar,
   // ScrollView,
 } from "react-native";
-import React, { useRef, useState,useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./HomeScreen";
 import HotSpot from "./HotSpot";
@@ -16,21 +16,8 @@ import Report from "./Report";
 import Notification from "./Notification";
 import Profile from "./Profile";
 import "react-native-gesture-handler";
-import {
-  Ionicons,
-  Octicons,
-  Feather,
-  Entypo,
-  FontAwesome6,
-  AntDesign,
-} from "@expo/vector-icons";
 import { icons, COLORS, SIZES } from "../constants";
 import { LinearGradient } from "expo-linear-gradient";
-
-
-//import { SIZES, COLORS, icons } from "../constants";
-import { useDispatch, useSelector } from "react-redux";
-import * as Font from "expo-font";
 
 // const CustomBottomTabs = (props) => {
 //   return <CustomBottomTab {...props} />;
@@ -88,19 +75,6 @@ const CustomTabBarLabel = ({ focused, label }) => (
 
 const Home = ({ navigation }) => {
   const Tab = createBottomTabNavigator();
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...Ionicons.font,
-        ...Octicons.font,
-        ...Feather.font,
-        ...Entypo.font,
-        ...FontAwesome6.font,
-      });
-    };
-
-    loadFonts();
-  }, []);
 
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
 
@@ -145,16 +119,14 @@ const Home = ({ navigation }) => {
                     //paddingBottom: 20,
                   }}
                 >
-                  {focused ? (
-                    <Entypo name="home" size={33} color={`${COLORS.primary}`} />
-                  ) : (
-                    <Octicons
-                      name="home"
-                      size={32}
-                      color={focused ? `${COLORS.primary}` : "black"}
-                    />
-                  )}
-
+                  <Image
+                    source={icons.home}
+                    style={{
+                      width: 33,
+                      height: 33,
+                      tintColor: focused ? `${COLORS.primary}` : "black",
+                    }}
+                  />
                   <CustomTabBarLabel focused={focused} label="Home" />
                 </View>
               );
@@ -183,19 +155,14 @@ const Home = ({ navigation }) => {
                     top: "20%",
                   }}
                 >
-                  {focused ? (
-                    <FontAwesome6
-                      name="location-pin"
-                      size={32}
-                      color={`${COLORS.primary}`}
-                    />
-                  ) : (
-                    <Feather
-                      name="map-pin"
-                      size={32}
-                      color={focused ? `${COLORS.primary}` : "black"}
-                    />
-                  )}
+                  <Image
+                    source={icons.hotspots}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      tintColor: focused ? `${COLORS.primary}` : "black",
+                    }}
+                  />
 
                   <CustomTabBarLabel focused={focused} label="Hotspots" />
                 </View>
@@ -267,11 +234,15 @@ const Home = ({ navigation }) => {
                     top: "20%",
                   }}
                 >
-                  <Ionicons
-                    name={focused ? "notifications" : "notifications-outline"}
-                    size={33}
-                    color={focused ? `${COLORS.primary}` : "black"}
+                  <Image
+                    source={icons.notification}
+                    style={{
+                      width: 34,
+                      height: 34,
+                      tintColor: focused ? `${COLORS.primary}` : "black",
+                    }}
                   />
+
                   <Text
                     style={{
                       color: focused ? `${COLORS.primary}` : "black",
@@ -309,12 +280,13 @@ const Home = ({ navigation }) => {
                     top: "20%",
                   }}
                 >
-                  <Ionicons
-                    name={
-                      focused ? "person-circle-sharp" : "person-circle-outline"
-                    }
-                    size={34}
-                    color={focused ? `${COLORS.primary}` : "black"}
+                  <Image
+                    source={icons.user}
+                    style={{
+                      width: 34,
+                      height: 34,
+                      tintColor: focused ? `${COLORS.primary}` : "black",
+                    }}
                   />
                   <CustomTabBarLabel focused={focused} label="Profile" />
                 </View>

@@ -5,25 +5,14 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  Image,
 } from "react-native";
 import React, { useEffect } from "react";
-import { COLORS, SIZES } from "../constants";
-import { AntDesign } from "@expo/vector-icons";
+import { COLORS, icons, SIZES } from "../constants";
 import DummyFeedData from "../data/DummyFeedData";
 import Feed from "../components/Feed";
-import * as Font from "expo-font";
-
 
 const SearchScreen = ({ navigation }) => {
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-
-    loadFonts();
-  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
@@ -38,7 +27,10 @@ const SearchScreen = ({ navigation }) => {
             onPress={() => navigation.navigate("MainScreen")}
             style={styles.goBackButton}
           >
-            <AntDesign name="arrowleft" size={28} color="black" />
+            <Image
+              source={icons.arrowleft}
+              style={{ width: 20, height: 20, tintColor: "black" }}
+            />
           </TouchableOpacity>
         </View>
 

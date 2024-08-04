@@ -1,27 +1,12 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Audio } from "expo-av";
-import { FontAwesome, } from "@expo/vector-icons";
-import { COLORS } from "../constants";
-import { MaterialIcons } from "@expo/vector-icons";
-import * as Font from "expo-font";
-
+import { COLORS, icons } from "../constants";
 
 const AudioRecordScreen = ({ route, navigation }) => {
   const { setStoredRecording } = route.params;
   const [recording, setRecording] = useState();
   const [permissionResponse, requestPermission] = Audio.usePermissions();
-
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...FontAwesome.font,
-        ...MaterialIcons.font,
-      });
-    };
-
-    loadFonts();
-  }, []);
 
   //Audio Recording
   async function startRecording() {
@@ -77,13 +62,19 @@ const AudioRecordScreen = ({ route, navigation }) => {
         >
           {recording ? (
             <View style={{ alignItems: "center", justifyContent: "center" }}>
-              <FontAwesome name="microphone-slash" size={65} color="white" />
+              <Image
+                source={icons.microphone_slash}
+                style={{ width: 75, height: 75, tintColor: "white" }}
+              />
               <Text style={styles.text}>Recording...</Text>
               <Text style={styles.text}>Click to stop</Text>
             </View>
           ) : (
             <View style={{ alignItems: "center", justifyContent: "center" }}>
-              <FontAwesome name="microphone" size={75} color="white" />
+              <Image
+                source={icons.microphoneicon}
+                style={{ width: 75, height: 75, tintColor: "white" }}
+              />
               <Text style={styles.text}>Start Record</Text>
             </View>
           )}

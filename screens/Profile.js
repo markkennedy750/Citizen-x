@@ -6,40 +6,111 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  Alert,
 } from "react-native";
-import React, { useEffect } from "react";
-import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
 import feeds from "../data/DummyFeedData";
-import { COLORS, icons } from "../constants";
+import { COLORS, icons, SIZES } from "../constants";
 import BottomTabFeed from "../components/BottomTabFeed";
-import * as Font from "expo-font";
+import { useDispatch, useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingImage from "../components/loadingStates/LoadingImage";
+import { profile_sec, rewardCount } from "../Redux/authSlice";
+import ErrorImage from "../components/loadingStates/ErrorImage";
+import TextButton from "../components/TextButton";
+import { HOST } from "../Redux/URL";
 
 const Profile = ({ navigation }) => {
+  const [access_token, setAccess_token] = useState("");
+  const [catchUser, setCatchUser] = useState({});
+  const dispatch = useDispatch();
+  const { loading, error, user, availableCoins } = useSelector(
+    (state) => state.auth
+  );
   const profile = feeds[3];
 
   useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-        ...SimpleLineIcons.font,
-      });
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("access_token");
+        const userDetail = await AsyncStorage.getItem("user_details");
+        setAccess_token(value);
+        setCatchUser(userDetail);
+      } catch (e) {
+        console.log(e);
+      }
     };
-
-    loadFonts();
+    getData();
   }, []);
+
+  useEffect(() => {
+    dispatch(profile_sec({ access_token }));
+    dispatch(rewardCount({ access_token }));
+  }, [dispatch]);
+
+  function refreshBtn() {
+    dispatch(profile_sec({ access_token }));
+  }
+
+  if (loading) return <LoadingImage />;
+  if (error)
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text
+          style={{
+            color: "red",
+            fontSize: 12,
+            fontWeight: "400",
+            textAlign: "center",
+          }}
+        >
+          Failed to load your profile, please check your network connection or
+          click to refresh
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Refresh"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={refreshBtn}
+          />
+        </View>
+      </View>
+    );
+  console.log("user section", user);
+  console.log("user profile image", user?.profileImage);
+  console.log("user details", catchUser);
+  const host = `${HOST}/`;
   return (
     <View style={styles.container}>
       <TouchableOpacity>
-        <AntDesign name="arrowleft" size={30} color="black" />
+        <Image
+          source={icons.arrowleft}
+          style={{ width: 20, height: 20, tintColor: "black" }}
+        />
       </TouchableOpacity>
-      <View style={{ marginTop: 15 }}>
+      <View style={{ marginTop: 12 }}>
         <View style={styles.profileContiner}>
           <Image
-            source={profile.user.profileImage}
+            source={{
+              uri: catchUser?.profileImage,
+            }}
             style={styles.profileImag}
           />
           <View style={styles.profileNameContainer}>
-            <Text style={styles.fullName}>{profile.user.fullname}</Text>
+            <Text style={styles.fullName}>{user?.name}</Text>
             <Text style={styles.userName}>@{profile.user.username}</Text>
           </View>
 
@@ -58,7 +129,10 @@ const Profile = ({ navigation }) => {
               >
                 <View style={styles.topCircle}>
                   <View style={styles.innerCircle}>
-                    <AntDesign name="star" size={10} color="#d49013" />
+                    <Image
+                      source={icons.staricon}
+                      style={{ height: 12, width: 12, tintColor: "#d49013" }}
+                    />
                   </View>
                 </View>
                 <Text
@@ -108,14 +182,22 @@ const Profile = ({ navigation }) => {
             style={styles.editButton}
             onPress={() => navigation.navigate("EditProfile")}
           >
-            <AntDesign name="solution1" size={22} color={COLORS.primary} />
+            <Image
+              source={icons.solution1icon}
+              style={{ height: 35, width: 35, tintColor: `${COLORS.primary}` }}
+            />
+
             <Text style={styles.buttonText}>Edit Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.editButton}
             onPress={() => navigation.navigate("Settings")}
           >
-            <SimpleLineIcons name="settings" size={22} color={COLORS.primary} />
+            <Image
+              source={icons.setting}
+              style={{ height: 23, width: 23, tintColor: `${COLORS.primary}` }}
+            />
+
             <Text style={styles.buttonText}>Settings</Text>
           </TouchableOpacity>
         </View>
@@ -131,7 +213,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingTop: StatusBar.currentHeight || 45,
+    paddingTop: 18,
     paddingHorizontal: 12,
   },
   profileContiner: {
@@ -217,5 +299,11 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: COLORS.primary,
     marginLeft: 10,
+  },
+  errorStyle: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
   },
 });

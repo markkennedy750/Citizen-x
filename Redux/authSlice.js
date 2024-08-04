@@ -7,6 +7,8 @@ import {
   LOGIN_WITH_GOOGLE,
   CREATE_REPORT,
   AUTH_FEEDS,
+  PROFILE,
+  USER_REWARD,
 } from "./URL";
 
 const initialState = {
@@ -18,6 +20,7 @@ const initialState = {
   status: "",
   report: null,
   auth_feed: null,
+  availableCoins: null,
 };
 
 export const signup = createAsyncThunk(
@@ -44,14 +47,22 @@ export const signup = createAsyncThunk(
         });
       }
 
-      console.log("Form Data before sending to server:", formData);
+      //console.log("Form Data before sending to server:", formData);
       const response = await axios.post(SIGNUP, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
+      const userDetails = {
+        fullname,
+        username,
+        phoneNumber,
+        email,
+        profileImage,
+      };
       console.log("Signup response data:", response.data);
+      await AsyncStorage.setItem("user_details", JSON.stringify(userDetails));
       return response.data;
     } catch (error) {
       console.log("Signup error response data:", error.response.data);
@@ -147,19 +158,18 @@ export const createReport = createAsyncThunk(
         {
           sub_report_type: insidentType,
           category: categ,
-          description:textInput,
-          date_of_incidence:currentDate,
+          description: textInput,
+          date_of_incidence: currentDate,
           state_name: selectedState,
-          lga_name:selectedLocalGov,
-          landmark:address,
-          rating:selectedId,
-          is_anonymous:isEnabled,
-          latitude:location.latitude,
-          longitude:location.longitude,
-          accident_cause:causeOfAccident,
-          is_response:checkboxValue,
-          airport_name:airportName,
-          
+          lga_name: selectedLocalGov,
+          landmark: address,
+          rating: selectedId,
+          is_anonymous: isEnabled,
+          latitude: location.latitude,
+          longitude: location.longitude,
+          accident_cause: causeOfAccident,
+          is_response: checkboxValue,
+          airport_name: airportName,
         },
         {
           headers: {
@@ -207,7 +217,46 @@ export const authFeed = createAsyncThunk(
           Authorization: `Bearer ${access_token}`,
         },
       });
-      console.log("Auth Feeds successfully gotten:", response.data);
+      // console.log(
+      //   "Auth Feeds successfully gotten:",
+      //   response.data.incident_reports
+      // );
+      return response.data.incident_reports;
+    } catch (error) {
+      console.log("Error fetching feed", error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const profile_sec = createAsyncThunk(
+  "auth/profile_sec",
+  async ({ access_token }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(PROFILE, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      //console.log("the user details:", response.data.data);
+      return response.data.data;
+    } catch (error) {
+      console.log("Error fetching feed", error);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const rewardCount = createAsyncThunk(
+  "auth/rewardCount",
+  async ({ access_token }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(USER_REWARD, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      console.log("user reward count:", response.data);
       return response.data;
     } catch (error) {
       console.log("Error fetching feed", error);
@@ -245,6 +294,7 @@ export const authSlice = createSlice({
       AsyncStorage.removeItem("refresh_token");
       AsyncStorage.removeItem("fullname");
       AsyncStorage.removeItem("username");
+      AsyncStorage.removeItem("user_details");
     },
   },
   extraReducers: (builder) => {
@@ -309,10 +359,33 @@ export const authSlice = createSlice({
       })
       .addCase(authFeed.fulfilled, (state, action) => {
         state.loading = false;
-        state.auth_feed = action.payload.data;
-        //state.status = action.payload.status;
+        state.auth_feed = action.payload;
       })
       .addCase(authFeed.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(profile_sec.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(profile_sec.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(profile_sec.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(rewardCount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(rewardCount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.availableCoins = action.payload;
+      })
+      .addCase(rewardCount.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

@@ -22,6 +22,19 @@ https://ashishnoob.medium.com/docker-basic-cheatsheet-011b8ccf78fc
 ////////////////////////////////////////////////////////////////////////////////////
 expoicons: ComponentProps<typeof Ionicons>["name"]
 
+<Ionicons name={focused ? "notifications" : "notifications-outline"} size={33} color={focused ? `${COLORS.primary}` : "black"}/>
+
+{focused ? (
+                    <Entypo name="home" size={33} color={`${COLORS.primary}`} />
+                  ) : (
+                    <Octicons
+                      name="home"
+                      size={32}
+                      color={focused ? `${COLORS.primary}` : "black"}
+                    />
+                  )}
+
+
 npx expo install expo-font
 npx expo install expo-splash-screen
 /////////////////////////////////////////////////////////////////////////////////////
@@ -619,4 +632,4 @@ Build expo application
 
 7) >> eas build -p android --profile preview
 
-
+8) >> eas build -p android

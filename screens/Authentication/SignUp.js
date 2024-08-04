@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  StatusBar,
+} from "react-native";
 import { SIZES, COLORS, icons } from "../../constants";
 import FormInput from "../../components/FormInput";
 import TextButton from "../../components/TextButton";
 import { utils } from "../../utils";
 import AuthLayoutSignUp from "./AuthLayoutSignUp";
-import { AntDesign } from "@expo/vector-icons";
-import { StatusBar } from "react-native";
-import * as Font from "expo-font";
-
 
 const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -34,14 +37,6 @@ const SignUp = ({ navigation }) => {
     );
   }
 
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-    loadFonts();
-  }, []);
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -53,7 +48,10 @@ const SignUp = ({ navigation }) => {
         }}
         onPress={() => navigation.navigate("InitialSignUp")}
       >
-        <AntDesign name="arrowleft" size={27} color="black" />
+        <Image
+          source={icons.arrowleft}
+          style={{ width: 20, height: 20, tintColor: "black" }}
+        />
       </TouchableOpacity>
 
       <AuthLayoutSignUp

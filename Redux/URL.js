@@ -6,3 +6,6 @@ export const PROFILEPICS = `${HOST}/api/v1/upload`;
 export const LOGIN_WITH_GOOGLE = `${HOST}/api/v1/google/login`;
 export const CREATE_REPORT = `${HOST}/api/v1/user/report`;
 export const AUTH_FEEDS = `${HOST}/api/v1/incident_reports`;
+export const USER_REWARD = `${HOST}/api/v1/count/all/rewards`;
+export const PROFILE = `${HOST}/api/v1/me`;
+

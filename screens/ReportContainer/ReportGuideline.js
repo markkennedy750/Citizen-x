@@ -10,28 +10,20 @@ import {
 import React, { useEffect } from "react";
 import { SIZES, COLORS, icons } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
-import { AntDesign } from "@expo/vector-icons";
-import * as Font from "expo-font";
-
 
 const ReportGuideline = () => {
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const loadFonts = async () => {
-      await Font.loadAsync({
-        ...AntDesign.font,
-      });
-    };
-    loadFonts();
-  }, []);
   return (
     <SafeAreaView style={styles.primaryContainer}>
       <TouchableOpacity
         onPress={() => navigation.navigate("MainScreen")}
         style={styles.imageContainer}
       >
-        <AntDesign name="arrowleft" size={24} color="black" />
+        <Image
+          source={icons.arrowleft}
+          style={{ width: 20, height: 20, tintColor: "black" }}
+        />
       </TouchableOpacity>
 
       <View style={styles.textContainer}>
