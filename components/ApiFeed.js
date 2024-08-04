@@ -4,37 +4,71 @@ import { COLORS, icons } from "../constants";
 import CustomImageSlider from "./CustomImageSlider";
 import TextComponent from "./TextComponent";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
 
-
-const Feed = ({ item }) => {
+const ApiFeed = ({ item }) => {
   const navigation = useNavigation();
   const images = item.image;
 
+  const date = item?.time_of_incidence;
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+    const milliseconds = String(date.getMilliseconds()).charAt(0);
+
+    return `${year}-${month}-${day} : ${hours}:${minutes}:${seconds}.${milliseconds}`;
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.navigate("FeedDetail", { feed: item })}
+        onPress={() => {
+          //navigation.navigate("ApiFeedDetail", { feed: item });
+        }}
       >
         <View style={styles.profileContainer}>
-          <Image source={item.user.profileImage} style={styles.profileImg} />
+          <Image source={icons.anonymous} style={styles.profileImg} />
           <View style={{ marginLeft: 10 }}>
             <View style={styles.usernameContainer}>
-              <Text style={styles.fulName}>{item.user.fullname}</Text>
-              <Text style={styles.usename}>@{item.user.username}</Text>
-              <View style={styles.verify}>
-                <Text style={styles.verifyText}>verified</Text>
-                <Image
-                  source={icons.checkbox}
-                  style={{
-                    width: 12,
-                    height: 12,
-                    tintColor: "white",
-                  }}
-                />
-              </View>
+              <Text style={styles.fulName}>{item?.fullname}</Text>
+              <Text style={styles.usename}>@{item?.username}</Text>
+              {item?.report_status === "Pending" ? (
+                <View style={styles.verify}>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      lineHeight: 14,
+                      fontWeight: "700",
+                      color: "yellow",
+                    }}
+                  >
+                    Pending
+                  </Text>
+                </View>
+              ) : (
+                <View style={styles.verify}>
+                  <Text style={styles.verifyText}>verified</Text>
+                  <Image
+                    source={icons.checkbox}
+                    style={{
+                      width: 12,
+                      height: 12,
+                      tintColor: "white",
+                    }}
+                  />
+                </View>
+              )}
             </View>
             <View style={styles.reportDaTim}>
-              <Text style={styles.date}>{item.createdAt}</Text>
+              {item?.time_of_incidence && (
+                <Text style={styles.date}>{formatDate(date)}</Text>
+              )}
+
               <View
                 style={{
                   width: 2,
@@ -51,26 +85,21 @@ const Feed = ({ item }) => {
                   tintColor: "red",
                 }}
               />
-              <Text style={styles.placeStyle}>{item.place}</Text>
+              <Text style={{ ...styles.placeStyle, marginRight: 3 }}>
+                {item?.state_name}
+              </Text>
+              <Text style={styles.placeStyle}>{item?.lga_name}</Text>
             </View>
           </View>
         </View>
         <View style={styles.reporttype}>
-          <Text style={styles.reportText}>{item.reportType}</Text>
+          <Text style={styles.reportText}>{item?.category}</Text>
         </View>
       </TouchableOpacity>
       <View style={{ marginRight: 10 }}>
         <View style={{ paddingHorizontal: 10 }}>
-          <TextComponent text={item.content} />
+          <TextComponent text={item?.description} />
         </View>
-
-        {item.image && (
-          <TouchableOpacity
-            onPress={() => navigation.navigate("ImageScreen", { images })}
-          >
-            <CustomImageSlider images={item.image} />
-          </TouchableOpacity>
-        )}
       </View>
       <View style={styles.iconContainer}>
         <View
@@ -99,7 +128,7 @@ const Feed = ({ item }) => {
               lineHeight: 17,
             }}
           >
-            {item.numOfLike}
+            {item?.like_count}
           </Text>
         </View>
         <View
@@ -115,7 +144,9 @@ const Feed = ({ item }) => {
               alignItems: "center",
               justifyContent: "space-between",
             }}
-            onPress={() => navigation.navigate("FeedDetail", { feed: item })}
+            onPress={() => {
+              //navigation.navigate("FeedDetail", { feed: item });
+            }}
           >
             <Image
               source={icons.swipeicon}
@@ -180,7 +211,7 @@ const Feed = ({ item }) => {
               lineHeight: 17,
             }}
           >
-            {item.numberOfView}
+            {item?.view}
           </Text>
         </View>
         <View
@@ -206,7 +237,7 @@ const Feed = ({ item }) => {
   );
 };
 
-export default Feed;
+export default ApiFeed;
 
 const styles = StyleSheet.create({
   container: {
@@ -252,7 +283,7 @@ const styles = StyleSheet.create({
   },
   date: {
     fontWeight: "400",
-    fontSize: 13,
+    fontSize: 11,
     lineHeight: 16.8,
     color: COLORS.gray,
   },

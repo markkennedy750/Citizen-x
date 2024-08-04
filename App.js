@@ -57,6 +57,7 @@ import School from "./screens/ReportContainer/School";
 import Hospital from "./screens/ReportContainer/Hospital";
 import CommunityDev from "./screens/ReportContainer/CommunityDev";
 import NonAuthFeed from "./screens/NonAuthFeed";
+import ApiFeedDetail from "./screens/ApiFeedDetails";
 
 //import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Stack = createStackNavigator();
@@ -168,6 +169,7 @@ export default function App() {
             name="AudioRecordScreen"
             component={AudioRecordScreen}
           />
+          <Stack.Screen name="ApiFeedDetail" component={ApiFeedDetail} />
 
           {/**Report start */}
 

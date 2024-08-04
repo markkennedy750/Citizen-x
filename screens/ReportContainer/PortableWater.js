@@ -41,9 +41,7 @@ const PortableWater = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
 
-
-  const categ = "Petrol";
-
+  const categ = "Portable Water";
 
   useEffect(() => {
     const getData = async () => {

@@ -35,8 +35,6 @@ const Employment = ({ navigation }) => {
 
   const categ = "Employment";
 
-
-
   useEffect(() => {
     const getData = async () => {
       try {

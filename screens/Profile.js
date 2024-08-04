@@ -103,15 +103,10 @@ const Profile = ({ navigation }) => {
       </TouchableOpacity>
       <View style={{ marginTop: 12 }}>
         <View style={styles.profileContiner}>
-          <Image
-            source={{
-              uri: catchUser?.profileImage,
-            }}
-            style={styles.profileImag}
-          />
+          <Image source={icons.anonymous} style={styles.profileImag} />
           <View style={styles.profileNameContainer}>
             <Text style={styles.fullName}>{user?.name}</Text>
-            <Text style={styles.userName}>@{profile.user.username}</Text>
+            <Text style={styles.userName}>@{user?.username}</Text>
           </View>
 
           <TouchableOpacity onPress={() => navigation.navigate("Coin")}>

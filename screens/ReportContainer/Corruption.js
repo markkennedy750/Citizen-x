@@ -55,7 +55,6 @@ const Corruption = ({ navigation }) => {
     }
   }, [error]);
 
-
   const corruption = [
     { label: "Bribery Cases", value: "Bribery Cases" },
     { label: "Embazzlement Incidents", value: "Embazzlement Incidents" },
@@ -154,7 +153,7 @@ const Corruption = ({ navigation }) => {
     } catch (error) {
       console.log("report error:", error.response.data);
       setError(error.response.data);
-      
+
       return rejectWithValue(error.response.data);
     }
   }

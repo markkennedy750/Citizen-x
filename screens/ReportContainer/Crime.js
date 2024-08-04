@@ -40,7 +40,7 @@ const Crime = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
 
-  const categ = "Accidents";
+  const categ = "Crime";
 
   useEffect(() => {
     const getData = async () => {
@@ -151,6 +151,7 @@ const Crime = ({ navigation }) => {
       });
 
       console.log("report created successfully:", response.data);
+      console.log("report before sending to server:", data);
       setLoading(false);
       if (response.data.status === "Created") {
         navigation.navigate("ReportSuccess");

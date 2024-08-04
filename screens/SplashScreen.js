@@ -1,18 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  useWindowDimensions,
-} from "react-native";
+import { View, StyleSheet, useWindowDimensions } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MotiView, MotiImage } from "moti";
+import { MotiImage } from "moti";
 import * as Splash from "expo-splash-screen";
 
 const SplashScreen = ({ navigation }) => {
   const { width } = useWindowDimensions();
-  const [token, setToken] = useState();
+  const [token, setToken] = useState(null);
   const [appIsReady, setAppIsReady] = useState(false);
 
   Splash.preventAutoHideAsync();
@@ -21,49 +15,45 @@ const SplashScreen = ({ navigation }) => {
     const getData = async () => {
       try {
         const value = await AsyncStorage.getItem("access_token");
-        setToken(value);
+        if (value !== null) {
+          setToken(value);
+        }
       } catch (e) {
-        console.log(e);
+        console.log("Error reading token", e);
+      } finally {
+        setAppIsReady(true);
       }
     };
     getData();
   }, []);
 
   useEffect(() => {
-    const checkSplashScreen = async () => {
-      try {
-        //const isFirstTime = await AsyncStorage.getItem("WelcomeScreen");
-
-        if (token !== undefined && token !== null) {
-          console.log(token);
-          setTimeout(() => {
-            //navigation.navigate("WelcomeScreen");
-            //AsyncStorage.setItem("splashShown", "true");
-
-            navigation.navigate("MainScreen");
-          }, 4000);
-        } else {
-          setTimeout(() => {
-            navigation.navigate("WelcomeScreen");
-          }, 4000);
+    if (appIsReady) {
+      const checkSplashScreen = async () => {
+        try {
+          if (token) {
+            console.log("This is the token", token);
+            setTimeout(() => {
+              navigation.navigate("MainScreen");
+            }, 4000);
+          } else {
+            setTimeout(() => {
+              navigation.navigate("WelcomeScreen");
+            }, 4000);
+          }
+        } catch (error) {
+          console.error(error);
+        } finally {
+          await Splash.hideAsync();
         }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setAppIsReady(true);
-      }
-    };
+      };
 
-    checkSplashScreen();
-  }, [navigation]);
+      checkSplashScreen();
+    }
+  }, [appIsReady, token, navigation]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
       await Splash.hideAsync();
     }
   }, [appIsReady]);

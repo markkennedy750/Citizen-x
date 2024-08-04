@@ -33,7 +33,7 @@ const HealthCare = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
 
-  const categ = "HealthCare";
+  const categ = "Health Care";
 
   useEffect(() => {
     const getData = async () => {
