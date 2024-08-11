@@ -7,10 +7,10 @@ const ErrorImage = () => {
     <View style={{  alignItems: "center", justifyContent: "center" }}>
       <Image
         source={icons.erroricon}
-        style={{ width: 160, height: 160, alignSelf: "center" }}
+        style={{ width: 100, height: 100, alignSelf: "center" }}
         resizeMode="contain"
       />
-      <Text style={{ color: "red", fontSize: 25, fontWeight: "600" }}>
+      <Text style={{ color: "red", fontSize: 18, fontWeight: "600" }}>
         ERROR!!!
       </Text>
     </View>

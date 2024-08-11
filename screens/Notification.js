@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StatusBar,
   Image,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -111,7 +112,7 @@ const Notification = () => {
       <View style={styles.headerContainer}>
         <Text style={styles.notifyText}>Notification</Text>
       </View>
-      <View>{renderSwipeList()}</View>
+      <ScrollView>{renderSwipeList()}</ScrollView>
     </View>
   );
 };

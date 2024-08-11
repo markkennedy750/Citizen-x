@@ -27,16 +27,18 @@ const ProfilePics = ({ navigation, route }) => {
   const { fullname, email, phoneNumber, password, username } = route.params;
 
   const mediaAccess = async () => {
-    setImageLoading(true);
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert(
-        "Sorry, we need media library permissions to access your photos."
-      );
-      setImageLoading(false);
-      return;
-    } else {
-      let result = await ImagePicker.launchImageLibraryAsync({
+    try {
+      setImageLoading(true);
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Sorry, we need media library permissions to access your photos."
+        );
+        setImageLoading(false);
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
@@ -45,16 +47,21 @@ const ProfilePics = ({ navigation, route }) => {
 
       if (!result.canceled) {
         setProfileImage(result.assets[0].uri);
-        setImageLoading(false);
       }
+    } catch (error) {
+      console.error("Error accessing media library: ", error);
+      Alert.alert("Error", "There was an error accessing your media library.");
+    } finally {
+      setImageLoading(false);
     }
   };
 
   useEffect(() => {
     if (error) {
-      Alert.alert("Sign Up failed,", "The was an issue signing you up");
+      Alert.alert("Sign Up failed", "There was an issue signing you up.");
     }
   }, [error]);
+
   useEffect(() => {
     if (user && status === "Created") {
       navigation.navigate("SignUpSuccess", {
@@ -67,11 +74,9 @@ const ProfilePics = ({ navigation, route }) => {
     }
   }, [user, status, navigation]);
 
-  function isEnableSignIn() {
-    return profileImage != "";
-  }
+  const isEnableSignIn = () => profileImage !== "";
 
-  function signUpFnc() {
+  const signUpFnc = () => {
     if (profileImage) {
       dispatch(
         signup({
@@ -84,50 +89,40 @@ const ProfilePics = ({ navigation, route }) => {
         })
       );
     } else {
-      dispatch(
-        signup({
-          fullname,
-          username,
-          phoneNumber,
-          email,
-          password,
-        })
-      );
+      noImage();
     }
-  }
+  };
 
+  function noImage() {
+    setProfileImage(icons.anonymous);
+    dispatch(
+      signup({
+        profileImage,
+        fullname,
+        username,
+        phoneNumber,
+        email,
+        password,
+      })
+    );
+  }
   if (loading) return <LoadingImage />;
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={{
-          marginTop: 5,
-          justifyContent: "flex-start",
-          //marginBottom: ,
-          marginLeft: 15,
-        }}
+        style={styles.backButton}
         onPress={() => navigation.navigate("SignUp")}
       >
-        <Image
-          source={icons.arrowleft}
-          style={{ width: 20, height: 20, tintColor: "black" }}
-        />
+        <Image source={icons.arrowleft} style={styles.backButtonIcon} />
       </TouchableOpacity>
       <AuthLayoutSignUp
         steps="Personalization"
         title="Add Profile Photo"
         subTitle="Add your preferred picture or avatar "
-        containerStyle={{
-          paddingTop: 25,
-        }}
+        containerStyle={styles.authLayout}
       >
-        <View
-          style={{
-            flex: 1,
-            marginTop: 45,
-          }}
-        >
+        <View style={styles.content}>
           <View style={styles.imageContainer}>
             <TouchableOpacity onPress={mediaAccess}>
               {imageLoading ? (
@@ -136,27 +131,14 @@ const ProfilePics = ({ navigation, route }) => {
                 <Image
                   source={{ uri: profileImage }}
                   resizeMode="cover"
-                  style={{ width: 90, height: 90, borderRadius: 45 }}
+                  style={styles.profileImage}
                 />
               ) : (
-                <View
-                  style={{
-                    width: 85,
-                    height: 85,
-                    borderRadius: 47,
-                    backgroundColor: "#E6E6E6",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
+                <View style={styles.defaultImageContainer}>
                   <Image
                     source={icons.uploadProfile}
                     resizeMode="cover"
-                    style={{
-                      width: 85,
-                      height: 85,
-                      alignSelf: "center",
-                    }}
+                    style={styles.defaultImage}
                   />
                 </View>
               )}
@@ -166,21 +148,14 @@ const ProfilePics = ({ navigation, route }) => {
 
           <TextButton
             label={profileImage ? "Next" : "Skip"}
-            disabled={isEnableSignIn() ? false : true}
-            buttonContainerStyle={{
-              height: 55,
-              alignItems: "center",
-              justifyContent: "center",
-              marginTop: 35,
-              borderRadius: SIZES.radius,
-              backgroundColor: COLORS.primary,
-              backgroundColor: isEnableSignIn() ? "#0E9C67" : COLORS.invisible,
-            }}
-            labelStyle={{
-              color: COLORS.white,
-              fontWeight: "700",
-              fontSize: 17,
-            }}
+            //disabled={!isEnableSignIn()}
+            buttonContainerStyle={[
+              styles.nextButton,
+              {
+                backgroundColor: "#0E9C67",
+              },
+            ]}
+            labelStyle={styles.nextButtonLabel}
             onPress={signUpFnc}
           />
         </View>

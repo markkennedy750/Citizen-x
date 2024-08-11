@@ -15,6 +15,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
 import { CREATE_REPORT } from "../../Redux/URL";
 import axios from "axios";
+import ErrorImage from "../../components/loadingStates/ErrorImage";
 
 const HealthCare = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -29,6 +30,7 @@ const HealthCare = ({ navigation }) => {
   const [address, setAddress] = useState("");
   const [videoMedia, setVideoMedia] = useState("");
   const [selectedId, setSelectedId] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
@@ -47,12 +49,6 @@ const HealthCare = ({ navigation }) => {
     getData();
   }, []);
 
-  useEffect(() => {
-    if (error) {
-      Alert.alert("Login Failed", error.message);
-    }
-  }, [error]);
-
   async function submitReport() {
     try {
       setLoading(true);
@@ -64,7 +60,7 @@ const HealthCare = ({ navigation }) => {
       data.lga_name = selectedLocalGov;
       data.is_anonymous = isEnabled;
       data.landmark = address;
-      data.rating = selectedId
+      data.rating = selectedId;
 
       if (location) {
         data.latitude = location.latitude;
@@ -132,9 +128,25 @@ const HealthCare = ({ navigation }) => {
       }
       return response.data;
     } catch (error) {
-      console.log("report error:", error.response.data);
-      setError(error.response.data);
-      return rejectWithValue(error.response.data);
+      setLoading(false);
+      setError(error);
+      if (error.response) {
+        console.log("server error:", error.response.data);
+        setErrorMessage(
+          "There was an issue with the server. Please try again later."
+        );
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        console.log("network error:", error.message);
+        setErrorMessage(
+          "Network error. Please check your internet connection and try again."
+        );
+        return rejectWithValue(error.message);
+      } else {
+        console.log("error:", error.message);
+        setErrorMessage("An unexpected error occurred. Please try again.");
+        return rejectWithValue(error.message);
+      }
     }
   }
 
@@ -198,6 +210,98 @@ const HealthCare = ({ navigation }) => {
     );
   }
   if (loading) return <LoadingImage />;
+
+  if (error.response) {
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          {errorMessage}
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Go Back"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    );
+  } else if (error.request) {
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          {errorMessage}
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Go Back"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    );
+  } else if (error) {
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          {errorMessage}
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Go Back"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    );
+  }
   return (
     <ReportWrapper title="HealthCare">
       <InsidentType
@@ -299,5 +403,11 @@ const styles = StyleSheet.create({
   checkBoxContainer: {
     marginVertical: 20,
     justifyContent: "flex-start",
+  },
+  errorStyle: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
   },
 });

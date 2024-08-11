@@ -22,6 +22,7 @@ const FeedDetail = ({ route, navigation }) => {
   const [storedRecording, setStoredRecording] = useState(null);
   const [photoUri, setPhotoUri] = useState(null);
   const [textInput, setTextInput] = useState("");
+  const [videoMedia, setVideoMedia] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
 
   function submitPost() {
@@ -165,7 +166,7 @@ const FeedDetail = ({ route, navigation }) => {
                     />
                   </TouchableOpacity>
                 </View>
-                
+
                 <View
                   style={{
                     alignItems: "center",
@@ -225,6 +226,8 @@ const FeedDetail = ({ route, navigation }) => {
               setAlbums={setAlbums}
               setStoredRecording={setStoredRecording}
               setPhotoUri={setPhotoUri}
+              videoMedia={videoMedia}
+              setVideoMedia={setVideoMedia}
             />
             <AnonymousPost isEnabled={isEnabled} setIsEnabled={setIsEnabled} />
             <TextButton

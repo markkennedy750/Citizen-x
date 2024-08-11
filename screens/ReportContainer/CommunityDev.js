@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
 import { CREATE_REPORT } from "../../Redux/URL";
 import axios from "axios";
+import ErrorImage from "../../components/loadingStates/ErrorImage";
 
 const CommunityDev = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -30,6 +31,7 @@ const CommunityDev = ({ navigation }) => {
   const [address, setAddress] = useState("");
   const [videoMedia, setVideoMedia] = useState("");
   const [token, setToken] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -46,11 +48,6 @@ const CommunityDev = ({ navigation }) => {
     };
     getData();
   }, []);
-  useEffect(() => {
-    if (error) {
-      Alert.alert("Login Failed", error.message);
-    }
-  }, [error]);
 
   const communitydevelopment = [
     { label: "Community Project Funding", value: "Community Project Funding" },
@@ -161,14 +158,121 @@ const CommunityDev = ({ navigation }) => {
       }
       return response.data;
     } catch (error) {
-      console.log("report error:", error.response.data);
       setLoading(false);
-      setError(error.response.data);
-      return rejectWithValue(error.response.data);
+      setError(error);
+      if (error.response) {
+        console.log("server error:", error.response.data);
+        setErrorMessage(
+          "There was an issue with the server. Please try again later."
+        );
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        console.log("network error:", error.message);
+        setErrorMessage(
+          "Network error. Please check your internet connection and try again."
+        );
+        return rejectWithValue(error.message);
+      } else {
+        console.log("error:", error.message);
+        setErrorMessage("An unexpected error occurred. Please try again.");
+        return rejectWithValue(error.message);
+      }
     }
   }
 
   if (loading) return <LoadingImage />;
+
+  if (error.response) {
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          {errorMessage}
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Go Back"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    );
+  } else if (error.request) {
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          {errorMessage}
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Go Back"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    );
+  } else if (error) {
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          {errorMessage}
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Go Back"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    );
+  }
   return (
     <ReportWrapper title="Community Development">
       <InsidentType
@@ -239,3 +343,14 @@ const CommunityDev = ({ navigation }) => {
 };
 
 export default CommunityDev;
+const styles = StyleSheet.create({
+  checkBoxContainer: {
+    marginVertical: 20,
+  },
+  errorStyle: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+  },
+});

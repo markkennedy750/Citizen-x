@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { COLORS, icons } from "../constants";
 import CustomImageSlider from "./CustomImageSlider";
@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 const ApiFeed = ({ item }) => {
   const navigation = useNavigation();
   const images = item.image;
+  const [upvote, setupvote] = useState(true);
+  const [downvote, setdownvote] = useState(false);
 
   const date = item?.time_of_incidence;
   const formatDate = (dateString) => {
@@ -24,6 +26,13 @@ const ApiFeed = ({ item }) => {
 
     return `${year}-${month}-${day} : ${hours}:${minutes}:${seconds}.${milliseconds}`;
   };
+
+  function upVoteClick() {
+    setupvote((prev) => !prev);
+  }
+  function downVoteClick() {
+    setdownvote((prev) => !prev);
+  }
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -44,7 +53,7 @@ const ApiFeed = ({ item }) => {
                       fontSize: 12,
                       lineHeight: 14,
                       fontWeight: "700",
-                      color: "yellow",
+                      color: COLORS.white,
                     }}
                   >
                     Pending
@@ -102,19 +111,16 @@ const ApiFeed = ({ item }) => {
         </View>
       </View>
       <View style={styles.iconContainer}>
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "row",
-          }}
-        >
-          <TouchableOpacity style={{ width: 25, paddingBottom: 2 }}>
+        <View style={styles.voteContainer}>
+          <TouchableOpacity
+            style={{ width: 25, paddingBottom: 2 }}
+            onPress={() => upVoteClick()}
+          >
             <Image
-              source={icons.likeicon}
+              source={upvote ? icons.upvoteIcon : icons.upVoteClick}
               style={{
-                width: 25,
-                height: 25,
+                width: 28,
+                height: 28,
                 tintColor: "#000000",
               }}
               resizeMode="contain"
@@ -123,26 +129,36 @@ const ApiFeed = ({ item }) => {
           <Text
             style={{
               fontWeight: "500",
-              fontSize: 14,
+              fontSize: 16,
               marginHorizontal: 5,
               lineHeight: 17,
             }}
           >
             {item?.like_count}
           </Text>
+
+          <TouchableOpacity
+            style={{ width: 25, paddingBottom: 2 }}
+            onPress={() => downVoteClick()}
+          >
+            <Image
+              source={downvote ? icons.downvoteIcon : icons.downVoteClick}
+              style={{
+                width: 28,
+                height: 28,
+                tintColor: "#000000",
+              }}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
         </View>
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            flexDirection: "row",
-          }}
-        >
+        <View style={styles.followUpContainer}>
           <TouchableOpacity
             style={{
               flexDirection: "row",
               alignItems: "center",
-              justifyContent: "space-between",
+              justifyContent: "center",
+              padding: 5,
             }}
             onPress={() => {
               //navigation.navigate("FeedDetail", { feed: item });
@@ -160,7 +176,7 @@ const ApiFeed = ({ item }) => {
               style={{
                 fontWeight: "500",
                 fontSize: 14,
-                marginHorizontal: 3,
+                marginRight: 4,
                 lineHeight: 17,
               }}
             >
@@ -322,7 +338,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: "#0276FF",
     width: 72,
-    height: 23,
+    height: 20,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -346,5 +362,25 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     paddingHorizontal: 8,
+  },
+  voteContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#d8d8d8",
+    padding: 8,
+    gap: 5,
+    borderRadius: 10,
+    height: 40,
+  },
+  followUpContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#d8d8d8",
+    padding: 2,
+    //gap: 5,
+    borderRadius: 10,
+    height: 40,
   },
 });

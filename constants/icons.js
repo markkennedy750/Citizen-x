@@ -76,10 +76,18 @@ const deleteIcon = require("../assets/icons/icon/deleteIcon.png");
 const solution1icon = require("../assets/icons/icon/solution1icon.png");
 const searchsharp = require("../assets/icons/icon/searchsharp.png");
 const addcircleoutline = require("../assets/icons/icon/addcircleoutline.png");
+const upvoteIcon = require("../assets/icons/icon/ArrowFatUp.png");
+const downvoteIcon = require("../assets/icons/icon/ArrowFatDown.png");
+const upVoteClick = require("../assets/icons/icon/ArrowFatUpgreen.png");
+const downVoteClick = require("../assets/icons/icon/ArrowFatUpred.png");
 const swap = require("../assets/icons/icon/swap.svg");
 const citizenx = require("../assets/citizenx.png");
 
 export default {
+  downVoteClick,
+  upVoteClick,
+  downvoteIcon,
+  upvoteIcon,
   coupon,
   cross,
   cart,

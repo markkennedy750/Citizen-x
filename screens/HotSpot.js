@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React from "react";
 import { COLORS, icons } from "../constants";
-import { useDispatch  } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const HotSpot = ({ navigation }) => {
   //const dispatch = useDispatch();
@@ -39,7 +39,7 @@ const HotSpot = ({ navigation }) => {
         >
           <Image
             source={icons.searchsharp}
-            style={{ height: 25, width: 25, tintColor: `${COLORS.gray}` }}
+            style={{ height: 20, width: 20, tintColor: `${COLORS.gray}` }}
           />
 
           <Text style={styles.filterReportText}>Filter Reports HotSpot</Text>
@@ -79,11 +79,11 @@ export default HotSpot;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight || 25,
+    paddingTop: 25,
     backgroundColor: COLORS.white,
   },
   firstContainer: {
-    height: 35,
+    height: 30,
     width: "100%",
     alignItems: "flex-start",
     justifyContent: "flex-end",
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   hotSpotText: {
     color: COLORS.primary,
     fontWeight: "700",
-    fontSize: 20,
+    fontSize: 19,
     lineHeight: 20,
     marginLeft: 15,
   },
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: COLORS.gray,
     borderRadius: 25,
-    height: 50,
+    height: 47,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
   filterReportText: {
     fontWeight: "700",
-    fontSize: 18,
+    fontSize: 16,
     color: COLORS.gray,
     lineHeight: 22,
   },
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 25,
     backgroundColor: "#ECFDF7",
-    height: 70,
+    height: 60,
     padding: 12,
     borderRadius: 10,
     gap: 5,
@@ -149,19 +149,19 @@ const styles = StyleSheet.create({
   instructionText: {
     textAlign: "left",
     color: "#000000B2",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "700",
     marginVertical: 8,
   },
 
   primTextConatiner: {
     fontWeight: "700",
-    fontSize: 15,
+    fontSize: 13,
     lineHeight: 19.6,
   },
   secTextContainer: {
     fontWeight: "500",
-    fontSize: 14,
+    fontSize: 12,
     lineHeight: 19.6,
   },
 });

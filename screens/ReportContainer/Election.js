@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
 import { CREATE_REPORT } from "../../Redux/URL";
 import axios from "axios";
+import ErrorImage from "../../components/loadingStates/ErrorImage";
 
 const Election = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -32,6 +33,7 @@ const Election = ({ navigation }) => {
   const [address, setAddress] = useState("");
   const [videoMedia, setVideoMedia] = useState("");
   const [selectedId, setSelectedId] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
@@ -49,12 +51,6 @@ const Election = ({ navigation }) => {
     };
     getData();
   }, []);
-
-  useEffect(() => {
-    if (error) {
-      Alert.alert("Login Failed", error.message);
-    }
-  }, [error]);
 
   const elections = [
     { label: "Voter Intimidation", value: "Voter Intimidation" },
@@ -74,12 +70,6 @@ const Election = ({ navigation }) => {
       loading === false
     );
   }
-
-  useEffect(() => {
-    if (error) {
-      Alert.alert("Error", error);
-    }
-  }, [error]);
 
   async function submitReport() {
     try {
@@ -200,6 +190,98 @@ const Election = ({ navigation }) => {
 
   if (loading) return <LoadingImage />;
 
+  if (error.response) {
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          {errorMessage}
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Go Back"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    );
+  } else if (error.request) {
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          {errorMessage}
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Go Back"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    );
+  } else if (error) {
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          {errorMessage}
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Go Back"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    );
+  }
+
   return (
     <ReportWrapper title="Elections">
       <InsidentType
@@ -302,5 +384,11 @@ export default Election;
 const styles = StyleSheet.create({
   checkBoxContainer: {
     marginVertical: 20,
+  },
+  errorStyle: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
   },
 });

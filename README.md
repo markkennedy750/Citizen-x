@@ -19,8 +19,8 @@ background: #0E9C67;
 https://github.com/react-native-clipboard/clipboard?tab=readme-ov-file#readme
 https://ashishnoob.medium.com/docker-basic-cheatsheet-011b8ccf78fc
 ////////////////////////////////////////////////////////////////////////////////////
-create a react component that takes in a string in this format
- "2024-08-04T15:42:12.764145916Z" and return string in this format "2024-08-04 : 15:42:12.7"
+nogton
+wheeli
 ////////////////////////////////////////////////////////////////////////////////////
 expoicons: ComponentProps<typeof Ionicons>["name"]
 
