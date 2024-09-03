@@ -15,7 +15,8 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": ["audio"]
+        "UIBackgroundModes": ["audio"],
+        "NSPhotoLibraryUsageDescription": "Citizen X need access to your photos to upload a profile picture."
       }
     },
     "android": {
@@ -24,7 +25,12 @@
         "backgroundColor": "#0E9C67"
       },
       "package": "com.kennedy757.citixenx",
-      "versionCode": 2
+      "versionCode": 2,
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/citizenx.png"
@@ -64,7 +70,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to let you share them with your friends."
+          "photosPermission": "Allow Citizen X to use your Photo."
         }
       ],
       [

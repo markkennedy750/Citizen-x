@@ -17,6 +17,7 @@ import LoadingImage from "../../components/loadingStates/LoadingImage";
 import { CREATE_REPORT } from "../../Redux/URL";
 import axios from "axios";
 import ErrorImage from "../../components/loadingStates/ErrorImage";
+import NetworkError from "../../components/loadingStates/NetworkError";
 
 const Technology = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -30,6 +31,7 @@ const Technology = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [address, setAddress] = useState("");
   const [videoMedia, setVideoMedia] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
@@ -208,7 +210,7 @@ const Technology = ({ navigation }) => {
   } else if (error.request) {
     return (
       <View style={styles.errorStyle}>
-        <ErrorImage />
+        <NetworkError />
         <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
           {errorMessage}
         </Text>

@@ -15,6 +15,7 @@ import { createReport } from "../../Redux/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
 import ErrorImage from "../../components/loadingStates/ErrorImage";
+import NetworkError from "../../components/loadingStates/NetworkError";
 
 const SocialWelfare = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -203,7 +204,7 @@ const SocialWelfare = ({ navigation }) => {
   } else if (error.request) {
     return (
       <View style={styles.errorStyle}>
-        <ErrorImage />
+      <NetworkError />
         <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
           {errorMessage}
         </Text>

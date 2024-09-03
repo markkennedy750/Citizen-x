@@ -3,54 +3,69 @@ import { View, StyleSheet, useWindowDimensions } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MotiImage } from "moti";
 import * as Splash from "expo-splash-screen";
+import { profile_sec, logout } from "../Redux/authSlice";
+import { useDispatch } from "react-redux";
 
 const SplashScreen = ({ navigation }) => {
   const { width } = useWindowDimensions();
-  const [token, setToken] = useState(null);
+  //const [token, setToken] = useState(null);
   const [appIsReady, setAppIsReady] = useState(false);
+  const dispatch = useDispatch();
 
   Splash.preventAutoHideAsync();
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem("access_token");
-        if (value !== null) {
-          setToken(value);
-        }
-      } catch (e) {
-        console.log("Error reading token", e);
-      } finally {
-        setAppIsReady(true);
-      }
-    };
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     try {
+  //       const value = await AsyncStorage.getItem("access_token");
+  //       if (value !== null) {
+  //         setToken(value);
+  //       }
+  //     } catch (e) {
+  //       console.log("Error reading token", e);
+  //     } finally {
+  //       setAppIsReady(true);
+  //     }
+  //   };
+  //   getData();
+  // }, []);
 
   useEffect(() => {
-    if (appIsReady) {
-      const checkSplashScreen = async () => {
-        try {
-          if (token) {
-            console.log("This is the token", token);
+    const checkTokenValidity = async () => {
+      try {
+        const token = await AsyncStorage.getItem("access_token");
+        if (token) {
+          const resultAction = await dispatch(
+            profile_sec({ access_token: token })
+          );
+
+          if (profile_sec.fulfilled.match(resultAction)) {
             setTimeout(() => {
               navigation.navigate("MainScreen");
             }, 4000);
           } else {
+            dispatch(logout());
             setTimeout(() => {
               navigation.navigate("WelcomeScreen");
             }, 4000);
           }
-        } catch (error) {
-          console.error(error);
-        } finally {
-          await Splash.hideAsync();
+        } else {
+          dispatch(logout());
+          setTimeout(() => {
+            navigation.navigate("WelcomeScreen");
+          }, 4000);
         }
-      };
+      } catch (error) {
+        console.error("Error validating token", error);
+        navigation.navigate("WelcomeScreen");
+      } finally {
+        setAppIsReady(true);
+        await Splash.hideAsync();
+      }
+    };
 
-      checkSplashScreen();
-    }
-  }, [appIsReady, token, navigation]);
+    checkTokenValidity();
+  }, [dispatch, navigation]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {

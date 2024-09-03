@@ -6,26 +6,315 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { COLORS, icons, SIZES } from "../constants";
 import feeds from "../data/DummyFeedData";
 import { utils } from "../utils";
 import FormInput from "../components/FormInput";
+import * as ImagePicker from "expo-image-picker";
+import { useSelector, useDispatch } from "react-redux";
+import { UPDATE_PROFILE_PICS, UPDATE_PROFILE } from "../Redux/URL";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ErrorImage from "../components/loadingStates/ErrorImage";
+import TextButton from "../components/TextButton";
+import NetworkError from "../components/loadingStates/NetworkError";
+import LoadingImage from "../components/loadingStates/LoadingImage";
+import axios from "axios";
+import { profile_sec } from "../Redux/authSlice";
 
 const EditProfile = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [state, setState] = useState("");
+  const [localGov, setLocalGov] = useState("");
   const [fullName, setFullName] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [UserName, setUserName] = useState("");
+  const [isValidImage, setIsValidImage] = useState(false);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [fullNameError, setFullNameError] = useState("");
+  const [imageLoading, setImageLoading] = useState(false);
+  const [profileImag, setProfileImag] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [token, setToken] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [error, setError] = useState("");
 
-  const profile = feeds[3];
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  //const profile = feeds[3];
+
+  const mediaAccess = async () => {
+    try {
+      setImageLoading(true);
+      // const { status } = await MediaLibrary.requestPermissionsAsync();
+      // if (status !== "granted") {
+      //   Alert.alert(
+      //     "Sorry, we need media library permissions to access your photos."
+      //   );
+      //   setImageLoading(false);
+      //   return;
+      // }
+
+      let result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        setProfileImag(result.assets[0].uri);
+        console.log(profileImag);
+        //updatePix(profileImag);
+        //console.log("The profile image was updated to the server");
+      } else {
+        Alert.alert("You did not select any image.");
+      }
+    } catch (error) {
+      //console.error("Error accessing media library: ", error);
+      Alert.alert("Error accessing media library", error);
+    } finally {
+      setImageLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem("access_token");
+        setToken(value);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (profileImag !== "") {
+      updatePix();
+    }
+  }, [profileImag]);
+
+  async function updateProfile() {
+    try {
+      setLoading(true);
+      const data = {};
+      if (fullName) {
+        data.fullname = fullName;
+      }
+      if (UserName) {
+        data.username = UserName;
+      }
+      if (state) {
+        data.state = state;
+      }
+      if (localGov) {
+        data.lga = localGov;
+      }
+      const response = await axios.put(UPDATE_PROFILE, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("report created successfully:", response.data);
+      if (response.status === 200) {
+        setLoading(false);
+        setUpdateSuccess(true);
+      }
+      return response.data;
+    } catch (error) {
+      setLoading(false);
+      setError(error);
+      if (error.response) {
+        console.log("server error:", error.response.data);
+        setErrorMessage(
+          "There was an issue with the server. Please try again later."
+        );
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        console.log("network error:", error.message);
+        setErrorMessage(
+          "Network error. Please check your internet connection and try again."
+        );
+        return rejectWithValue(error.message);
+      } else {
+        console.log("error:", error.message);
+        setErrorMessage("An unexpected error occurred. Please try again.");
+        return rejectWithValue(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function updatePix() {
+    try {
+      setImageLoading(true);
+      if (profileImag) {
+        const formData = new FormData();
+        formData.append("profileImage", {
+          uri: profileImag,
+          type: "image/jpeg",
+          name: "profileUpdate.jpg",
+        });
+
+        const response = await axios.put(UPDATE_PROFILE_PICS, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log("Profile image updated successfully:", response.data);
+        if (response.status === 200) {
+          Alert.alert("Success", "Profile image updated successfully");
+          setImageLoading(false);
+          dispatch(profile_sec());
+        }
+        return response.data;
+      }
+    } catch (error) {
+      setImageLoading(false);
+      //setError(error);
+      if (error.response) {
+        console.log("server error:", error.response.data);
+        Alert.alert(
+          "Error updating pricture",
+          "There was an issue with the server. Please try again later."
+        );
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        console.log("network error:", error.message);
+        Alert.alert(
+          "Network error updating pricture",
+          "Please check your internet connection and try again."
+        );
+        return rejectWithValue(error.message);
+      } else {
+        console.log("error:", error.message);
+        Alert.alert(
+          "Error updating pricture",
+          "An unexpected error occurred. Please try again."
+        );
+        setErrorMessage();
+        return rejectWithValue(error.message);
+      }
+    } finally {
+      setImageLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (user?.profileImage) {
+      Image.prefetch(user.profileImage)
+        .then(() => setIsValidImage(true))
+        .catch(() => setIsValidImage(false));
+    } else {
+      setIsValidImage(false);
+    }
+  }, [user?.profileImage]);
+
+  if (loading) return <LoadingImage />;
+
+  if (error.response) {
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          {errorMessage}
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Go Back"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    );
+  } else if (error.request) {
+    return (
+      <View style={styles.errorStyle}>
+        <NetworkError />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          {errorMessage}
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Go Back"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    );
+  } else if (error) {
+    return (
+      <View style={styles.errorStyle}>
+        <ErrorImage />
+        <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
+          {errorMessage}
+        </Text>
+        <View style={{ alignItems: "center", justifyContent: "center" }}>
+          <TextButton
+            label="Go Back"
+            buttonContainerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: "#0E9C67",
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -40,8 +329,17 @@ const EditProfile = ({ navigation }) => {
       </View>
 
       <View style={styles.profileImageContainer}>
-        <TouchableOpacity>
-          <Image source={profile.user.profileImage} style={styles.profileImg} />
+        <TouchableOpacity onPress={mediaAccess}>
+          {imageLoading ? (
+            <ActivityIndicator size="large" color={`${COLORS.primary}`} />
+          ) : (
+            <Image
+              source={
+                isValidImage ? { uri: user?.profileImage } : icons.anonymous
+              }
+              style={styles.profileImg}
+            />
+          )}
         </TouchableOpacity>
         <Text style={styles.profileImageText}>Change Profile Photo</Text>
       </View>
@@ -50,7 +348,7 @@ const EditProfile = ({ navigation }) => {
         <View>
           <FormInput
             label="Full Name"
-            placeholder="Dapo Karim"
+            placeholder={user?.name}
             containerStyle={{
               marginTop: SIZES.radius,
               flex: 1,
@@ -86,19 +384,19 @@ const EditProfile = ({ navigation }) => {
             }
           />
 
-          <TouchableOpacity style={{ marginLeft: "auto", height: 30 }}>
+          <View style={{ marginLeft: "auto", height: 30 }}>
             <Text
               style={{ fontWeight: "700", fontSize: 17, color: COLORS.primary }}
             >
               Change Fullname
             </Text>
-          </TouchableOpacity>
+          </View>
         </View>
 
         <View>
           <FormInput
             label="Username"
-            placeholder="Dapo Karim"
+            placeholder={user?.username}
             containerStyle={{
               marginTop: SIZES.radius,
               flex: 1,
@@ -134,106 +432,71 @@ const EditProfile = ({ navigation }) => {
             }
           />
 
-          <TouchableOpacity style={{ marginLeft: "auto", height: 30 }}>
+          <View style={{ marginLeft: "auto", height: 30 }}>
             <Text
               style={{ fontWeight: "700", fontSize: 15, color: COLORS.primary }}
             >
               Change Username
             </Text>
-          </TouchableOpacity>
+          </View>
         </View>
 
         <View>
           <FormInput
-            label="Email"
-            keyboardType="email-address"
-            placeholder="ObiShegunAminu@mail.com"
-            autoCompleteType="email"
+            label="State"
+            placeholder="Enugu"
             onChange={(value) => {
-              // validate email
-              utils.validateEmail(value, setEmailError);
-              setEmail(value);
+              setState(value);
             }}
-            errorMsg={emailError}
-            appendComponent={
-              <View
-                style={{
-                  justifyContent: "center",
-                }}
-              >
-                <Image
-                  source={
-                    email == "" || (email != "" && emailError == "")
-                      ? icons.correct
-                      : icons.cancel
-                  }
-                  style={{
-                    height: 20,
-                    width: 20,
-                    tintColor:
-                      email == ""
-                        ? COLORS.gray
-                        : email != "" && emailError == ""
-                        ? COLORS.green
-                        : COLORS.red,
-                  }}
-                />
-              </View>
-            }
           />
 
-          <TouchableOpacity style={{ marginLeft: "auto", height: 30 }}>
+          <View style={{ marginLeft: "auto", height: 30 }}>
             <Text
               style={{ fontWeight: "700", fontSize: 15, color: COLORS.primary }}
             >
-              Change Email
+              Change Your State
             </Text>
-          </TouchableOpacity>
+          </View>
         </View>
 
         <View>
           <FormInput
-            label="Password"
-            secureTextEntry={!showPass}
-            placeholder="!12$ogiQ0L"
-            autoCompleteType="password"
+            label="Local Government"
+            placeholder="Agwuata"
             containerStyle={{
               marginTop: SIZES.radius,
             }}
             onChange={(value) => {
-              utils.validatePassword(value, setPasswordError);
-              setPassword(value);
+              setLocalGov(value);
             }}
-            errorMsg={passwordError}
-            appendComponent={
-              <TouchableOpacity
-                style={{
-                  width: 40,
-                  alignItems: "flex-end",
-                  justifyContent: "center",
-                }}
-                onPress={() => setShowPass(!showPass)}
-              >
-                <Image
-                  source={showPass ? icons.eye_close : icons.eye}
-                  style={{
-                    height: 20,
-                    width: 20,
-                    tintColor: COLORS.gray,
-                  }}
-                />
-              </TouchableOpacity>
-            }
           />
 
-          <TouchableOpacity style={{ marginLeft: "auto", height: 30 }}>
+          <View style={{ marginLeft: "auto", height: 30 }}>
             <Text
               style={{ fontWeight: "700", fontSize: 15, color: COLORS.primary }}
             >
-              Reset Password
+              Set your local Government
             </Text>
-          </TouchableOpacity>
+          </View>
         </View>
+        <TextButton
+          label="Update your details"
+          //disabled={isEnableSignUp() ? false : true}
+          buttonContainerStyle={{
+            height: 55,
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 45,
+            borderRadius: SIZES.radius,
+            backgroundColor: "#0E9C67",
+          }}
+          labelStyle={{
+            color: COLORS.white,
+            fontWeight: "700",
+            fontSize: 17,
+          }}
+          onPress={updateProfile}
+        />
       </ScrollView>
     </View>
   );
@@ -245,8 +508,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    marginTop: StatusBar.currentHeight || 45,
-    paddingTop: 18,
+    paddingTop: 20,
     paddingHorizontal: 15,
   },
   topContainer: {

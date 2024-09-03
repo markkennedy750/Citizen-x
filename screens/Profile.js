@@ -7,6 +7,7 @@ import {
   Image,
   ImageBackground,
   Alert,
+  Modal,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import feeds from "../data/DummyFeedData";
@@ -15,7 +16,7 @@ import BottomTabFeed from "../components/BottomTabFeed";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingImage from "../components/loadingStates/LoadingImage";
-import { profile_sec, rewardCount } from "../Redux/authSlice";
+import { logout, profile_sec, rewardCount } from "../Redux/authSlice";
 import ErrorImage from "../components/loadingStates/ErrorImage";
 import TextButton from "../components/TextButton";
 import { HOST } from "../Redux/URL";
@@ -28,7 +29,8 @@ const Profile = ({ navigation }) => {
     (state) => state.auth
   );
   const profile = feeds[3];
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isValidImage, setIsValidImage] = useState(false);
   useEffect(() => {
     const getData = async () => {
       try {
@@ -44,6 +46,22 @@ const Profile = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    if (user?.profileImage) {
+      Image.prefetch(user.profileImage)
+        .then(() => setIsValidImage(true))
+        .catch(() => setIsValidImage(false));
+    } else {
+      setIsValidImage(false);
+    }
+  }, [user?.profileImage]);
+
+  function loguserout() {
+    dispatch(logout());
+    setModalVisible(false);
+    navigation.navigate("SignIn");
+  }
+
+  useEffect(() => {
     dispatch(profile_sec({ access_token }));
     dispatch(rewardCount({ access_token }));
   }, [dispatch]);
@@ -55,38 +73,127 @@ const Profile = ({ navigation }) => {
   if (loading) return <LoadingImage />;
   if (error)
     return (
-      <View style={styles.errorStyle}>
-        <ErrorImage />
-        <Text
+      <View style={{ flex: 1 }}>
+        <View
           style={{
-            color: "red",
-            fontSize: 12,
-            fontWeight: "400",
-            textAlign: "center",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            paddingHorizontal: 8,
+            paddingTop: 5,
           }}
         >
-          Failed to load your profile, please check your network connection or
-          click to refresh
-        </Text>
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
           <TextButton
-            label="Refresh"
+            label="log out"
             buttonContainerStyle={{
-              height: 50,
+              height: 35,
               alignItems: "center",
               justifyContent: "center",
               marginTop: 20,
               borderRadius: SIZES.radius,
-              backgroundColor: "#0E9C67",
+              //backgroundColor: "#0E9C67",
+              borderWidth: 1,
+              borderColor: COLORS.primary,
             }}
             labelStyle={{
-              color: COLORS.white,
+              color: COLORS.black,
               fontWeight: "700",
               fontSize: 18,
             }}
-            onPress={refreshBtn}
+            onPress={() => {
+              setModalVisible(true);
+            }}
           />
         </View>
+        <View style={styles.errorStyle}>
+          <ErrorImage />
+          <Text
+            style={{
+              color: "red",
+              fontSize: 12,
+              fontWeight: "400",
+              textAlign: "center",
+            }}
+          >
+            Failed to load your profile, please check your network connection or
+            click to refresh
+          </Text>
+          <View style={{ alignItems: "center", justifyContent: "center" }}>
+            <TextButton
+              label="Refresh"
+              buttonContainerStyle={{
+                height: 50,
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 20,
+                borderRadius: SIZES.radius,
+                backgroundColor: "#0E9C67",
+              }}
+              labelStyle={{
+                color: COLORS.white,
+                fontWeight: "700",
+                fontSize: 18,
+              }}
+              onPress={refreshBtn}
+            />
+          </View>
+        </View>
+        <Modal animationType="slide" transparent={true} visible={modalVisible}>
+          <View style={styles.modalContainer}>
+            <View style={styles.imagelogoutContainer}>
+              <Image
+                source={icons.logouticon}
+                style={{ height: 60, width: 60, tintColor: "black" }}
+              />
+            </View>
+            <View style={styles.logoutTextContainer}>
+              <Text style={styles.primaryText}>Already leaving?</Text>
+              <Text style={styles.secondaryText}>
+                Are you sure you want to logout?
+              </Text>
+            </View>
+            <View style={styles.buttonContainer}>
+              <TextButton
+                label="Yes, Logout"
+                buttonContainerStyle={{
+                  height: 55,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: 20,
+                  borderRadius: SIZES.radius,
+                  backgroundColor: "#0E9C67",
+                }}
+                labelStyle={{
+                  color: COLORS.white,
+                  fontWeight: "700",
+                  fontSize: 18,
+                }}
+                onPress={loguserout}
+              />
+              <TextButton
+                label="No, Am staying"
+                buttonContainerStyle={{
+                  height: 55,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: SIZES.radius,
+                  backgroundColor: COLORS.transparent,
+                  borderWidth: 1,
+                  marginTop: 15,
+                  borderColor: COLORS.gray2,
+                }}
+                labelStyle={{
+                  color: COLORS.black,
+                  fontWeight: "700",
+                  fontSize: 18,
+                }}
+                onPress={() => {
+                  setModalVisible(false);
+                }}
+              />
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   console.log("user section", user);
@@ -103,7 +210,12 @@ const Profile = ({ navigation }) => {
       </TouchableOpacity>
       <View style={{ marginTop: 12 }}>
         <View style={styles.profileContiner}>
-          <Image source={icons.anonymous} style={styles.profileImag} />
+          <Image
+            source={
+              isValidImage ? { uri: user?.profileImage } : icons.anonymous
+            }
+            style={styles.profileImag}
+          />
           <View style={styles.profileNameContainer}>
             <Text style={styles.fullName}>{user?.name}</Text>
             <Text style={styles.userName}>@{user?.username}</Text>
@@ -172,7 +284,16 @@ const Profile = ({ navigation }) => {
             </ImageBackground>
           </TouchableOpacity>
         </View>
-        <View style={styles.buttonContainer}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginHorizontal: 10,
+            marginVertical: 12,
+            gap: 5,
+          }}
+        >
           <TouchableOpacity
             style={styles.editButton}
             onPress={() => navigation.navigate("EditProfile")}
@@ -281,9 +402,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: "row",
     height: 45,
-    width: 165,
+    width: 155,
     borderWidth: 1.5,
-    marginRight: 8,
+    //marginRight: 8,
     borderColor: COLORS.primary,
     justifyContent: "center",
     alignItems: "center",
@@ -299,6 +420,48 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 33,
+  },
+  modalContainer: {
+    width: "98%",
+    height: 350,
+    backgroundColor: "white",
+    alignSelf: "center",
+    marginTop: "auto",
+    marginBottom: 7,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    alignItems: "center",
+    borderWidth: 1.5,
+    borderColor: COLORS.gray2,
+  },
+  imagelogoutContainer: {
+    width: 90,
+    height: 90,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: COLORS.primary,
+    borderRadius: 60,
+    marginTop: 10,
+  },
+  logoutTextContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  primaryText: {
+    fontSize: 20,
+    fontWeight: "600",
+    lineHeight: 25,
+  },
+  secondaryText: {
+    fontSize: 15,
+    fontWeight: "400",
+    lineHeight: 20,
+  },
+  buttonContainer: {
+    width: "100%",
+    paddingHorizontal: 15,
   },
 });

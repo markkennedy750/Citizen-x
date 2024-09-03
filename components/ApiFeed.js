@@ -1,18 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { COLORS, icons } from "../constants";
 import CustomImageSlider from "./CustomImageSlider";
 import TextComponent from "./TextComponent";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { DOWN_VOTE, UPVOTE } from "../Redux/URL";
 
 const ApiFeed = ({ item }) => {
   const navigation = useNavigation();
   const images = item.image;
-  const [upvote, setupvote] = useState(true);
+  const [upvote, setupvote] = useState(false);
   const [downvote, setdownvote] = useState(false);
+  const [upvoteCount, setUpvoteCount] = useState(item?.upvote_count);
+  const [downCount, setDownCount] = useState(item?.downvote_count);
+  const [voteLoading, setVoteLoading] = useState(false);
+  const [downVoteLoading, setDownVoteLoading] = useState(false);
 
   const date = item?.time_of_incidence;
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
 
@@ -24,14 +40,89 @@ const ApiFeed = ({ item }) => {
     const seconds = String(date.getSeconds()).padStart(2, "0");
     const milliseconds = String(date.getMilliseconds()).charAt(0);
 
-    return `${year}-${month}-${day} : ${hours}:${minutes}:${seconds}.${milliseconds}`;
+    return `${year}-${month}-${day}:${hours}:${minutes}:${seconds}.${milliseconds}`;
   };
 
-  function upVoteClick() {
+  const postId = item?.id;
+
+  async function upVoteClick(postId) {
     setupvote((prev) => !prev);
+    setdownvote(false);
+    setVoteLoading(true);
+    try {
+      const token = await AsyncStorage.getItem("access_token");
+      const response = await axios.put(UPVOTE + "/" + postId, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      if (response.status === 200) {
+        if (upvote === false) {
+          setUpvoteCount((prevCount) => prevCount + 1);
+        }
+        if (upvote === true && upvote > 0) {
+          setUpvoteCount((prevCount) => prevCount - 1);
+        }
+        setVoteLoading(false);
+      }
+    } catch (error) {
+      setVoteLoading(false);
+      if (error.response) {
+        console.log("server error:", error.response.data.error);
+        const errorMessage = error.response.data.error;
+        Alert.alert("Error", errorMessage);
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        console.log("network error:", error.message);
+        Alert.alert(
+          "Network error. Please check your internet connection and try again."
+        );
+        return rejectWithValue(error.message);
+      } else {
+        console.log("error:", error.message);
+        Alert.alert("An unexpected error occurred. Please try again.");
+        return rejectWithValue(error.message);
+      }
+    }
   }
-  function downVoteClick() {
+  async function downVoteClick(postId) {
     setdownvote((prev) => !prev);
+    setupvote(false);
+    setDownVoteLoading(true);
+    try {
+      const token = await AsyncStorage.getItem("access_token");
+      const response = await axios.put(DOWN_VOTE + "/" + postId, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(response.data);
+      if (response.status === 200) {
+        setDownCount((prevCount) => prevCount + 1);
+        setDownVoteLoading(false);
+      }
+    } catch (error) {
+      setDownVoteLoading(false);
+      if (error.response) {
+        console.log("server error:", error.response.data.error);
+        const errorMessage = error.response.data.error;
+        Alert.alert("Error", errorMessage);
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        console.log("network error:", error.message);
+        Alert.alert(
+          "Network error. Please check your internet connection and try again."
+        );
+        return rejectWithValue(error.message);
+      } else {
+        console.log("error:", error.message);
+        Alert.alert("An unexpected error occurred. Please try again.");
+        return rejectWithValue(error.message);
+      }
+    }
   }
   return (
     <View style={styles.container}>
@@ -44,33 +135,15 @@ const ApiFeed = ({ item }) => {
           <Image source={icons.anonymous} style={styles.profileImg} />
           <View style={{ marginLeft: 10 }}>
             <View style={styles.usernameContainer}>
-              <Text style={styles.fulName}>{item?.fullname}</Text>
-              <Text style={styles.usename}>@{item?.username}</Text>
-              {item?.report_status === "Pending" ? (
-                <View style={styles.verify}>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      lineHeight: 14,
-                      fontWeight: "700",
-                      color: COLORS.white,
-                    }}
-                  >
-                    Pending
-                  </Text>
-                </View>
+              {item?.fullname ? (
+                <Text style={styles.fulName}>{item?.fullname}</Text>
               ) : (
-                <View style={styles.verify}>
-                  <Text style={styles.verifyText}>verified</Text>
-                  <Image
-                    source={icons.checkbox}
-                    style={{
-                      width: 12,
-                      height: 12,
-                      tintColor: "white",
-                    }}
-                  />
-                </View>
+                <Text style={styles.fulName}>Anonymous User</Text>
+              )}
+              {item?.username ? (
+                <Text style={styles.usename}>@{item?.username}</Text>
+              ) : (
+                <Text style={styles.usename}>@Anonymous</Text>
               )}
             </View>
             <View style={styles.reportDaTim}>
@@ -86,14 +159,16 @@ const ApiFeed = ({ item }) => {
                   marginHorizontal: 5,
                 }}
               />
-              <Image
-                source={icons.hotspots}
-                style={{
-                  width: 15,
-                  height: 15,
-                  tintColor: "red",
-                }}
-              />
+              {item?.state_name && (
+                <Image
+                  source={icons.hotspots}
+                  style={{
+                    width: 15,
+                    height: 15,
+                    tintColor: "red",
+                  }}
+                />
+              )}
               <Text style={{ ...styles.placeStyle, marginRight: 3 }}>
                 {item?.state_name}
               </Text>
@@ -101,9 +176,11 @@ const ApiFeed = ({ item }) => {
             </View>
           </View>
         </View>
-        <View style={styles.reporttype}>
-          <Text style={styles.reportText}>{item?.category}</Text>
-        </View>
+        {item?.category && (
+          <View style={styles.reporttype}>
+            <Text style={styles.reportText}>{item?.category}</Text>
+          </View>
+        )}
       </TouchableOpacity>
       <View style={{ marginRight: 10 }}>
         <View style={{ paddingHorizontal: 10 }}>
@@ -112,45 +189,92 @@ const ApiFeed = ({ item }) => {
       </View>
       <View style={styles.iconContainer}>
         <View style={styles.voteContainer}>
-          <TouchableOpacity
-            style={{ width: 25, paddingBottom: 2 }}
-            onPress={() => upVoteClick()}
-          >
-            <Image
-              source={upvote ? icons.upvoteIcon : icons.upVoteClick}
-              style={{
-                width: 28,
-                height: 28,
-                tintColor: "#000000",
-              }}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-          <Text
+          {voteLoading ? (
+            <ActivityIndicator size="large" color={`${COLORS.black}`} />
+          ) : (
+            <>
+              <TouchableOpacity
+                style={{
+                  width: 25,
+                  padding: 5,
+                  flexDirection: "row",
+                  alignItem: "center",
+                  justifyContent: "center",
+                }}
+                onPress={() => upVoteClick(postId)}
+              >
+                <Image
+                  source={
+                    upvote === false ? icons.upvoteIcon : icons.upVoteClick
+                  }
+                  style={{
+                    width: 28,
+                    height: 28,
+                    tintColor: "#000000",
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  fontWeight: "500",
+                  fontSize: 16,
+                  marginHorizontal: 2,
+                  lineHeight: 17,
+                }}
+              >
+                {upvoteCount}
+              </Text>
+            </>
+          )}
+          <View
             style={{
-              fontWeight: "500",
-              fontSize: 16,
-              marginHorizontal: 5,
-              lineHeight: 17,
+              width: 2,
+              height: 30,
+              alignSelf: "center",
+              backgroundColor: COLORS.gray,
             }}
-          >
-            {item?.like_count}
-          </Text>
-
-          <TouchableOpacity
-            style={{ width: 25, paddingBottom: 2 }}
-            onPress={() => downVoteClick()}
-          >
-            <Image
-              source={downvote ? icons.downvoteIcon : icons.downVoteClick}
-              style={{
-                width: 28,
-                height: 28,
-                tintColor: "#000000",
-              }}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
+          />
+          {downVoteLoading ? (
+            <ActivityIndicator size="large" color={`${COLORS.black}`} />
+          ) : (
+            <>
+              <Text
+                style={{
+                  fontWeight: "500",
+                  fontSize: 16,
+                  marginHorizontal: 2,
+                  lineHeight: 17,
+                }}
+              >
+                {downCount}
+              </Text>
+              <TouchableOpacity
+                style={{
+                  width: 25,
+                  padding: 5,
+                  flexDirection: "row",
+                  alignItem: "center",
+                  justifyContent: "center",
+                }}
+                onPress={() => downVoteClick(postId)}
+              >
+                <Image
+                  source={
+                    downvote === false
+                      ? icons.downvoteIcon
+                      : icons.downVoteClick
+                  }
+                  style={{
+                    width: 28,
+                    height: 28,
+                    tintColor: "#000000",
+                  }}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
         <View style={styles.followUpContainer}>
           <TouchableOpacity
@@ -312,7 +436,7 @@ const styles = StyleSheet.create({
   reporttype: {
     marginVertical: 15,
     borderWidth: 1.3,
-    height: 30,
+    height: "auto",
     width: 120,
     alignItems: "center",
     justifyContent: "center",
@@ -324,6 +448,8 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
     fontWeight: "700",
     textAlign: "center",
+    fontSize: 15,
+    lineHeight: 18,
   },
   feedContent: {
     textAlign: "left",
@@ -367,20 +493,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#d8d8d8",
+    //backgroundColor: "#d8d8d8",
     padding: 8,
     gap: 5,
     borderRadius: 10,
     height: 40,
+    borderWidth: 0.5,
+    borderColor: COLORS.gray3,
   },
   followUpContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#d8d8d8",
+    //backgroundColor: "#d8d8d8",
     padding: 2,
     //gap: 5,
     borderRadius: 10,
     height: 40,
+    borderWidth: 0.5,
+    borderColor: COLORS.gray3,
   },
 });

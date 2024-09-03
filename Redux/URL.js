@@ -8,4 +8,7 @@ export const CREATE_REPORT = `${HOST}/api/v1/user/report`;
 export const AUTH_FEEDS = `${HOST}/api/v1/incident_reports`;
 export const USER_REWARD = `${HOST}/api/v1/count/all/rewards`;
 export const PROFILE = `${HOST}/api/v1/me`;
-
+export const UPDATE_PROFILE_PICS = `${HOST}/api/v1/upload`;
+export const UPDATE_PROFILE = `${HOST}/api/v1/me/updateUserProfile`;
+export const UPVOTE = `${HOST}/api/v1/report/upvote`;
+export const DOWN_VOTE = `${HOST}/api/v1/report/downvote`;

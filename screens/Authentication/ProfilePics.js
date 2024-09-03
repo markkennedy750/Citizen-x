@@ -15,8 +15,8 @@ import TextButton from "../../components/TextButton";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { signup } from "../../Redux/authSlice";
+//import AsyncStorage from "@react-native-async-storage/async-storage";
+import { resetUserStatus, signup } from "../../Redux/authSlice";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
 
 const ProfilePics = ({ navigation, route }) => {
@@ -29,38 +29,39 @@ const ProfilePics = ({ navigation, route }) => {
   const mediaAccess = async () => {
     try {
       setImageLoading(true);
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert(
-          "Sorry, we need media library permissions to access your photos."
-        );
-        setImageLoading(false);
-        return;
-      }
+      // const { status } = await MediaLibrary.requestPermissionsAsync();
+      // if (status !== "granted") {
+      //   Alert.alert(
+      //     "Sorry, we need media library permissions to access your photos."
+      //   );
+      //   setImageLoading(false);
+      //   return;
+      // }
 
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      let result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
-        aspect: [4, 3],
         quality: 1,
       });
 
       if (!result.canceled) {
         setProfileImage(result.assets[0].uri);
+      } else {
+        Alert.alert("You did not select any image.");
       }
     } catch (error) {
-      console.error("Error accessing media library: ", error);
-      Alert.alert("Error", "There was an error accessing your media library.");
+      //console.error("Error accessing media library: ", error);
+      Alert.alert("Error accessing media library", error);
     } finally {
       setImageLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (error) {
-      Alert.alert("Sign Up failed", "There was an issue signing you up.");
-    }
-  }, [error]);
+  // useEffect(() => {
+  //   if (error) {
+  //     Alert.alert("Sign Up failed", "There was an issue signing you up.");
+  //     console.log(error);
+  //   }
+  // }, [error]);
 
   useEffect(() => {
     if (user && status === "Created") {
@@ -71,30 +72,12 @@ const ProfilePics = ({ navigation, route }) => {
         password,
         username,
       });
+      dispatch(resetUserStatus());
     }
-  }, [user, status, navigation]);
-
-  const isEnableSignIn = () => profileImage !== "";
+  }, [user, status, navigation, dispatch]);
 
   const signUpFnc = () => {
-    if (profileImage) {
-      dispatch(
-        signup({
-          profileImage,
-          fullname,
-          username,
-          phoneNumber,
-          email,
-          password,
-        })
-      );
-    } else {
-      noImage();
-    }
-  };
-
-  function noImage() {
-    setProfileImage(icons.anonymous);
+    //console.log("signup function called");
     dispatch(
       signup({
         profileImage,
@@ -105,16 +88,35 @@ const ProfilePics = ({ navigation, route }) => {
         password,
       })
     );
-  }
+  };
+
   if (loading) return <LoadingImage />;
 
+  if (error) {
+    Alert.alert(
+      "Sign Up failed",
+      "There was an issue signing you up. Please check your internet connection and try again later."
+    );
+    console.log(error);
+  }
+
+  // if (user && status === "Created") {
+  //   navigation.navigate("SignUpSuccess", {
+  //     fullname,
+  //     email,
+  //     phoneNumber,
+  //     password,
+  //     username,
+  //   });
+  //   //     dispatch(resetUserStatus());
+  // }
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.navigate("SignUp")}
-      >
-        <Image source={icons.arrowleft} style={styles.backButtonIcon} />
+      <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+        <Image
+          source={icons.arrowleft}
+          style={{ width: 23, height: 23, tintColor: "black", marginLeft: 12 }}
+        />
       </TouchableOpacity>
       <AuthLayoutSignUp
         steps="Personalization"
@@ -134,13 +136,11 @@ const ProfilePics = ({ navigation, route }) => {
                   style={styles.profileImage}
                 />
               ) : (
-                <View style={styles.defaultImageContainer}>
-                  <Image
-                    source={icons.uploadProfile}
-                    resizeMode="cover"
-                    style={styles.defaultImage}
-                  />
-                </View>
+                <Image
+                  source={icons.uploadProfile}
+                  resizeMode="cover"
+                  style={styles.profileImage}
+                />
               )}
             </TouchableOpacity>
             <Text style={styles.text}>Add Profile Photo</Text>
@@ -148,15 +148,15 @@ const ProfilePics = ({ navigation, route }) => {
 
           <TextButton
             label={profileImage ? "Next" : "Skip"}
-            //disabled={!isEnableSignIn()}
-            buttonContainerStyle={[
-              styles.nextButton,
-              {
-                backgroundColor: "#0E9C67",
-              },
-            ]}
+            buttonContainerStyle={styles.nextButton}
             labelStyle={styles.nextButtonLabel}
-            onPress={signUpFnc}
+            onPress={() => {
+              if (profileImage) {
+                signUpFnc();
+              } else if (profileImage === "") {
+                noProfileSignUp();
+              }
+            }}
           />
         </View>
       </AuthLayoutSignUp>
@@ -183,5 +183,29 @@ const styles = StyleSheet.create({
     lineHeight: 19.6,
     marginRight: 95,
     color: COLORS.primary,
+  },
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 70,
+    marginRight: 15,
+    marginTop: 18,
+  },
+  authLayout: {
+    paddingVertical: 20,
+  },
+  nextButton: {
+    height: 50,
+    width: "100%",
+    backgroundColor: COLORS.primary,
+    borderRadius: 8,
+    marginTop: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  nextButtonLabel: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: COLORS.white,
   },
 });

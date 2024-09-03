@@ -47,7 +47,7 @@ export const signup = createAsyncThunk(
         });
       }
 
-      //console.log("Form Data before sending to server:", formData);
+      console.log("Form Data before sending to server:", formData);
       const response = await axios.post(SIGNUP, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -296,6 +296,10 @@ export const authSlice = createSlice({
       AsyncStorage.removeItem("username");
       AsyncStorage.removeItem("user_details");
     },
+    resetUserStatus: (state) => {
+      state.user = null;
+      state.status = "";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -392,5 +396,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, resetUserStatus } = authSlice.actions;
 export default authSlice.reducer;

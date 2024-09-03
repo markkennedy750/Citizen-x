@@ -15,6 +15,9 @@ import { createReport } from "../../Redux/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
 import ErrorImage from "../../components/loadingStates/ErrorImage";
+import NetworkError from "../../components/loadingStates/NetworkError";
+import { CREATE_REPORT } from "../../Redux/URL";
+import axios from "axios";
 
 const MakeReport = ({ navigation }) => {
   const [reportType, setReportType] = useState("");
@@ -56,7 +59,7 @@ const MakeReport = ({ navigation }) => {
       data.sub_report_type = reportType;
       data.description = textInput;
 
-      data.date_of_incidence = date;
+      //data.date_of_incidence = date;
       data.state_name = selectedState;
       data.lga_name = selectedLocalGov;
       data.is_anonymous = isEnabled;
@@ -193,7 +196,7 @@ const MakeReport = ({ navigation }) => {
   } else if (error.request) {
     return (
       <View style={styles.errorStyle}>
-        <ErrorImage />
+        <NetworkError />
         <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
           {errorMessage}
         </Text>

@@ -17,6 +17,7 @@ import LoadingImage from "../../components/loadingStates/LoadingImage";
 import { CREATE_REPORT } from "../../Redux/URL";
 import axios from "axios";
 import ErrorImage from "../../components/loadingStates/ErrorImage";
+import NetworkError from "../../components/loadingStates/NetworkError";
 
 const School = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -248,7 +249,7 @@ const School = ({ navigation }) => {
   } else if (error.request) {
     return (
       <View style={styles.errorStyle}>
-        <ErrorImage />
+      <NetworkError />
         <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
           {errorMessage}
         </Text>

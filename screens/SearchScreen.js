@@ -12,6 +12,7 @@ import { COLORS, icons, SIZES } from "../constants";
 import DummyFeedData from "../data/DummyFeedData";
 import Feed from "../components/Feed";
 
+
 const SearchScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
@@ -68,19 +69,19 @@ export default SearchScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 45,
+    paddingTop: 25,
     backgroundColor: COLORS.white,
     //paddingVertical: 16,
   },
   goBackButton: {
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
   },
   topContainer: {
-    height: 145,
+    height: "auto",
     width: "100%",
     borderBottomWidth: 1.5,
     borderColor: COLORS.gray,
-    paddingVertical: 10,
+    paddingbottom: 8,
   },
   appliedFilterTitleText: {
     fontWeight: "700",
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   itemContainer: {
-    paddingHorizontal: 20,
+    //paddingHorizontal: 20,
     marginTop: 12,
     marginBottom: "auto",
   },

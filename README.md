@@ -22,80 +22,82 @@ https://ashishnoob.medium.com/docker-basic-cheatsheet-011b8ccf78fc
 nogton
 wheeli
 ////////////////////////////////////////////////////////////////////////////////////
-expoicons: ComponentProps<typeof Ionicons>["name"]
-
-<Ionicons name={focused ? "notifications" : "notifications-outline"} size={33} color={focused ? `${COLORS.primary}` : "black"}/>
-
-{focused ? (
-                    <Entypo name="home" size={33} color={`${COLORS.primary}`} />
-                  ) : (
-                    <Octicons
-                      name="home"
-                      size={32}
-                      color={focused ? `${COLORS.primary}` : "black"}
-                    />
-                  )}
-
 
 npx expo install expo-font
 npx expo install expo-splash-screen
-/////////////////////////////////////////////////////////////////////////////////////
-Like button
-import { Octicons } from '@expo/vector-icons';
-<Octicons name="thumbsup" size={24} color="black" />
+////////////////////////////////////////////////////////////////////////////////////
 
-FollowUp
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-<MaterialCommunityIcons name="swap-horizontal-variant" size={24} color="black" />
+const mediaAccess = async () => {
+    try {
+      setImageLoading(true);
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Sorry, we need media library permissions to access your photos."
+        );
+        setImageLoading(false);
+        return;
+      }
 
-BookMark
-import { Feather } from '@expo/vector-icons';
-<Feather name="bookmark" size={24} color="black" />
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
-seen
-import { Feather } from '@expo/vector-icons';
-<Feather name="eye" size={24} color="black" />
+      if (!result.canceled) {
+        setProfileImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error("Error accessing media library: ", error);
+      Alert.alert("Error", "There was an error accessing your media library.");
+    } finally {
+      setImageLoading(false);
+    }
+  };
 
-share
-import { AntDesign } from '@expo/vector-icons';
+  "feed_urls":["./media/feed/AGROSQUARE-removebg-preview.png,https://citizenx.s3.eu-north-1.amazonaws.com/images/AGROSQUARE-removebg-preview.png"] ,
+
+  feed_urls[2]
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
-likeButton
-import { AntDesign } from '@expo/vector-icons';
-<AntDesign name="like2" size={24} color="black" />
-<AntDesign name="like1" size={24} color="black" />
+          <FormInput
+            label="Password"
+            secureTextEntry={!showPass}
+            placeholder="!12$ogiQ0L"
+            autoCompleteType="password"
+            containerStyle={{
+              marginTop: SIZES.radius,
+            }}
+            onChange={(value) => {
+              utils.validatePassword(value, setPasswordError);
+              setPassword(value);
+            }}
+            errorMsg={passwordError}
+            appendComponent={
+              <TouchableOpacity
+                style={{
+                  width: 40,
+                  alignItems: "flex-end",
+                  justifyContent: "center",
+                }}
+                onPress={() => setShowPass(!showPass)}
+              >
+                <Image
+                  source={showPass ? icons.eye_close : icons.eye}
+                  style={{
+                    height: 20,
+                    width: 20,
+                    tintColor: COLORS.gray,
+                  }}
+                />
+              </TouchableOpacity>
+            }
+          />
 /////////////////////////////////////////////////////////////////////////////////////////
-checked success
-import { AntDesign } from '@expo/vector-icons';
-<AntDesign name="checkcircle" size={24} color="black" />
-cloud Upload
-import { AntDesign } from '@expo/vector-icons';
-<AntDesign name="clouduploado" size={24} color="black" />
-Search
-import { AntDesign } from '@expo/vector-icons';
-<AntDesign name="search1" size={24} color="black" />
-import { Entypo } from '@expo/vector-icons';
-<Entypo name="bookmark" size={24} color="black" />
-seen button
-import { Entypo } from '@expo/vector-icons';
-<Entypo name="eye" size={24} color="black" />
-take an image
-import { Entypo } from '@expo/vector-icons';
-<Entypo name="image" size={24} color="black" />
-record voice
-import { Entypo } from '@expo/vector-icons';
-<Entypo name="mic" size={24} color="black" />
-Share
-import { Entypo } from '@expo/vector-icons';
-<Entypo name="share" size={24} color="black" />
 
-No internet connection
-import { Entypo } from '@expo/vector-icons';
-<Entypo name="signal" size={24} color="black" />
-
-comment
-import { FontAwesome } from '@expo/vector-icons';
-<FontAwesome name="comments-o" size={24} color="black" />
 ////////////////////////////////////////////////////////////////////////////////////////
 BULLETED TEXT
 /////////////////////////////////////////////////////////////////////////////
@@ -201,63 +203,8 @@ export default DropdownComponent;
 
 ACCESSING THE DEVICE CAMERA
 ///////////////////////////////////////////////////////////////////////////////////////////
-expo install expo-camera
 
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Button, Image } from 'react-native';
-import { Camera } from 'expo-camera';
 
-const CameraComponent = () => {
-const [hasPermission, setHasPermission] = useState(null);
-const [cameraRef, setCameraRef] = useState(null);
-const [photoUri, setPhotoUri] = useState(null);
-
-useEffect(() => {
-(async () => {
-const { status } = await Camera.requestPermissionsAsync();
-setHasPermission(status === 'granted');
-})();
-}, []);
-
-const takePicture = async () => {
-if (cameraRef) {
-const { uri } = await cameraRef.takePictureAsync();
-setPhotoUri(uri);
-}
-};
-
-if (hasPermission === null) {
-return <View />;
-}
-if (hasPermission === false) {
-return <Text>No access to camera</Text>;
-}
-
-return (
-<View style={{ flex: 1 }}>
-<Camera
-style={{ flex: 1 }}
-type={Camera.Constants.Type.back}
-ref={(ref) => setCameraRef(ref)} >
-<View style={{ flex: 1, backgroundColor: 'transparent', flexDirection: 'row' }}>
-<Button title="Take Picture" onPress={takePicture} />
-</View>
-</Camera>
-{photoUri && <Image source={{ uri: photoUri }} style={{ width: 200, height: 200 }} />}
-</View>
-);
-};
-
-export default CameraComponent;
-
-We import the Camera component from expo-camera.
-We use the useState hook to manage the camera reference (cameraRef), the photo URI (photoUri), and camera permission (hasPermission).
-We use the useEffect hook to request camera permissions when the component mounts.
-The takePicture function is called when the user presses the "Take Picture" button. It captures a photo using the camera reference (cameraRef.takePictureAsync()) and updates the photoUri state with the URI of the captured image.
-Depending on the camera permission status (hasPermission), we render either the camera view or a message indicating no access to the camera.
-If a photo has been taken (photoUri is not null), we render the captured image.
-
-TO access the device camera or select a picture from the device's media library
 /////////////////////////////////////////////////////////////////////////////////////////////
 expo install expo-image-picker
 
@@ -463,158 +410,7 @@ const [refreshing, setRefreshing] = useState(false);
 Expo has guided us to use react-native-background-geolocation if we want to track user's locations in the background. 
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-try{
-const formData = new FormData();
-      if (insidentType) {
-        formData.append("sub_report_type", insidentType);
-      }
-      if (categ) {
-        formData.append("category", categ);
-      }
-      formData.append("description", textInput);
-      formData.append("date_of_incidence", date);
-      if (selectedState) {
-        formData.append("state_name", selectedState);
-        formData.append("lga_name", selectedLocalGov);
-      }
-      if (address) {
-        formData.append("landmark", address);
-      }
-      if (selectedId) {
-        formData.append("rating", selectedId);
-      }
-      if (isEnabled) {
-        formData.append("is_anonymous", isEnabled);
-      }
-      if (location) {
-        if (location.latitude) {
-          formData.append("latitude", location.latitude);
-        }
-        if (location.longitude) {
-          formData.append("longitude", location.longitude);
-        }
-      }
-      if (causeOfAccident) {
-        formData.append("accident_cause", causeOfAccident);
-      }
-      //stopped
-      if (checkboxValue) {
-        formData.append("is_response", checkboxValue);
-      }
-      if (airportName) {
-        formData.append("airport_name", airportName);
-      }
-      if (time) {
-        formData.append("time_of_incidence", time);
-      }
-      if (country) {
-        formData.append("country", country);
-      }
-      if (stateEmbassey) {
-        formData.append("state_embassy_location", stateEmbassey);
-      }
-      if (ambassedor) {
-        formData.append("ambassedor_name", ambassedor);
-      }
 
-      if (terminal) {
-        //TODO: fill in later
-      }
-      if (queueTime) {
-        //TODO: fill in later
-      }
-      if (airline) {
-        formData.append("airline_name", airline);
-      }
-
-      if (schoolName) {
-        formData.append("school_name", schoolName);
-      }
-      if (hospitalName) {
-        formData.append("hospital_name", hospitalName);
-      }
-      if (hospitaleAddress) {
-        formData.append("hospital_address", hospitaleAddress);
-      }
-      if (roadName) {
-        formData.append("road_name", roadName);
-      }
-      if (schoolHead) {
-        formData.append("vice_principal", schoolHead);
-      }
-      if (department) {
-        formData.append("department", department);
-      }
-      if (departmentNameHead) {
-        formData.append("department_head_name", departmentNameHead);
-      }
-      if (productName) {
-        formData.append("product_name", productName);
-      }
-      if (autageLength) {
-        formData.append("outage_length", autageLength);
-      }
-      if (albums) {
-        const fileType = albums.substring(albums.lastIndexOf(".") + 1);
-        const mimeType =
-          fileType === "jpg" || fileType === "jpeg"
-            ? "image/jpeg"
-            : fileType === "png"
-            ? "image/png"
-            : fileType === "mp4"
-            ? "video/mp4"
-            : "audio/mpeg";
-        formData.append("media_type", {
-          uri: albums,
-          type: mimeType,
-          name: albums,
-        });
-      }
-
-      const appendFileToFormData = (uri, index, typePrefix) => {
-        if (uri) {
-          const fileType = uri.substring(uri.lastIndexOf(".") + 1);
-          const mimeType =
-            fileType === "jpg" || fileType === "jpeg"
-              ? "image/jpeg"
-              : fileType === "png"
-              ? "image/png"
-              : fileType === "mp4"
-              ? "video/mp4"
-              : "audio/mpeg";
-          formData.append(`mediaFiles`, {
-            uri: uri,
-            type: mimeType,
-            name: `${typePrefix}_${index}.${fileType}`,
-          });
-        }
-      };
-
-      if (photoUri) {
-        appendFileToFormData(photoUri, 0, "photo");
-      }
-
-      if (videoMedia) {
-        appendFileToFormData(videoMedia, 1, "video");
-      }
-
-      if (storedRecording) {
-        appendFileToFormData(storedRecording, 2, "audio");
-      }
-
-      console.log("This is actially calling");
-      const response = await axios.post(CREATE_REPORT, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("report created successfully:", response.data);
-      return response.data;
-} catch (error) {
-      console.log("report error:", error.response.data);
-      return rejectWithValue(error.response.data);
-}
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 Build expo application

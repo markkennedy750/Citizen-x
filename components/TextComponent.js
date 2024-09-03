@@ -8,14 +8,14 @@ const TextComponent = ({ text }) => {
     setShowFullText(!showFullText);
   };
 
-  const truncatedText = text.length > 25 ? text.substring(0, 25) + "..." : text;
+  const truncatedText = text.length > 45 ? text.substring(0, 45) + "..." : text;
 
   return (
     <View>
       <Text style={styles.feedContent}>
         {showFullText ? text : truncatedText}
       </Text>
-      {text.length > 22 && (
+      {text.length > 45 && (
         <TouchableOpacity onPress={toggleTextDisplay}>
           <Text style={styles.showMoreButton}>
             {showFullText ? "Show Less" : "Show More"}

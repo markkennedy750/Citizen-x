@@ -18,6 +18,7 @@ import { CREATE_REPORT } from "../../Redux/URL";
 import axios from "axios";
 import ErrorImage from "../../components/loadingStates/ErrorImage";
 import { Alert } from "react-native";
+import NetworkError from "../../components/loadingStates/NetworkError";
 
 const Employment = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -202,7 +203,7 @@ const Employment = ({ navigation }) => {
   } else if (error.request) {
     return (
       <View style={styles.errorStyle}>
-        <ErrorImage />
+      <NetworkError />
         <Text style={{ color: "red", fontSize: 12, fontWeight: "400" }}>
           {errorMessage}
         </Text>
