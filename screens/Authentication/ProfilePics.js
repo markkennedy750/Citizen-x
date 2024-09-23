@@ -98,6 +98,7 @@ const ProfilePics = ({ navigation, route }) => {
       "There was an issue signing you up. Please check your internet connection and try again later."
     );
     console.log(error);
+    dispatch(resetUserStatus());
   }
 
   // if (user && status === "Created") {

@@ -107,12 +107,34 @@ const Notification = () => {
       />
     );
   }
+  const NotificationInProgress = () => {
+    return (
+      <View
+        style={{ alignItems: "center", justifyContent: "center", padding: 5 }}
+      >
+        <Image
+          source={icons.notify}
+          style={{
+            width: 250,
+            height: 250,
+            marginVertical: 10,
+            tintColor: COLORS.primary,
+          }}
+        />
+        <Text style={{ textAlign: "center", fontWeight: "600", fontSize: 20 }}>
+          This section is still in progress will be available in the next
+          version
+        </Text>
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.notifyText}>Notification</Text>
       </View>
-      <ScrollView>{renderSwipeList()}</ScrollView>
+      {/**<ScrollView>{renderSwipeList()}</ScrollView>**/}
+      <NotificationInProgress />
     </View>
   );
 };

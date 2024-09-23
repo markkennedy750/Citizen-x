@@ -1,19 +1,16 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList, Image } from "react-native";
 import React from "react";
-import feeds from "../data/DummyFeedData";
-import Feed from "./Feed";
-import { COLORS } from "../constants";
+import { COLORS, icons } from "../constants";
 
 const SavedDraft = () => {
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        data={feeds}
-        renderItem={({ item }) => <Feed item={item} />}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={{ ...styles.itemContainer, flexGrow: 1 }}
-        ListFooterComponent={<View style={{ height: 110 }} />}
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Image
+        source={icons.workInProgress}
+        style={{ height: 160, width: 210, marginTop: 8 }}
       />
+      <Text style={{ fontSize: 20, fontWeight: "600" }}>Work in progress</Text>
+      <Text>Will be available in the next version</Text>
     </View>
   );
 };

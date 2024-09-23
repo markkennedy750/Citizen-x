@@ -10,6 +10,7 @@ const TextIconButton = ({
   iconPosition,
   iconStyle,
   onPress,
+  disabled
 }) => {
   return (
     <TouchableOpacity
@@ -20,6 +21,7 @@ const TextIconButton = ({
         ...containerStyle,
       }}
       onPress={onPress}
+      disabled={disabled}
     >
       {iconPosition == "LEFT" && (
         <Image

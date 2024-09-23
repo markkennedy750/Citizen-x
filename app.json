@@ -7,9 +7,9 @@
     "icon": "./assets/citizenx.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/citizenx.png",
+      "image": "./assets/citizenx_resize.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0E9C67"
+      "backgroundColor": "#ffff"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -17,7 +17,8 @@
       "infoPlist": {
         "UIBackgroundModes": ["audio"],
         "NSPhotoLibraryUsageDescription": "Citizen X need access to your photos to upload a profile picture."
-      }
+      },
+      "bundleIdentifier": "com.kennedy757.citixenx"
     },
     "android": {
       "adaptiveIcon": {

@@ -2,20 +2,20 @@ export default data = [
   {
     id: 1,
     image: require("../assets/onboarding/slide_1.png"),
-    title: "Make Reports",
-    text: "Have a concern? Simply snap a photo, provide a description, and submit it directly through the app. You will earn X points which you can monetize.",
+    title: "Share Your Report",
+    text: `Got a concern or event in your local community, Take a photo, record a voice note or video, choose a category, add details and submit. It's that simple.`,
   },
   {
     id: 2,
     image: require("../assets/onboarding/slide_2.png"),
     title: "Explore Report Feeds",
-    text: "Explore Verified Report Feeds: Dive into a curated stream of verified reports from fellow citizens, ensuring you stay informed about crucial issues affecting your community",
+    text: "Explore a stream of verified reports from fellow citizens and stay informed about key issues in your local community",
   },
   {
     id: 3,
     image: require("../assets/onboarding/slide_5.png"),
     title: "Earn Report Points",
-    text: "Earn Citizen X points when you make reports. Get rewarded when you follow up on reports to add more context to it and create more credibility.",
+    text: "Earn points by reporting and following up on community impact tasks. Our reward system turns participation into rewards, allowing you to earn points for your contributions.",
   },
   {
     id: 4,

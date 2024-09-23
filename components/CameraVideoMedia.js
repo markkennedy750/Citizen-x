@@ -1,4 +1,11 @@
-import { Text, View, Alert } from "react-native";
+import {
+  Text,
+  View,
+  Alert,
+  ActivityIndicator,
+  Image,
+  FlatList,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import * as MediaLibrary from "expo-media-library";
 import TextIconButton from "./TextIconButton";
@@ -13,6 +20,7 @@ export default function CameraVideoMedia({
   setPhotoUri,
   videoMedia,
   setVideoMedia,
+  albums,
 }) {
   const navigation = useNavigation();
 
@@ -20,6 +28,7 @@ export default function CameraVideoMedia({
   //const [albums, setAlbums] = useState(null);
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
   const [recording, setRecording] = useState();
+  const [imageLoading, setImageLoading] = useState(false);
   //const [storedRecording, setStoredRecording] = useState(null);
 
   //const [hasPermission, setHasPermission] = useCameraPermissions();
@@ -40,25 +49,27 @@ export default function CameraVideoMedia({
   // }, []);
 
   const mediaAccess = async () => {
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert(
-        "Sorry, we need media library permissions to access your photos."
-      );
-      return;
-    } else {
+    try {
+      setImageLoading(true);
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
+        //allowsEditing: true,
         quality: 1,
+        allowsMultipleSelection: true,
       });
 
-      //console.log(result);
-
       if (!result.canceled) {
-        setAlbums(result.assets[0].uri);
+        const selectedImages = result.assets.map((asset) => asset.uri);
+        setAlbums(selectedImages);
+        setImageLoading(false);
+        // return selectedImages;
+      } else {
+        Alert.alert("You did not select any images.");
+        setImageLoading(false);
       }
+    } catch (error) {
+      Alert.alert("Error accessing media library", error);
+    } finally {
+      setImageLoading(false);
     }
   };
   // async function takePicture() {
@@ -122,66 +133,98 @@ export default function CameraVideoMedia({
   //   setStoredRecording(uri);
   // }
 
+  const renderImage = ({ item }) => (
+    <Image
+      source={{ uri: item }}
+      style={{
+        width: 80,
+        height: 80,
+        marginRight: 10,
+        borderRadius: SIZES.radius,
+      }}
+    />
+  );
+
   return (
     <View style={{ justifyContent: "flex-start", marginVertical: 15 }}>
       <Text style={{ marginVertical: 5, fontSize: 14 }}>Add Media</Text>
+      {imageLoading ? (
+        <View
+          style={{
+            height: 40,
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: SIZES.radius,
+            borderRadius: SIZES.radius,
+            backgroundColor: "#0585FA",
+            width: 160,
+          }}
+        >
+          <ActivityIndicator size="large" color={`${COLORS.primary}`} />
+        </View>
+      ) : (
+        <TextIconButton
+          containerStyle={{
+            height: 40,
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: SIZES.radius,
+            borderRadius: SIZES.radius,
+            backgroundColor: "#0585FA",
+            width: 160,
+          }}
+          icon={icons.cloudUpload}
+          iconPosition="LEFT"
+          iconStyle={{
+            tintColor: "white",
+            width: 25,
+            resizeMode: "cover",
+            height: 17,
+          }}
+          label="Upload Media"
+          labelStyle={{
+            marginLeft: SIZES.radius,
+            color: "white",
+          }}
+          onPress={mediaAccess}
+        />
+      )}
+      {/* 
+        
+        <TextIconButton
+          containerStyle={{
+            height: 40,
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: SIZES.radius,
+            borderRadius: SIZES.radius,
+            backgroundColor: "#0585FA",
+            width: 160,
+          }}
+          icon={icons.cameraIcon}
+          iconPosition="LEFT"
+          iconStyle={{
+            tintColor: "white",
+            width: 28,
+            resizeMode: "cover",
+            height: 27,
+          }}
+          label="Take a picture"
+          labelStyle={{
+            marginLeft: SIZES.radius,
+            color: "white",
+          }}
+          onPress={() => {
+            navigation.navigate("CameraScreen", {
+              setPhotoUri,
+              videoMedia,
+              setVideoMedia,
+            });
+          }}
+        />
+        */}
       <TextIconButton
-        containerStyle={{
-          height: 40,
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: SIZES.radius,
-          borderRadius: SIZES.radius,
-          backgroundColor: "#0585FA",
-          width: 160,
-        }}
-        icon={icons.cloudUpload}
-        iconPosition="LEFT"
-        iconStyle={{
-          tintColor: "white",
-          width: 25,
-          resizeMode: "cover",
-          height: 17,
-        }}
-        label="Upload Media"
-        labelStyle={{
-          marginLeft: SIZES.radius,
-          color: "white",
-        }}
-        onPress={mediaAccess}
-      />
-      <TextIconButton
-        containerStyle={{
-          height: 40,
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: SIZES.radius,
-          borderRadius: SIZES.radius,
-          backgroundColor: "#0585FA",
-          width: 160,
-        }}
-        icon={icons.cameraIcon}
-        iconPosition="LEFT"
-        iconStyle={{
-          tintColor: "white",
-          width: 28,
-          resizeMode: "cover",
-          height: 27,
-        }}
-        label="Take a picture"
-        labelStyle={{
-          marginLeft: SIZES.radius,
-          color: "white",
-        }}
-        onPress={() => {
-          navigation.navigate("CameraScreen", {
-            setPhotoUri,
-            videoMedia,
-            setVideoMedia,
-          });
-        }}
-      />
-      <TextIconButton
+        disabled={imageLoading}
         containerStyle={{
           height: 40,
           alignItems: "center",
@@ -208,6 +251,18 @@ export default function CameraVideoMedia({
           navigation.navigate("AudioRecordScreen", { setStoredRecording })
         }
       />
+
+      {albums.length > 0 && (
+        <View style={{ marginTop: 15 }}>
+          <FlatList
+            data={albums}
+            renderItem={renderImage}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
+      )}
     </View>
   );
 }

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View,Platform } from "react-native";
 import React, { useEffect, useState, useMemo } from "react";
 import ReportWrapper from "./ReportWrapper";
 import InsidentType from "../../components/InsidentType";
@@ -19,11 +19,12 @@ import { CREATE_REPORT } from "../../Redux/URL";
 import axios from "axios";
 import ErrorImage from "../../components/loadingStates/ErrorImage";
 import NetworkError from "../../components/loadingStates/NetworkError";
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const Airport = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
   const [textInput, setTextInput] = useState("");
-  const [albums, setAlbums] = useState("");
+  const [albums, setAlbums] = useState([]);
   const [storedRecording, setStoredRecording] = useState(null);
   const [photoUri, setPhotoUri] = useState("");
   const [location, setLocation] = useState("");
@@ -61,8 +62,6 @@ const Airport = ({ navigation }) => {
   //     navigation.navigate("SignUpSuccess");
   //   }
   // }, [report, status, navigation]);
-
-  
 
   const airport = [
     {
@@ -120,82 +119,68 @@ const Airport = ({ navigation }) => {
     []
   );
 
+  async function compressImage(uri) {
+    try {
+      const manipulatedImage = await ImageManipulator.manipulateAsync(
+        uri,
+        [{ resize: { width: 900 } }], // Resize width to 900px
+        { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG } // Adjust compression as needed
+      );
+      return manipulatedImage.uri;
+    } catch (error) {
+      console.log("Error compressing image: ", error);
+      return uri;
+    }
+  }
+  
   async function submitReport() {
     try {
       setLoading(true);
-      const data = {};
-      data.category = categ;
-      data.sub_report_type = insidentType;
-      data.description = textInput;
-      data.state_name = selectedState;
-      data.lga_name = selectedLocalGov;
-      data.is_anonymous = isEnabled;
-      if (address) {
-        data.landmark = address;
-      }
-      if (airportName) {
-        data.airport_name = airportName;
-      }
-      if (airline) {
-        data.airline_name = airline;
-      }
-      if (selectedId) {
-        data.rating = selectedId;
-      }
+      const formData = new FormData();
 
-      if (location) {
-        data.latitude = location.latitude;
-        data.longitude = location.longitude;
-      }
-      if (albums) {
-        const fileType = albums.substring(albums.lastIndexOf(".") + 1);
-        const mimeType =
-          fileType === "jpg" || fileType === "jpeg"
-            ? "image/jpeg"
-            : fileType === "png"
-            ? "image/png"
-            : fileType === "mp4"
-            ? "video/mp4"
-            : "audio/mpeg";
-        data.media_type = {
-          uri: albums,
-          type: mimeType,
-          name: albums,
-        };
-      }
+      // Append textual data
+      formData.append("category", categ);
+      formData.append("sub_report_type", insidentType);
+      formData.append("description", textInput);
+      formData.append("state_name", selectedState);
+      formData.append("lga_name", selectedLocalGov);
+      formData.append("is_anonymous", isEnabled);
+      formData.append("airport_name", airportName || "");
+      formData.append("landmark", address || "");
+      formData.append("latitude", location?.latitude || "");
+      formData.append("longitude", location?.longitude || "");
 
-      const appendFileToData = (uri, index, typePrefix) => {
-        if (uri) {
-          const fileType = uri.substring(uri.lastIndexOf(".") + 1);
-          const mimeType =
-            fileType === "jpg" || fileType === "jpeg"
-              ? "image/jpeg"
-              : fileType === "png"
-              ? "image/png"
-              : fileType === "mp4"
-              ? "video/mp4"
-              : "audio/mpeg";
-          data[`mediaFiles_${index}`] = {
-            uri: uri,
-            type: mimeType,
-            name: `${typePrefix}_${index}.${fileType}`,
-          };
-        }
+      const appendMediaFile = (uri, name, type) => {
+        formData.append("mediaFiles", {
+          uri: Platform.OS === "ios" ? uri.replace("file://", "") : uri,
+          type: type,
+          name: name,
+        });
       };
-
-      if (photoUri) {
-        appendFileToData(photoUri, 0, "photo");
+      // if (photoUri) {
+      //   appendMediaFile(photoUri, "photo.jpg", "image/jpeg");
+      // }
+      for (let index = 0; index < albums.length; index++) {
+        const album = albums[index];
+        const fileType = album.substring(album.lastIndexOf(".") + 1);
+        let mimeType = `image/${fileType}`;
+        if (fileType !== "jpeg" && fileType !== "png") {
+          mimeType = "image/jpeg";
+        }
+    
+        const compressedImageUri = await compressImage(album);
+  
+        appendMediaFile(compressedImageUri, `photo${index}.${fileType}`, mimeType);
       }
-
-      if (videoMedia) {
-        appendFileToData(videoMedia, 1, "video");
-      }
-
+      // if (videoMedia) {
+      //   appendMediaFile(videoMedia, "video.mp4", "video/mp4");
+      // }
       if (storedRecording) {
-        appendFileToData(storedRecording, 2, "audio");
+        appendMediaFile(storedRecording, "audio.mp3", "audio/mpeg");
       }
 
-      const response = await axios.post(CREATE_REPORT, data, {
+      // Make the request to the backend
+      const response = await axios.post(CREATE_REPORT, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
@@ -293,7 +278,7 @@ const Airport = ({ navigation }) => {
         </View>
       </View>
     );
-  } else if(error){
+  } else if (error) {
     return (
       <View style={styles.errorStyle}>
         <ErrorImage />
@@ -330,7 +315,7 @@ const Airport = ({ navigation }) => {
         insidenType={insidentType}
         setInsidentType={setInsidentType}
         labelType="Airport"
-        label="Select the type of Insident"
+        label="Select the type of Incident"
         insident={airport}
       />
       <TextDesc
@@ -489,4 +474,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
 });
-

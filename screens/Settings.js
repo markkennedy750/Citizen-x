@@ -6,6 +6,8 @@ import {
   View,
   Image,
   Modal,
+  ActivityIndicator,
+  Vibration
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { COLORS, icons, SIZES } from "../constants";
@@ -13,12 +15,18 @@ import SettingsWrapper from "./SettingsWrapper";
 import TextButton from "../components/TextButton";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../Redux/authSlice";
+import axios from "axios";
+import { DELETE_USER } from "../Redux/URL";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Settings = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalDelete, setModalDelete] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const dispatch = useDispatch();
   const { access_token } = useSelector((state) => state.auth);
 
-  function loguserout() {
+  async function loguserout() {
     dispatch(logout());
     setModalVisible(false);
     if (access_token === null) {
@@ -26,6 +34,42 @@ const Settings = ({ navigation }) => {
     }
   }
 
+  async function deleteAccount() {
+    setDeleteLoading(true);
+    try {
+      const token = await AsyncStorage.getItem("access_token");
+      const response = await axios.delete(DELETE_USER, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        setDeleteLoading(false);
+        loguserout();
+      }
+    } catch (error) {
+      setDeleteLoading(false);
+      if (error.response) {
+        console.log("server error:", error.response.data);
+        setErrorMessage(
+          "There was an issue with the server. Please try again later."
+        );
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        console.log("network error:", error.message);
+        setErrorMessage(
+          "Network error. Please check your internet connection and try again."
+        );
+        return rejectWithValue(error.message);
+      } else {
+        console.log("error:", error.message);
+        setErrorMessage("An unexpected error occurred. Please try again.");
+        return rejectWithValue(error.message);
+      }
+    } finally {
+      setDeleteLoading(false);
+    }
+  }
   return (
     <SettingsWrapper title="Settings">
       <TouchableOpacity
@@ -81,7 +125,13 @@ const Settings = ({ navigation }) => {
         />
         <Text style={styles.settingTitle}>Help</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.settingContainer}>
+      <TouchableOpacity
+        style={styles.settingContainer}
+        onPress={() => {
+          setModalDelete(true);
+          Vibration.vibrate();
+        }}
+      >
         <Image
           source={icons.deleteIcon}
           style={{ height: 36, width: 27, tintColor: "black" }}
@@ -134,7 +184,7 @@ const Settings = ({ navigation }) => {
               onPress={loguserout}
             />
             <TextButton
-              label="No, Am staying"
+              label="No, I'm staying"
               buttonContainerStyle={{
                 height: 55,
                 alignItems: "center",
@@ -152,6 +202,78 @@ const Settings = ({ navigation }) => {
               }}
               onPress={() => {
                 setModalVisible(false);
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
+      <Modal animationType="slide" transparent={true} visible={modalDelete}>
+        <View style={styles.modalContainer}>
+          {deleteLoading ? (
+            <ActivityIndicator size="large" color={`${COLORS.red}`} />
+          ) : errorMessage === "" ? (
+            <>
+              <View style={styles.imageDeletContainer}>
+                <Image
+                  source={icons.deleteUser}
+                  style={{ height: 110, width: 180 }}
+                />
+              </View>
+              <View style={styles.logoutTextContainer}>
+                <Text style={styles.primaryText}>We will really miss you?</Text>
+                <Text style={styles.secondaryText}>
+                  Are you sure you want to delete your account?
+                </Text>
+              </View>
+            </>
+          ) : (
+            <View style={styles.logoutTextContainer}>
+              <Text style={styles.primaryText}>
+                An error occured while deleting account
+              </Text>
+              <Text style={styles.secondaryText}>{errorMessage}</Text>
+            </View>
+          )}
+
+          <View style={styles.buttonContainer}>
+            <TextButton
+              label="Yes, I want to delete my account"
+              buttonContainerStyle={{
+                height: 55,
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 20,
+                borderRadius: SIZES.radius,
+                backgroundColor: COLORS.red,
+              }}
+              disabled={deleteLoading}
+              labelStyle={{
+                color: COLORS.white,
+                fontWeight: "700",
+                fontSize: 18,
+              }}
+              onPress={deleteAccount}
+            />
+            <TextButton
+              label="No, I clicked this button my mistake"
+              buttonContainerStyle={{
+                height: 55,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: SIZES.radius,
+                backgroundColor: COLORS.transparent,
+                borderWidth: 1,
+                marginTop: 15,
+                borderColor: COLORS.gray2,
+              }}
+              disabled={deleteLoading}
+              labelStyle={{
+                color: COLORS.black,
+                fontWeight: "700",
+                fontSize: 18,
+              }}
+              onPress={() => {
+                setModalDelete(false);
               }}
             />
           </View>
@@ -195,6 +317,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: COLORS.primary,
     borderRadius: 60,
+    marginTop: 10,
+  },
+  imageDeletContainer: {
+    width: 100,
+    height: 100,
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 10,
   },
   logoutTextContainer: {

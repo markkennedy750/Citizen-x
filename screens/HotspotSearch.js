@@ -6,16 +6,19 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { COLORS, icons, SIZES } from "../constants";
 import InsidentType from "../components/InsidentType";
 import StateLocal from "../components/StateLocal";
 import TextButton from "../components/TextButton";
+import { useSelector } from "react-redux";
 
 const HotspotSearch = ({ navigation }) => {
   const [reportType, setReportType] = useState("");
   const [selectedState, setSelectedState] = useState();
   const [selectedLocalGov, setSelectedLocalGov] = useState();
+  const { loading, error, auth_feed } = useSelector((state) => state.auth);
+  const [filteredData, setFilteredData] = useState([]);
 
   const report = [
     { label: "Crime", value: "Crime" },
@@ -45,6 +48,18 @@ const HotspotSearch = ({ navigation }) => {
   function submitPost() {
     return reportType != "" && selectedState != null;
   }
+
+  useEffect(() => {
+    if (auth_feed && auth_feed.length > 0) {
+      const filtered = auth_feed.filter(
+        (report) =>
+          report.report_type_name === reportType &&
+          report.state_name === selectedState &&
+          report.lga_name === selectedLocalGov
+      );
+      setFilteredData(filtered);
+    }
+  }, [reportType, selectedState, selectedLocalGov, auth_feed]);
 
   return (
     <View style={styles.container}>
@@ -110,7 +125,14 @@ const HotspotSearch = ({ navigation }) => {
             fontWeight: "700",
             fontSize: 17,
           }}
-          onPress={() => navigation.navigate("SearchScreen")}
+          onPress={() =>
+            navigation.navigate("SearchScreen", {
+              filteredData,
+              reportType,
+              selectedState,
+              selectedLocalGov
+            })
+          }
         />
       </View>
     </View>

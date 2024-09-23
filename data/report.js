@@ -14,7 +14,7 @@ const reportData = [
   {
     id: 3,
     image: require("../assets/reports/roads.png"),
-    title: "Infastructures",
+    title: "Road",
     navigation: "Roads",
   },
   {

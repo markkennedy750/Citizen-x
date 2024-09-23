@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { icons, COLORS, SIZES } from "../../constants";
 import TextButton from "../../components/TextButton";
 
-
 const SignUpSuccess = ({ navigation, route }) => {
   const { fullname, email, phoneNumber, password, username } =
     route.params || {};
@@ -30,7 +29,7 @@ const SignUpSuccess = ({ navigation, route }) => {
               textAlign: "center",
             }}
           >
-            SignUp Successful
+            Sign-up successful
           </Text>
           <Text
             style={{

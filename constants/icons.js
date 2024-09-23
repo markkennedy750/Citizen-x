@@ -81,10 +81,17 @@ const downvoteIcon = require("../assets/icons/icon/ArrowFatDown.png");
 const upVoteClick = require("../assets/icons/icon/ArrowFatUpgreen.png");
 const networkSignal = require("../assets/icons/icon/signal.png");
 const downVoteClick = require("../assets/icons/icon/ArrowFatUpred.png");
+const deleteUser = require("../assets/icons/icon/deleteUser.png");
+const notify = require("../assets/icons/icon/notify.png");
+const emailSent = require("../assets/icons/icon/emailSent.png");
+const workInProgress = require("../assets/icons/icon/workInProgress.png");
 const swap = require("../assets/icons/icon/swap.svg");
 const citizenx = require("../assets/citizenx.png");
 
 export default {
+  workInProgress,
+  emailSent,
+  notify,
   networkSignal,
   downVoteClick,
   upVoteClick,
@@ -170,4 +177,5 @@ export default {
   logouticon,
   questioncircleo,
   erroricon,
+  deleteUser,
 };

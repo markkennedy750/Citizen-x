@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,12 +6,66 @@ import {
   Image,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
+  ActivityIndicator,
+  Platform,
 } from "react-native";
 import { SIZES, COLORS, icons } from "../../constants";
 import TextButton from "../../components/TextButton";
 import TextIconButton from "../../components/TextIconButton";
+import * as WebBrowser from "expo-web-browser";
+import * as AuthSession from "expo-auth-session";
+import * as Google from "expo-auth-session/providers/google";
+import axios from "axios";
+import { LOGIN_WITH_GOOGLE } from "../../Redux/URL";
+import { AuthSession } from "expo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IOS_GOOGLE_CLIENT_ID, ANDROID_GOOGLE_CLIENT_ID } from "@env";
+
+WebBrowser.maybeCompleteAuthSession();
 
 const SignUpMethods = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId: Platform.select({
+      ios: IOS_GOOGLE_CLIENT_ID,
+      android: ANDROID_GOOGLE_CLIENT_ID,
+    }),
+    redirectUri: AuthSession.makeRedirectUri({
+      useProxy: true,
+    }),
+    scopes: ["openid", "profile", "email"],
+  });
+
+  const getUserInfo = async (token) => {
+    setLoading(true);
+
+    try {
+      const res = await axios.get(LOGIN_WITH_GOOGLE, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const { access_token, refresh_token } = res.data;
+
+      await AsyncStorage.setItem("access_token", access_token);
+      await AsyncStorage.setItem("refresh_token", refresh_token);
+
+      navigation.navigate("MainScreen");
+    } catch (error) {
+      console.error("Google login error:", error);
+      Alert.alert("Google login error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (response?.type === "success") {
+      const { authentication } = response;
+      getUserInfo(authentication.accessToken);
+    }
+  }, [response]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.miniContainer}>
@@ -33,6 +87,7 @@ const SignUpMethods = ({ navigation }) => {
         <TextButton
           label="Continue with email"
           //disabled={isEnableSignUp() ? false : true}
+          disabled={loading}
           buttonContainerStyle={{
             height: 55,
             alignItems: "center",
@@ -62,6 +117,7 @@ const SignUpMethods = ({ navigation }) => {
         {/** Facebook */}
 
         <TextIconButton
+          disabled={loading}
           containerStyle={{
             height: 50,
             alignItems: "center",
@@ -84,29 +140,33 @@ const SignUpMethods = ({ navigation }) => {
         />
 
         {/** Google */}
-        <TextIconButton
-          containerStyle={{
-            height: 50,
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: SIZES.radius,
-            borderRadius: SIZES.radius,
-            backgroundColor: COLORS.lightGray2,
-            borderWidth: 1,
-          }}
-          icon={icons.google}
-          iconPosition="LEFT"
-          iconStyle={{
-            tintColor: null,
-          }}
-          label="Continue with Google"
-          labelStyle={{
-            marginLeft: SIZES.radius,
-          }}
-          onPress={() => {}}
-        />
+        {loading ? (
+          <ActivityIndicator size="large" color={COLORS.primary} />
+        ) : (
+          <TextIconButton
+            disabled={loading}
+            containerStyle={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: SIZES.radius,
+              borderRadius: SIZES.radius,
+              backgroundColor: COLORS.lightGray2,
+              borderWidth: 1,
+            }}
+            icon={icons.google}
+            iconPosition="LEFT"
+            iconStyle={{
+              tintColor: null,
+            }}
+            label="Continue with Google"
+            labelStyle={{
+              marginLeft: SIZES.radius,
+            }}
+            onPress={() => promptAsync()}
+          />
+        )}
       </View>
-
       <View
         style={{
           marginTop: SIZES.padding * 0.5,
@@ -135,7 +195,7 @@ const SignUpMethods = ({ navigation }) => {
             fontWeight: "400",
             fontSize: 11,
           }}
-          onPress={() => console.log("To do terms and conditions")}
+          onPress={() => navigation.navigate("TermsAndConditions")}
         />
       </View>
       <View
@@ -165,7 +225,7 @@ const SignUpMethods = ({ navigation }) => {
             fontWeight: "400",
             fontSize: 11,
           }}
-          onPress={() => console.log("To do terms and conditions")}
+          onPress={() => navigation.navigate("TermsAndConditions")}
         />
       </View>
 

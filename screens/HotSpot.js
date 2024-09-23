@@ -6,30 +6,71 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Alert,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { COLORS, icons } from "../constants";
-import { useDispatch } from "react-redux";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoadingImage from "../components/loadingStates/LoadingImage";
 
 const HotSpot = ({ navigation }) => {
-  //const dispatch = useDispatch();
+  const [categories, setCategories] = useState([]);
+  const [reportCounts, setReportCounts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const ReportContainer = ({ primaryText, scondarytext }) => {
-    return (
-      <TouchableOpacity
-        style={styles.reportComponentContainer}
-        onPress={() => navigation.navigate("SearchScreen")}
-      >
-        <Text style={styles.primTextConatiner}>{primaryText}</Text>
-        <Text style={styles.secTextContainer}>{scondarytext}</Text>
-      </TouchableOpacity>
-    );
-  };
+  useEffect(() => {
+    const fetchReportCategories = async () => {
+      setLoading(true);
+      try {
+        const token = await AsyncStorage.getItem("access_token");
+
+        if (!token) {
+          Alert.alert("Error", "Access token not found. Please log in.");
+          setLoading(false);
+          return;
+        }
+
+        // Make the API request
+        const response = await axios.get(
+          "https://citizenx-9hk2.onrender.com/api/v1/top/report/categories",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        // Set the fetched categories and report counts in state
+        setCategories(response.data.categories);
+        setReportCounts(response.data.report_counts);
+      } catch (err) {
+        setError("Failed to load data. Please try again.");
+        console.error("Error fetching categories:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReportCategories();
+  }, []);
+
+  // ReportContainer Component
+  const ReportContainer = ({ primaryText, secondaryText }) => (
+    <TouchableOpacity
+      style={styles.reportComponentContainer}
+      onPress={() => navigation.navigate("SearchScreen")}
+    >
+      <Text style={styles.primTextContainer}>{primaryText}</Text>
+      <Text style={styles.secTextContainer}>{secondaryText}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.firstContainer}>
-        <Text style={styles.hotSpotText}>HotSpot</Text>
+        <Text style={styles.hotSpotText}>Hotspot</Text>
       </View>
 
       <View style={styles.secondContainer}>
@@ -41,34 +82,36 @@ const HotSpot = ({ navigation }) => {
             source={icons.searchsharp}
             style={{ height: 20, width: 20, tintColor: `${COLORS.gray}` }}
           />
-
-          <Text style={styles.filterReportText}>Filter Reports HotSpot</Text>
+          <Text style={styles.filterReportText}>Filter Reports Hotspot</Text>
         </TouchableOpacity>
 
         <Text style={styles.instructionText}>
           Get access to live report data on location hotspots in your community
           and other places in Nigeria.
         </Text>
-
-        <ScrollView>
-          <ReportContainer primaryText="Crime" scondarytext="102 Reports" />
-          <ReportContainer
-            primaryText="Consumer Protection"
-            scondarytext="234 reports"
-          />
-          <ReportContainer primaryText="Crime" scondarytext="102 Reports" />
-          <ReportContainer
-            primaryText="Consumer Protection"
-            scondarytext="234 reports"
-          />
-          <ReportContainer
-            primaryText="Healthcare"
-            scondarytext="125 reports"
-          />
-          <ReportContainer primaryText="Crime" scondarytext="102 Reports" />
-          <ReportContainer primaryText="Crime" scondarytext="102 Reports" />
-          <ReportContainer primaryText="Crime" scondarytext="102 Reports" />
-        </ScrollView>
+        {loading ? (
+          <View
+            style={{
+              marginTop: 110,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <LoadingImage />
+          </View>
+        ) : error ? (
+          <Text style={{ color: "red" }}>{error}</Text>
+        ) : (
+          <ScrollView>
+            {categories.map((category, index) => (
+              <ReportContainer
+                key={index}
+                primaryText={category || "Unknown Category"} // Fallback for empty categories
+                secondaryText={`${reportCounts[index]} Reports`}
+              />
+            ))}
+          </ScrollView>
+        )}
       </View>
     </ScrollView>
   );
@@ -153,8 +196,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginVertical: 8,
   },
-
-  primTextConatiner: {
+  primTextContainer: {
     fontWeight: "700",
     fontSize: 13,
     lineHeight: 19.6,

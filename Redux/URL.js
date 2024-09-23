@@ -12,3 +12,11 @@ export const UPDATE_PROFILE_PICS = `${HOST}/api/v1/upload`;
 export const UPDATE_PROFILE = `${HOST}/api/v1/me/updateUserProfile`;
 export const UPVOTE = `${HOST}/api/v1/report/upvote`;
 export const DOWN_VOTE = `${HOST}/api/v1/report/downvote`;
+export const DELETE_USER = `${HOST}/api/v1/delete/user`;
+export const GET_USER_FEED = `${HOST}/api/v1/user/reports?page=1`;
+export const SEARCH = `${HOST}/api/v1/reports/filters`;
+export const BOOKMARK_FEED = `${HOST}/api/v1/user/bookmark`;
+export const VIEW_BOOKMARKS = `${HOST}/api/v1/user/bookmarked/report`;
+export const FORGET_PASSWORD = `${HOST}/api/v1/password/forgot`;
+
+

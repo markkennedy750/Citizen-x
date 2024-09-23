@@ -16,6 +16,7 @@ background: #0E9C67;
 
 > > git push origin main
 
+> > npm install expo@latest
 https://github.com/react-native-clipboard/clipboard?tab=readme-ov-file#readme
 https://ashishnoob.medium.com/docker-basic-cheatsheet-011b8ccf78fc
 ////////////////////////////////////////////////////////////////////////////////////
@@ -97,9 +98,131 @@ const mediaAccess = async () => {
             }
           />
 /////////////////////////////////////////////////////////////////////////////////////////
-
+async function getBase64(uri) {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
 ////////////////////////////////////////////////////////////////////////////////////////
-BULLETED TEXT
+export const createReport = createAsyncThunk(
+  "auth/createReport",
+  async (
+    {
+      token,
+      insidentType,
+      textInput,
+      date,
+      selectedState,
+      selectedLocalGov,
+      albums,
+      address,
+      selectedId,
+      isEnabled,
+      storedRecording,
+      photoUri,
+      videoMedia,
+      location,
+      causeOfAccident,
+      checkboxValue,
+      airportName,
+      time,
+      country,
+      ambassedor,
+      stateEmbassey,
+      hospitalName,
+      hospitaleAddress,
+      departmentNameHead,
+      productName,
+      autageLength,
+      roadName,
+      schoolName,
+      schoolHead,
+      terminal,
+      queueTime,
+      airline,
+      categ,
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const formData = new FormData();
+
+      formData.append("date_of_incidence", currentDate);
+
+      if (insidentType) {
+        formData.append("sub_report_type", insidentType);
+      }
+      if (categ) {
+        formData.append("category", categ);
+      }
+      formData.append("description", textInput);
+      if (date) {
+        formData.append("date_of_incidence", date);
+      }
+      if (selectedState) {
+        formData.append("state_name", selectedState);
+        formData.append("lga_name", selectedLocalGov);
+      }
+      if (address) {
+        formData.append("landmark", address);
+      }
+      if (selectedId) {
+        formData.append("rating", selectedId);
+      }
+      if (isEnabled) {
+        formData.append("is_anonymous", isEnabled);
+      }
+      if (location) {
+        if (location.latitude) {
+          formData.append("latitude", location.latitude);
+        }
+        if (location.longitude) {
+          formData.append("longitude", location.longitude);
+        }
+      }
+      if (causeOfAccident) {
+        formData.append("accident_cause", causeOfAccident);
+      }
+
+      //console.log("Form Data", formData);
+      const response = await axios.post(
+        CREATE_REPORT,
+        {
+          sub_report_type: insidentType,
+          category: categ,
+          description: textInput,
+          date_of_incidence: currentDate,
+          state_name: selectedState,
+          lga_name: selectedLocalGov,
+          landmark: address,
+          rating: selectedId,
+          is_anonymous: isEnabled,
+          latitude: location.latitude,
+          longitude: location.longitude,
+          accident_cause: causeOfAccident,
+          is_response: checkboxValue,
+          airport_name: airportName,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("report created successfully:", response.data);
+      return response.data;
+    } catch (error) {
+      console.log("report error:", error.response.data);
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 /////////////////////////////////////////////////////////////////////////////
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
@@ -177,7 +300,12 @@ export default DatePickerComponent;
 
 DROP DOWN LIST
 //////////////////////////////////////////////////////////////////////////////////////////////
+web:  1089518464102-t7760kkg0p2gpe3arckg0853fgdguli0.apps.googleusercontent.com
+iphone: 1089518464102-qdgrc9ulmneip0l4cj1ijc2igv8bubvk.apps.googleusercontent.com
+android: 1089518464102-r4upttig1g193o85v3nkqae937ppk0h0.apps.googleusercontent.com
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 import React, { useState } from 'react';
 import { View, Picker } from 'react-native';
 
@@ -411,6 +539,135 @@ Expo has guided us to use react-native-background-geolocation if we want to trac
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Audio } from "expo-av";
+import { COLORS, icons } from "../constants";
+
+const AudioRecordScreen = ({ route, navigation }) => {
+  const { setStoredRecording } = route.params;
+  const [recording, setRecording] = useState();
+  const [permissionResponse, requestPermission] = Audio.usePermissions();
+
+  //Audio Recording
+  async function startRecording() {
+    try {
+      if (permissionResponse.status !== "granted") {
+        console.log("Requesting permission..");
+        await requestPermission();
+      }
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      console.log("Starting recording..");
+      const { recording } = await Audio.Recording.createAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+      setRecording(recording);
+      console.log("Recording started");
+    } catch (err) {
+      console.error("Failed to start recording", err);
+    }
+  }
+
+  async function stopRecording() {
+    console.log("Stopping recording..");
+    setRecording(undefined);
+    await recording.stopAndUnloadAsync();
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+    });
+    const uri = recording.getURI();
+    setStoredRecording(uri);
+    console.log("Recording stopped and stored at", uri);
+    console.log(recording);
+  }
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={[
+          styles.parentButtonConatiner,
+          recording ? styles.parentrecordingStop : styles.parentrecordStart,
+        ]}
+        onPress={() => {
+          recording ? stopRecording() : startRecording();
+        }}
+      >
+        <View
+          style={[
+            styles.buttonContainer,
+            recording ? styles.buttonStop : styles.buttonStart,
+          ]}
+        >
+          {recording ? (
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
+              <Image
+                source={icons.microphone_slash}
+                style={{ width: 75, height: 75, tintColor: "white" }}
+              />
+              <Text style={styles.text}>Recording...</Text>
+              <Text style={styles.text}>Click to stop</Text>
+            </View>
+          ) : (
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
+              <Image
+                source={icons.microphoneicon}
+                style={{ width: 75, height: 75, tintColor: "white" }}
+              />
+              <Text style={styles.text}>Start Record</Text>
+            </View>
+          )}
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default AudioRecordScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  parentButtonConatiner: {
+    backgroundColor: "white",
+    width: 170,
+    height: 170,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 100,
+  },
+  buttonContainer: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  parentrecordStart: {
+    backgroundColor: COLORS.white2,
+  },
+  parentrecordingStop: {
+    backgroundColor: "#28a7c9",
+  },
+  buttonStart: {
+    backgroundColor: COLORS.primary,
+  },
+  buttonStop: {
+    backgroundColor: "#f72346",
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: COLORS.white,
+  },
+});
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 Build expo application
@@ -431,3 +688,11 @@ Build expo application
 7) >> eas build -p android --profile preview
 
 8) >> eas build -p android
+
+
+Android developer
+1) >> npx expo prebuild
+
+2) >> eas build
+
+Build apk for android 

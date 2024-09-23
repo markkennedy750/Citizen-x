@@ -5,14 +5,22 @@ import {
   View,
   FlatList,
   Image,
+  Modal,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "./ReportContainer/Container";
 import { COLORS, SIZES, icons } from "../constants";
 import reportData from "../data/report";
 import TextIconButton from "../components/TextIconButton";
+import TextButton from "../components/TextButton";
 
 const Report = ({ navigation }) => {
+  const [errorModal, setErrorModal] = useState(false);
+
+  useEffect(() => {
+    setErrorModal(true);
+  }, []);
+
   const footerButton = () => {
     return (
       <TextIconButton
@@ -75,6 +83,40 @@ const Report = ({ navigation }) => {
         contentContainerStyle={{ ...styles.itemContainer, flexGrow: 1 }}
         ListFooterComponent={footerButton}
       />
+      <Modal animationType="slide" transparent={true} visible={errorModal}>
+        <View style={styles.modalContainer}>
+          <Image
+            source={icons.workInProgress}
+            style={{ height: 130, width: 210, marginTop: 12 }}
+          />
+
+          <View style={styles.logoutTextContainer}>
+            <Text style={styles.primaryText}>Work in progress</Text>
+            <Text style={styles.secondaryText}>
+              Only Image and audio media file is accepted at the mean time video
+              files will be in the next version
+            </Text>
+          </View>
+          <TextButton
+            label="Dismiss"
+            buttonContainerStyle={{
+              height: 55,
+              width: "80%",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 50,
+              borderRadius: SIZES.radius,
+              backgroundColor: COLORS.primary,
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => setErrorModal(false)}
+          />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -125,5 +167,39 @@ const styles = StyleSheet.create({
     marginTop: 2,
     alignSelf: "center",
     alignItems: "center",
+  },
+  modalContainer: {
+    width: "98%",
+    height: 350,
+    backgroundColor: "white",
+    alignSelf: "center",
+    marginTop: "auto",
+    marginBottom: 7,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    alignItems: "center",
+    borderWidth: 1.5,
+    borderColor: COLORS.gray2,
+  },
+  imagelogoutContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  logoutTextContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  primaryText: {
+    fontSize: 20,
+    fontWeight: "600",
+    lineHeight: 25,
+  },
+  secondaryText: {
+    fontSize: 12,
+    fontWeight: "400",
+    lineHeight: 20,
+    textAlign: "center",
   },
 });

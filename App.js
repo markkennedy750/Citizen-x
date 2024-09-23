@@ -9,6 +9,7 @@ import SplashScreen from "./screens/SplashScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import OnboardingScreen from "./screens/OnboardingScreen";
 import SignUp from "./screens/Authentication/SignUp";
+import EmailSuccess from "./screens/Authentication/EmailSuccess";
 import SignIn from "./screens/Authentication/SignIn";
 import Interest from "./screens/Authentication/Interest";
 import ReportSuccess from "./screens/ReportContainer/ReportSuccess";
@@ -58,6 +59,9 @@ import Hospital from "./screens/ReportContainer/Hospital";
 import CommunityDev from "./screens/ReportContainer/CommunityDev";
 import NonAuthFeed from "./screens/NonAuthFeed";
 import ApiFeedDetail from "./screens/ApiFeedDetails";
+import SingleImage from "./screens/SingleImage";
+import TermsAndConditions from "./screens/TermsAndConditions";
+import AnonymousFeed from "./screens/AnonymousFeed";
 
 //import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Stack = createStackNavigator();
@@ -89,6 +93,20 @@ export default function App() {
             }}
           />
           <Stack.Screen
+            name="AnonymousFeed"
+            component={AnonymousFeed}
+            options={{
+              animation: "fade",
+            }}
+          />
+          <Stack.Screen
+            name="EmailSuccess"
+            component={EmailSuccess}
+            options={{
+              animation: "fade",
+            }}
+          />
+          <Stack.Screen
             name="SignUp"
             component={SignUp}
             options={{
@@ -96,6 +114,13 @@ export default function App() {
             }}
           />
 
+          <Stack.Screen
+            name="TermsAndConditions"
+            component={TermsAndConditions}
+            options={{
+              animation: "fade",
+            }}
+          />
           <Stack.Screen
             name="Interest"
             component={Interest}
@@ -158,6 +183,7 @@ export default function App() {
             }}
           />
           <Stack.Screen name="ImageScreen" component={ImageScreen} />
+          <Stack.Screen name="SingleImage" component={SingleImage} />
           <Stack.Screen name="Settings" component={Settings} />
           <Stack.Screen name="Theme" component={Theme} />
           <Stack.Screen name="DataSaver" component={DataSaver} />

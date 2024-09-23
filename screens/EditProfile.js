@@ -24,6 +24,7 @@ import NetworkError from "../components/loadingStates/NetworkError";
 import LoadingImage from "../components/loadingStates/LoadingImage";
 import axios from "axios";
 import { profile_sec } from "../Redux/authSlice";
+import StateLocal from "../components/StateLocal";
 
 const EditProfile = ({ navigation }) => {
   const [state, setState] = useState("");
@@ -441,44 +442,12 @@ const EditProfile = ({ navigation }) => {
           </View>
         </View>
 
-        <View>
-          <FormInput
-            label="State"
-            placeholder="Enugu"
-            onChange={(value) => {
-              setState(value);
-            }}
-          />
-
-          <View style={{ marginLeft: "auto", height: 30 }}>
-            <Text
-              style={{ fontWeight: "700", fontSize: 15, color: COLORS.primary }}
-            >
-              Change Your State
-            </Text>
-          </View>
-        </View>
-
-        <View>
-          <FormInput
-            label="Local Government"
-            placeholder="Agwuata"
-            containerStyle={{
-              marginTop: SIZES.radius,
-            }}
-            onChange={(value) => {
-              setLocalGov(value);
-            }}
-          />
-
-          <View style={{ marginLeft: "auto", height: 30 }}>
-            <Text
-              style={{ fontWeight: "700", fontSize: 15, color: COLORS.primary }}
-            >
-              Set your local Government
-            </Text>
-          </View>
-        </View>
+        <StateLocal
+          selectedState={state}
+          setSelectedState={setState}
+          selectedLocalGov={localGov}
+          setSelectedLocalGov={setLocalGov}
+        />
         <TextButton
           label="Update your details"
           //disabled={isEnableSignUp() ? false : true}

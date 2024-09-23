@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Alert,
   ScrollView,
+  Modal,
+  Vibration,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 //import { AuthLayout } from "../";
@@ -15,18 +17,18 @@ import { utils } from "../../utils";
 import CustomSwitch from "../../components/CustomSwitch";
 import TextButton from "../../components/TextButton";
 import { StatusBar } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../Redux/authSlice";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SIGNIN } from "../../Redux/URL";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
-  const dispatch = useDispatch();
-  const { loading, error, refresh_token, access_token } = useSelector(
-    (state) => state.auth
-  );
+  const [loading, setLoading] = useState(false);
+  const [errorModal, setErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [showPass, setShowPass] = useState(false);
   const [saveMe, setSaveMe] = useState(false);
@@ -35,30 +37,45 @@ const SignIn = ({ navigation }) => {
     return email != "" && password != "" && emailError == "";
   }
 
-  useEffect(() => {
-    if (error) {
-      Alert.alert("Login Failed", error.errors);
-    }
-  }, [error]);
-  useEffect(() => {
-    if (access_token !== null) {
-      navigation.navigate("MainScreen");
-    }
-    console.log("The is an access token This is it", access_token);
-  }, [access_token]);
-
-  function signInFn() {
-    dispatch(
-      login({
+  async function signInFn() {
+    setLoading(true);
+    try {
+      const response = await axios.post(SIGNIN, {
         email,
         password,
-      })
-    );
+      });
+      const { access_token, refresh_token } = response.data.data;
 
-    if (access_token !== null) {
-      navigation.navigate("MainScreen");
+      await AsyncStorage.setItem("access_token", access_token);
+      await AsyncStorage.setItem("refresh_token", refresh_token);
+      //console.log(response.data);
+      if (response.status === 200) {
+        setLoading(false);
+        navigation.navigate("MainScreen");
+      }
+    } catch (error) {
+      setLoading(false);
+      setErrorModal(true);
+      Vibration.vibrate();
+      console.log(error);
+      if (error.response) {
+        console.log("server error:", error.response.data);
+        setErrorMessage(
+          "There was an issue with the server. Please try again later."
+        );
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        console.log("network error:", error.message);
+        setErrorMessage(
+          "Network error. Please check your internet connection and try again."
+        );
+        return rejectWithValue(error.message);
+      } else {
+        console.log("error:", error.message);
+        setErrorMessage("An unexpected error occurred. Please try again.");
+        return rejectWithValue(error.message);
+      }
     }
-    console.log("The is an access token This is it", access_token);
   }
 
   if (loading) return <LoadingImage />;
@@ -180,7 +197,7 @@ const SignIn = ({ navigation }) => {
               fontWeight: "600",
             }}
             onPress={() => {
-              console.log("forget password");
+              navigation.navigate("ForgotPassword");
             }}
           />
         </View>
@@ -242,6 +259,37 @@ const SignIn = ({ navigation }) => {
       </View>
 
       {/** Footer */}
+      <Modal animationType="slide" transparent={true} visible={errorModal}>
+        <View style={styles.modalContainer}>
+          <Image
+            source={icons.erroricon}
+            style={{ height: 100, width: 120, marginTop: 10 }}
+          />
+
+          <View style={styles.logoutTextContainer}>
+            <Text style={styles.primaryText}>LogIn Failed</Text>
+            <Text style={styles.secondaryText}>{errorMessage}</Text>
+          </View>
+          <TextButton
+            label="Dismiss"
+            buttonContainerStyle={{
+              height: 55,
+              width: "80%",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 50,
+              borderRadius: SIZES.radius,
+              backgroundColor: COLORS.primary,
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => setErrorModal(false)}
+          />
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -266,5 +314,40 @@ const styles = StyleSheet.create({
     fontSize: 12.1,
     fontWeight: "500",
     color: "#000000",
+  },
+  modalContainer: {
+    width: "98%",
+    height: 350,
+    backgroundColor: "white",
+    alignSelf: "center",
+    marginTop: "auto",
+    marginBottom: 7,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    alignItems: "center",
+    borderWidth: 1.5,
+    borderColor: COLORS.gray2,
+  },
+  imagelogoutContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+
+    marginTop: 10,
+  },
+  logoutTextContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  primaryText: {
+    fontSize: 20,
+    fontWeight: "600",
+    lineHeight: 25,
+  },
+  secondaryText: {
+    fontSize: 15,
+    fontWeight: "400",
+    lineHeight: 20,
+    textAlign: "center",
   },
 });
