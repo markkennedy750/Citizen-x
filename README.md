@@ -300,9 +300,7 @@ export default DatePickerComponent;
 
 DROP DOWN LIST
 //////////////////////////////////////////////////////////////////////////////////////////////
-web:  1089518464102-t7760kkg0p2gpe3arckg0853fgdguli0.apps.googleusercontent.com
-iphone: 1089518464102-qdgrc9ulmneip0l4cj1ijc2igv8bubvk.apps.googleusercontent.com
-android: 1089518464102-r4upttig1g193o85v3nkqae937ppk0h0.apps.googleusercontent.com
+web:  
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////

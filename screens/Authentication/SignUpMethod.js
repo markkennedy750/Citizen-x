@@ -18,14 +18,12 @@ import * as AuthSession from "expo-auth-session";
 import * as Google from "expo-auth-session/providers/google";
 import axios from "axios";
 import { LOGIN_WITH_GOOGLE } from "../../Redux/URL";
-import { AuthSession } from "expo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IOS_GOOGLE_CLIENT_ID, ANDROID_GOOGLE_CLIENT_ID } from "@env";
 
-WebBrowser.maybeCompleteAuthSession();
-
 const SignUpMethods = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
   const [request, response, promptAsync] = Google.useAuthRequest({
     clientId: Platform.select({
       ios: IOS_GOOGLE_CLIENT_ID,
@@ -60,11 +58,16 @@ const SignUpMethods = ({ navigation }) => {
     }
   };
   useEffect(() => {
-    if (response?.type === "success") {
+    if (response?.type === "success" && !isRequesting) {
+      setIsRequesting(true);
       const { authentication } = response;
       getUserInfo(authentication.accessToken);
     }
   }, [response]);
+
+  useEffect(() => {
+    WebBrowser.maybeCompleteAuthSession();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
