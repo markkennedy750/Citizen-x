@@ -5,9 +5,11 @@ import {
   StatusBar,
   FlatList,
   RefreshControl,
+  Image,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
-import { COLORS, SIZES } from "../constants";
+import { COLORS, icons, SIZES } from "../constants";
 import { authFeed } from "../Redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,26 +18,29 @@ import TextButton from "../components/TextButton";
 import ErrorImage from "../components/loadingStates/ErrorImage";
 import ApiAnonymousFeed from "../components/ApiAnonymousFeed";
 
-const AnonymousFeed = () => {
+const AnonymousFeed = ({ navigation }) => {
   // const [apiFeeds, setApiFeeds] = useState({})
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useDispatch();
   const { loading, error, auth_feed } = useSelector((state) => state.auth);
 
+  const access_token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZhcm1AZ21haWwuY29tIiwiZXhwIjoxNzI3ODczNjE0LCJpZCI6MTUsImlzX2FkbWluIjpmYWxzZSwicm9sZSI6IlVzZXIifQ.rLjjJie_tbaKmvc-oXQmCAKPQHZifk68CX-YHxqOmbA";
+
   useEffect(() => {
-    dispatch(authFeed());
+    dispatch(authFeed({ access_token }));
   }, [dispatch]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    dispatch(authFeed({ accessToken }));
+    dispatch(authFeed({ access_token }));
     if (loading === false) {
       setRefreshing(false);
     }
   }, []);
 
   function refreshBtn() {
-    dispatch(authFeed());
+    dispatch(authFeed({ access_token }));
   }
 
   if (loading) return <LoadingImage />;
@@ -81,6 +86,36 @@ const AnonymousFeed = () => {
   return (
     <View style={styles.container}>
       <View style={styles.top}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            paddingTop: 15,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.goBackButton}
+          >
+            <Image
+              source={icons.arrowleft}
+              style={{ width: 20, height: 20, tintColor: "black" }}
+            />
+          </TouchableOpacity>
+          <Text
+            style={{
+              alignSelf: "center",
+              textAlign: "center",
+              fontWeight: "600",
+              fontSize: 16,
+              color: COLORS.primary,
+            }}
+          >
+            Create an account to see more
+          </Text>
+        </View>
+
         <Text
           style={{
             fontWeight: "700",
@@ -121,6 +156,9 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-end",
     height: 30,
+  },
+  goBackButton: {
+    paddingHorizontal: 15,
   },
   itemContainer: {
     //paddingHorizontal: 6,

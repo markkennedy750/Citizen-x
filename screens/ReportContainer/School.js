@@ -71,56 +71,54 @@ const School = ({ navigation }) => {
   async function submitReport() {
     try {
       setLoading(true);
+      const formData = new FormData();
+
       formData.append("category", categ);
       formData.append("sub_report_type", insidentType);
       formData.append("description", textInput);
       formData.append("state_name", selectedState);
       formData.append("lga_name", selectedLocalGov);
       formData.append("is_anonymous", isEnabled);
-      formData.append("landmark", address || "");
-      formData.append("school_name", schoolName || "");
-      formData.append("latitude", location?.latitude || "");
-      formData.append("longitude", location?.longitude || "");
+      if (address) {
+        formData.append("landmark", address);
+      }
+      if (schoolName) {
+        formData.append("school_name", schoolName);
+      }
+      if (location) {
+        formData.append("latitude", location?.latitude);
+        formData.append("longitude", location?.longitude);
+      }
 
-      const appendMediaFile = (uri, name, type) => {
-        formData.append("mediaFiles", {
-          uri: Platform.OS === "ios" ? uri.replace("file://", "") : uri,
-          type: type,
-          name: name,
-        });
-      };
-      // if (photoUri) {
-      //   appendMediaFile(photoUri, "photo.jpg", "image/jpeg");
-      // }
-      for (let index = 0; index < albums.length; index++) {
-        const album = albums[index];
-        const fileType = album.substring(album.lastIndexOf(".") + 1);
-        let mimeType = `image/${fileType}`;
-        if (fileType !== "jpeg" && fileType !== "png") {
-          mimeType = "image/jpeg";
+      if (albums && albums.length > 0) {
+        for (let index = 0; index < albums.length; index++) {
+          const album = albums[index];
+          const fileType = album.substring(album.lastIndexOf(".") + 1);
+          formData.append("mediaFiles[]", {
+            uri: album,
+            type: `image/${fileType}`,
+            name: `media_${index}.${fileType}`,
+          });
         }
-
-        const compressedImageUri = await compressImage(album);
-
-        appendMediaFile(
-          compressedImageUri,
-          `photo${index}.${fileType}`,
-          mimeType
-        );
       }
-      // if (videoMedia) {
-      //   appendMediaFile(videoMedia, "video.mp4", "video/mp4");
-      // }
+
+      // Append audio file to formData if available
       if (storedRecording) {
-        appendMediaFile(storedRecording, "audio.mp3", "audio/mpeg");
+        const audioFileType = storedRecording.substring(
+          storedRecording.lastIndexOf(".") + 1
+        ); // Get file extension
+
+        formData.append("mediaFiles[]", {
+          uri: storedRecording,
+          type: `audio/${audioFileType}`,
+          name: `recording.${audioFileType}`,
+        });
       }
 
-      console.log("datas sent to backend", formData);
-      // Make the request to the backend
       const response = await axios.post(CREATE_REPORT, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
       });
 
@@ -317,6 +315,7 @@ const School = ({ navigation }) => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        albums={albums}
         videoMedia={videoMedia}
         setVideoMedia={setVideoMedia}
       />

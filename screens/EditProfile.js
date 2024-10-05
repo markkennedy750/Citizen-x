@@ -333,6 +333,11 @@ const EditProfile = ({ navigation }) => {
         <TouchableOpacity onPress={mediaAccess}>
           {imageLoading ? (
             <ActivityIndicator size="large" color={`${COLORS.primary}`} />
+          ) : profileImag ? (
+            <Image
+              source={{ uri: user?.profileImag }}
+              style={styles.profileImg}
+            />
           ) : (
             <Image
               source={

@@ -45,11 +45,21 @@ const BasicRevealAnimation = () => {
         transition={{ delay: 2000 }}
       >
         <Text style={styles.title}>Welcome to Citizen X</Text>
+        <Text
+          style={{
+            textAlign: "center",
+            marginHorizontal: 35,
+            color: "black",
+            lineHeight: 20,
+            fontWeight: "bold",
+          }}
+        >
+          Share. Report. Impact.
+        </Text>
         <Text style={styles.text}>
-          A platform for citizen reporting and accountability in Nigeria. Our
-          mission is to empower citizens to report on government bodies and
-          infrastructures in real-time. Together we strive for transparency,
-          accountability, and positive change in our communities.
+          CitizenX is a platform for a more engaged local community. Share
+          views, report incidents, and update local events easily. Every report
+          makes a difference.
         </Text>
       </MotiView>
       <TouchableWithoutFeedback onPress={navFunction}>

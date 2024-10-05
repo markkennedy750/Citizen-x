@@ -20,7 +20,7 @@ import { CREATE_REPORT } from "../../Redux/URL";
 import axios from "axios";
 import ErrorImage from "../../components/loadingStates/ErrorImage";
 import NetworkError from "../../components/loadingStates/NetworkError";
-import { readAsStringAsync } from "expo-file-system";
+import * as FileSystem from "expo-file-system";
 import * as ImageManipulator from "expo-image-manipulator";
 import { Platform } from "react-native";
 
@@ -77,27 +77,19 @@ const Crime = ({ navigation }) => {
     );
   }
 
-  async function compressImage(uri) {
-    try {
-      const manipulatedImage = await ImageManipulator.manipulateAsync(
-        uri,
-        [{ resize: { width: 900 } }], // Resize width to 900px
-        { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG } // Adjust compression as needed
-      );
-      return manipulatedImage.uri;
-    } catch (error) {
-      console.log("Error compressing image: ", error);
-      return uri;
-    }
-  }
+  const uriToBlob = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+  };
 
   async function submitReport() {
     try {
       setLoading(true);
-      // Create a new FormData object to hold all the data
+
+      // Initialize FormData
       const formData = new FormData();
 
-      // Append textual data
       formData.append("category", categ);
       formData.append("sub_report_type", insidentType);
       formData.append("description", textInput);
@@ -105,53 +97,48 @@ const Crime = ({ navigation }) => {
       formData.append("lga_name", selectedLocalGov);
       formData.append("is_anonymous", isEnabled);
       formData.append("date_of_incidence", date);
-      formData.append("landmark", address || "");
-      formData.append("latitude", location?.latitude || "");
-      formData.append("longitude", location?.longitude || "");
+      if (address) {
+        formData.append("landmark", address);
+      }
+      if (location) {
+        formData.append("latitude", location?.latitude);
+        formData.append("longitude", location?.longitude);
+      }
 
-      const appendMediaFile = (uri, name, type) => {
-        formData.append("mediaFiles", {
-          uri: Platform.OS === "ios" ? uri.replace("file://", "") : uri,
-          type: type,
-          name: name,
-        });
-      };
-      // if (photoUri) {
-      //   appendMediaFile(photoUri, "photo.jpg", "image/jpeg");
-      // }
-
-      for (let index = 0; index < albums.length; index++) {
-        const album = albums[index];
-        const fileType = album.substring(album.lastIndexOf(".") + 1);
-        let mimeType = `image/${fileType}`;
-        if (fileType !== "jpeg" && fileType !== "png") {
-          mimeType = "image/jpeg";
+      if (albums && albums.length > 0) {
+        for (let index = 0; index < albums.length; index++) {
+          const album = albums[index];
+          const fileType = album.substring(album.lastIndexOf(".") + 1);
+          formData.append("mediaFiles[]", {
+            uri: album,
+            type: `image/${fileType}`,
+            name: `media_${index}.${fileType}`,
+          });
         }
-    
-        const compressedImageUri = await compressImage(album);
-  
-        appendMediaFile(compressedImageUri, `photo${index}.${fileType}`, mimeType);
-      }
-      // if (videoMedia) {
-      //   appendMediaFile(videoMedia, "video.mp4", "video/mp4");
-      // }
-      if (storedRecording) {
-        appendMediaFile(storedRecording, "audio.mp3", "audio/mpeg");
       }
 
-      // Make the request to the backend  CREATE_REPORT
+      if (storedRecording) {
+        const audioFileType = storedRecording.substring(
+          storedRecording.lastIndexOf(".") + 1
+        ); // Get file extension
+
+        formData.append("mediaFiles[]", {
+          uri: storedRecording,
+          type: `audio/${audioFileType}`,
+          name: `recording.${audioFileType}`,
+        });
+      }
+
+      console.log(`form data data`, formData);
       const response = await axios.post(CREATE_REPORT, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
       });
 
-      // Check if the report was successfully created
-      if (response.data.status === "Created") {
-        console.log("Report created successfully:", response.data);
-        navigation.navigate("ReportSuccess");
-      }
+      console.log("Report created successfully:", response.data);
+      navigation.navigate("ReportSuccess");
 
       setLoading(false);
     } catch (error) {
@@ -162,18 +149,14 @@ const Crime = ({ navigation }) => {
         setErrorMessage(
           "There was an issue with the server. Please try again later."
         );
-        return rejectWithValue(error.response.data);
       } else if (error.request) {
         console.log("network error:", error.message);
-        console.log(error);
         setErrorMessage(
           "Network error. Please check your internet connection and try again."
         );
-        return rejectWithValue(error.message);
       } else {
         console.log("error:", error.message);
         setErrorMessage("An unexpected error occurred. Please try again.");
-        return rejectWithValue(error.message);
       }
     }
   }
@@ -370,7 +353,7 @@ const Crime = ({ navigation }) => {
           fontWeight: "700",
           fontSize: 17,
         }}
-        onPress={submitReport}
+        onPress={async () => await submitReport()}
       />
     </ReportWrapper>
   );

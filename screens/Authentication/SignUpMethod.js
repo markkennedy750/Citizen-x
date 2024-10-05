@@ -19,20 +19,27 @@ import * as Google from "expo-auth-session/providers/google";
 import axios from "axios";
 import { LOGIN_WITH_GOOGLE } from "../../Redux/URL";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IOS_GOOGLE_CLIENT_ID, ANDROID_GOOGLE_CLIENT_ID } from "@env";
 
+WebBrowser.maybeCompleteAuthSession();
 const SignUpMethods = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
+
+  // const [request, response, promptAsync] = Google.useAuthRequest({
+  //   clientId: Platform.select({
+  //     androidClientId: ANDROID_GOOGLE_CLIENT_ID,
+  //     iosClientId: IOS_GOOGLE_CLIENT_ID,
+  //   }),
+  //   redirectUri: AuthSession.makeRedirectUri({
+  //     useProxy: true,
+  //   }),
+  //   scopes: ["openid", "profile", "email"],
+  // });
   const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: Platform.select({
-      ios: IOS_GOOGLE_CLIENT_ID,
-      android: ANDROID_GOOGLE_CLIENT_ID,
-    }),
-    redirectUri: AuthSession.makeRedirectUri({
-      useProxy: true,
-    }),
-    scopes: ["openid", "profile", "email"],
+    androidClientId:
+      "1089518464102-r4upttig1g193o85v3nkqae937ppk0h0.apps.googleusercontent.com",
+    iosClientId:
+      "1089518464102-qdgrc9ulmneip0l4cj1ijc2igv8bubvk.apps.googleusercontent.com",
   });
 
   const getUserInfo = async (token) => {
@@ -57,6 +64,7 @@ const SignUpMethods = ({ navigation }) => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     if (response?.type === "success" && !isRequesting) {
       setIsRequesting(true);
@@ -64,10 +72,6 @@ const SignUpMethods = ({ navigation }) => {
       getUserInfo(authentication.accessToken);
     }
   }, [response]);
-
-  useEffect(() => {
-    WebBrowser.maybeCompleteAuthSession();
-  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -166,7 +170,7 @@ const SignUpMethods = ({ navigation }) => {
             labelStyle={{
               marginLeft: SIZES.radius,
             }}
-            onPress={() => promptAsync()}
+            onPress={async () => await promptAsync()}
           />
         )}
       </View>

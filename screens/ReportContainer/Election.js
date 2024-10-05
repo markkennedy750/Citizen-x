@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, View,Platform } from "react-native";
+import { Alert, StyleSheet, Text, View, Platform } from "react-native";
 import React, { useEffect, useState, useMemo } from "react";
 import ReportWrapper from "./ReportWrapper";
 import InsidentType from "../../components/InsidentType";
@@ -18,7 +18,7 @@ import { CREATE_REPORT } from "../../Redux/URL";
 import axios from "axios";
 import ErrorImage from "../../components/loadingStates/ErrorImage";
 import NetworkError from "../../components/loadingStates/NetworkError";
-import * as ImageManipulator from 'expo-image-manipulator';
+import * as ImageManipulator from "expo-image-manipulator";
 
 const Election = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -103,45 +103,39 @@ const Election = ({ navigation }) => {
       formData.append("latitude", location?.latitude || "");
       formData.append("longitude", location?.longitude || "");
 
-      const appendMediaFile = (uri, name, type) => {
-        formData.append("mediaFiles", {
-          uri: Platform.OS === "ios" ? uri.replace("file://", "") : uri,
-          type: type,
-          name: name,
-        });
-      };
-      // if (photoUri) {
-      //   appendMediaFile(photoUri, "photo.jpg", "image/jpeg");
-      // }
-      for (let index = 0; index < albums.length; index++) {
-        const album = albums[index];
-        const fileType = album.substring(album.lastIndexOf(".") + 1);
-        let mimeType = `image/${fileType}`;
-        if (fileType !== "jpeg" && fileType !== "png") {
-          mimeType = "image/jpeg";
+      if (albums && albums.length > 0) {
+        for (let index = 0; index < albums.length; index++) {
+          const album = albums[index];
+          const fileType = album.substring(album.lastIndexOf(".") + 1);
+  
+          
+          formData.append("mediaFiles[]", {
+            uri: album,
+            type: `image/${fileType}`,
+            name: `media_${index}.${fileType}`, 
+          });
         }
-
-        const compressedImageUri = await compressImage(album);
-
-        appendMediaFile(
-          compressedImageUri,
-          `photo${index}.${fileType}`,
-          mimeType
-        );
       }
-      // if (videoMedia) {
-      //   appendMediaFile(videoMedia, "video.mp4", "video/mp4");
-      // }
+  
+      
       if (storedRecording) {
-        appendMediaFile(storedRecording, "audio.mp3", "audio/mpeg");
+        const audioFileType = storedRecording.substring(storedRecording.lastIndexOf(".") + 1); // Get file extension
+  
+        formData.append("mediaFiles[]", {
+          uri: storedRecording,
+          type: `audio/${audioFileType}`,
+          name: `recording.${audioFileType}`, 
+        });
       }
-
+  
+      
       const response = await axios.post(CREATE_REPORT, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data", 
         },
       });
+  
 
       console.log("report created successfully:", response.data);
       setLoading(false);
@@ -317,6 +311,7 @@ const Election = ({ navigation }) => {
         setAlbums={setAlbums}
         setStoredRecording={setStoredRecording}
         setPhotoUri={setPhotoUri}
+        albums={albums}
         videoMedia={videoMedia}
         setVideoMedia={setVideoMedia}
       />

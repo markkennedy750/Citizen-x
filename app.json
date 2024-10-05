@@ -2,7 +2,7 @@
   "expo": {
     "name": "citixenx",
     "slug": "citixenx",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/citizenx.png",
     "userInterfaceStyle": "light",
@@ -36,6 +36,7 @@
     "web": {
       "favicon": "./assets/citizenx.png"
     },
+    "scheme": "CITIZEN_X",
     "extra": {
       "eas": {
         "projectId": "37271682-1c79-46cd-8a73-3c2cac94cb3c"

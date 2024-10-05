@@ -7,6 +7,7 @@ import {
   Alert,
   Image,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import AuthLayoutSignUp from "./AuthLayoutSignUp";
@@ -14,16 +15,17 @@ import { COLORS, icons, SIZES } from "../../constants";
 import TextButton from "../../components/TextButton";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
-import { useDispatch, useSelector } from "react-redux";
-//import AsyncStorage from "@react-native-async-storage/async-storage";
-import { resetUserStatus, signup } from "../../Redux/authSlice";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
+import axios from "axios";
+import { SIGNUP } from "../../Redux/URL";
+import { Vibration } from "react-native";
 
 const ProfilePics = ({ navigation, route }) => {
   const [profileImage, setProfileImage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [imageLoading, setImageLoading] = useState(false);
-  const dispatch = useDispatch();
-  const { loading, error, user, status } = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
+  const [errorModal, setErrorModal] = useState(false);
   const { fullname, email, phoneNumber, password, username } = route.params;
 
   const mediaAccess = async () => {
@@ -63,8 +65,34 @@ const ProfilePics = ({ navigation, route }) => {
   //   }
   // }, [error]);
 
-  useEffect(() => {
-    if (user && status === "Created") {
+  const signUpFnc = async () => {
+    //console.log("signup function called");
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("fullname", fullname);
+      formData.append("telephone", phoneNumber);
+      formData.append("username", username);
+      formData.append("email", email);
+      formData.append("password", password);
+      if (profileImage) {
+        const fileType = profileImage.substring(
+          profileImage.lastIndexOf(".") + 1
+        );
+        formData.append("profile_image", {
+          uri: profileImage,
+          type: `image/${fileType}`,
+          name: `profile_image.${fileType}`,
+        });
+      }
+
+      console.log("Form Data before sending to server:", formData);
+      const response = await axios.post(SIGNUP, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       navigation.navigate("SignUpSuccess", {
         fullname,
         email,
@@ -72,34 +100,36 @@ const ProfilePics = ({ navigation, route }) => {
         password,
         username,
       });
-      dispatch(resetUserStatus());
+      console.log("Signup response data:", response.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setErrorModal(true);
+      Vibration.vibrate();
+      console.log(error);
+      if (error.response) {
+        console.log("server error:", error.response.data);
+        setErrorMessage(
+          "There was an issue with the server. Please try again later."
+        );
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        console.log("network error:", error.message);
+        setErrorMessage(
+          "Network error. Please check your internet connection and try again."
+        );
+        return rejectWithValue(error.message);
+      } else {
+        console.log("error:", error.message);
+        setErrorMessage("An unexpected error occurred. Please try again.");
+        return rejectWithValue(error.message);
+      }
+    } finally {
+      setLoading(false);
     }
-  }, [user, status, navigation, dispatch]);
-
-  const signUpFnc = () => {
-    //console.log("signup function called");
-    dispatch(
-      signup({
-        profileImage,
-        fullname,
-        username,
-        phoneNumber,
-        email,
-        password,
-      })
-    );
   };
 
   if (loading) return <LoadingImage />;
-
-  if (error) {
-    Alert.alert(
-      "Sign Up failed",
-      "There was an issue signing you up. Please check your internet connection and try again later."
-    );
-    console.log(error);
-    dispatch(resetUserStatus());
-  }
 
   // if (user && status === "Created") {
   //   navigation.navigate("SignUpSuccess", {
@@ -161,6 +191,38 @@ const ProfilePics = ({ navigation, route }) => {
           />
         </View>
       </AuthLayoutSignUp>
+      <Modal animationType="slide" transparent={true} visible={errorModal}>
+        <View style={styles.modalContainer}>
+          <Image
+            source={icons.erroricon}
+            style={{ height: 80, width: 100, marginTop: 8 }}
+            resizeMode="contain"
+          />
+
+          <View style={styles.logoutTextContainer}>
+            <Text style={styles.primaryText}>Sign up failed</Text>
+            <Text style={styles.secondaryText}>{errorMessage}</Text>
+          </View>
+          <TextButton
+            label="Dismiss"
+            buttonContainerStyle={{
+              height: 55,
+              width: "80%",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 50,
+              borderRadius: SIZES.radius,
+              backgroundColor: COLORS.primary,
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => setErrorModal(false)}
+          />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -208,5 +270,40 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: COLORS.white,
+  },
+  modalContainer: {
+    width: "98%",
+    height: 350,
+    backgroundColor: "white",
+    alignSelf: "center",
+    marginTop: "auto",
+    marginBottom: 7,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    alignItems: "center",
+    borderWidth: 1.5,
+    borderColor: COLORS.gray2,
+  },
+  imagelogoutContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+
+    marginTop: 10,
+  },
+  logoutTextContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  primaryText: {
+    fontSize: 20,
+    fontWeight: "600",
+    lineHeight: 25,
+  },
+  secondaryText: {
+    fontSize: 15,
+    fontWeight: "400",
+    lineHeight: 20,
+    textAlign: "center",
   },
 });
