@@ -75,65 +75,79 @@ const Power = ({ navigation }) => {
   async function submitReport() {
     try {
       setLoading(true);
-      const formData = new FormData();
 
-      formData.append("category", categ);
-      formData.append("sub_report_type", insidentType);
-      formData.append("description", textInput);
-      formData.append("state_name", selectedState);
-      formData.append("lga_name", selectedLocalGov);
-      formData.append("is_anonymous", isEnabled);
+      const data = {
+        category: categ,
+        sub_report_type: insidentType,
+        description: textInput,
+        state_name: selectedState,
+        lga_name: selectedLocalGov,
+        is_anonymous: isEnabled,
+      };
+
       if (address) {
-        formData.append("landmark", address);
-      }
-      if (autageLength) {
-        formData.append("outage_length", autageLength);
+        data.landmark = address;
       }
       if (location) {
-        formData.append("latitude", location?.latitude);
-        formData.append("longitude", location?.longitude);
+        data.latitude = location?.latitude;
+        data.longitude = location?.longitude;
+      }
+      if (autageLength) {
+        data.outage_length = autageLength;
       }
 
-      if (albums && albums.length > 0) {
-        for (let index = 0; index < albums.length; index++) {
-          const album = albums[index];
-          const fileType = album.substring(album.lastIndexOf(".") + 1);
-          formData.append("mediaFiles[]", {
-            uri: album,
-            type: `image/${fileType}`,
-            name: `media_${index}.${fileType}`,
-          });
-        }
-      }
-
-      if (storedRecording) {
-        const audioFileType = storedRecording.substring(
-          storedRecording.lastIndexOf(".") + 1
-        ); // Get file extension
-
-        formData.append("mediaFiles[]", {
-          uri: storedRecording,
-          type: `audio/${audioFileType}`,
-          name: `recording.${audioFileType}`,
-        });
-      }
-
-      // Send the FormData
-      const response = await axios.post(CREATE_REPORT, formData, {
+      const response = await axios.post(CREATE_REPORT, data, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       });
 
-      console.log("report created successfully:", formData);
+      if (response.data.status === "Created" && response.data.reportID) {
+        const reportTypeID = response.data.reportID;
+        const formData = new FormData();
 
-      console.log("report created successfully:", response.data);
-      setLoading(false);
-      if (response.data.status === "Created") {
-        navigation.navigate("ReportSuccess");
+        if (albums && albums.length > 0) {
+          albums.forEach((album, index) => {
+            const fileType = album
+              .substring(album.lastIndexOf(".") + 1)
+              .toLowerCase();
+            let mediaType = "image";
+            if (["mp4", "mov", "avi", "mkv", "webm"].includes(fileType)) {
+              mediaType = "video";
+            }
+
+            formData.append("mediaFiles[]", {
+              uri: album,
+              type: `${mediaType}/${fileType}`,
+              name: `media_${index}.${fileType}`,
+            });
+          });
+        }
+
+        if (storedRecording) {
+          const audioFileType = storedRecording.substring(
+            storedRecording.lastIndexOf(".") + 1
+          );
+          formData.append("mediaFiles[]", {
+            uri: storedRecording,
+            type: `audio/${audioFileType}`,
+            name: `recording.${audioFileType}`,
+          });
+        }
+
+        formData.append("report_id", reportTypeID);
+
+        const Mediaresponse = await axios.post(MEDIA_UPLOAD, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log(Mediaresponse.data);
       }
-      return response.data;
+      setLoading(false);
+      navigation.navigate("ReportSuccess");
     } catch (error) {
       setLoading(false);
       setError(error);
@@ -154,6 +168,8 @@ const Power = ({ navigation }) => {
         setErrorMessage("An unexpected error occurred. Please try again.");
         return rejectWithValue(error.message);
       }
+    } finally {
+      setLoading(false);
     }
   }
 

@@ -322,7 +322,10 @@ const ApiFeed = ({ item }) => {
             </View>
             <View style={styles.reportDaTim}>
               {item?.time_of_incidence && (
-                <Text style={styles.date}>{formatDate(date)}</Text>
+                <Text style={styles.date}>{
+                  item?.date_of_incidence
+                  //formatDate(date)
+                }</Text>
               )}
 
               <View

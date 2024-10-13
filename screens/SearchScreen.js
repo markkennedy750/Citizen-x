@@ -54,7 +54,7 @@ const SearchScreen = ({ navigation, route }) => {
           Authorization: `Bearer ${value}`,
         },
       });
-      if (response.status === 200) {
+      if (response.status === 200 && response.data.reports) {
         setSearchFeed(response.data.reports);
         setLoading(false);
       }

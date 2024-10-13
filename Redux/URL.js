@@ -18,5 +18,4 @@ export const SEARCH = `${HOST}/api/v1/reports/filters`;
 export const BOOKMARK_FEED = `${HOST}/api/v1/user/bookmark`;
 export const VIEW_BOOKMARKS = `${HOST}/api/v1/user/bookmarked/report`;
 export const FORGET_PASSWORD = `${HOST}/api/v1/password/forgot`;
-
-
+export const MEDIA_UPLOAD = `${HOST}/api/v1/user/report/media`;

@@ -59,80 +59,95 @@ const PortableWater = ({ navigation }) => {
     getData();
   }, []);
 
-  async function compressImage(uri) {
-    try {
-      const manipulatedImage = await ImageManipulator.manipulateAsync(
-        uri,
-        [{ resize: { width: 900 } }], // Resize width to 900px
-        { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG } // Adjust compression as needed
-      );
-      return manipulatedImage.uri;
-    } catch (error) {
-      console.log("Error compressing image: ", error);
-      return uri;
-    }
-  }
+  // async function compressImage(uri) {
+  //   try {
+  //     const manipulatedImage = await ImageManipulator.manipulateAsync(
+  //       uri,
+  //       [{ resize: { width: 900 } }], // Resize width to 900px
+  //       { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG } // Adjust compression as needed
+  //     );
+  //     return manipulatedImage.uri;
+  //   } catch (error) {
+  //     console.log("Error compressing image: ", error);
+  //     return uri;
+  //   }
+  // }
 
   async function submitReport() {
     try {
       setLoading(true);
-      const formData = new FormData();
+      const data = {
+        category: categ,
+        sub_report_type: insidentType,
+        description: textInput,
+        state_name: selectedState,
+        lga_name: selectedLocalGov,
+        is_anonymous: isEnabled,
+        date_of_incidence: date,
+      };
 
-      formData.append("category", categ);
-      formData.append("sub_report_type", insidentType);
-      formData.append("description", textInput);
-      formData.append("state_name", selectedState);
-      formData.append("lga_name", selectedLocalGov);
-      formData.append("is_anonymous", isEnabled);
-      formData.append("date_of_incidence", date);
       if (address) {
-        formData.append("landmark", address);
+        data.landmark = address;
       }
       if (location) {
-        formData.append("latitude", location?.latitude);
-        formData.append("longitude", location?.longitude);
+        data.latitude = location?.latitude;
+        data.longitude = location?.longitude;
+      }
+      if (selectedId) {
+        data.rating = selectedId;
       }
 
-      if (albums && albums.length > 0) {
-        for (let index = 0; index < albums.length; index++) {
-          const album = albums[index];
-          const fileType = album.substring(album.lastIndexOf(".") + 1);
-          formData.append("mediaFiles[]", {
-            uri: album,
-            type: `image/${fileType}`,
-            name: `media_${index}.${fileType}`,
-          });
-        }
-      }
-
-      if (storedRecording) {
-        const audioFileType = storedRecording.substring(
-          storedRecording.lastIndexOf(".") + 1
-        ); // Get file extension
-
-        formData.append("mediaFiles[]", {
-          uri: storedRecording,
-          type: `audio/${audioFileType}`,
-          name: `recording.${audioFileType}`,
-        });
-      }
-
-      // Send the FormData
-      const response = await axios.post(CREATE_REPORT, formData, {
+      const response = await axios.post(CREATE_REPORT, data, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       });
+      if (response.data.status === "Created" && response.data.reportID) {
+        const reportTypeID = response.data.reportID;
+        const formData = new FormData();
 
-      console.log("report created successfully:", formData);
+        if (albums && albums.length > 0) {
+          albums.forEach((album, index) => {
+            const fileType = album
+              .substring(album.lastIndexOf(".") + 1)
+              .toLowerCase();
+            let mediaType = "image";
+            if (["mp4", "mov", "avi", "mkv", "webm"].includes(fileType)) {
+              mediaType = "video";
+            }
 
-      console.log("report created successfully:", response.data);
-      setLoading(false);
-      if (response.data.status === "Created") {
-        navigation.navigate("ReportSuccess");
+            formData.append("mediaFiles[]", {
+              uri: album,
+              type: `${mediaType}/${fileType}`,
+              name: `media_${index}.${fileType}`,
+            });
+          });
+        }
+
+        if (storedRecording) {
+          const audioFileType = storedRecording.substring(
+            storedRecording.lastIndexOf(".") + 1
+          );
+          formData.append("mediaFiles[]", {
+            uri: storedRecording,
+            type: `audio/${audioFileType}`,
+            name: `recording.${audioFileType}`,
+          });
+        }
+
+        formData.append("report_id", reportTypeID);
+
+        const Mediaresponse = await axios.post(MEDIA_UPLOAD, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log(Mediaresponse.data);
       }
-      return response.data;
+      setLoading(false);
+      navigation.navigate("ReportSuccess");
     } catch (error) {
       setLoading(false);
       setError(error);
@@ -153,6 +168,8 @@ const PortableWater = ({ navigation }) => {
         setErrorMessage("An unexpected error occurred. Please try again.");
         return rejectWithValue(error.message);
       }
+    } finally {
+      setLoading(false);
     }
   }
 

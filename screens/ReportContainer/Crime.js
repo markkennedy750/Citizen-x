@@ -77,67 +77,90 @@ const Crime = ({ navigation }) => {
     );
   }
 
-  const uriToBlob = async (uri) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    return blob;
-  };
+  // const uriToBlob = async (uri) => {
+  //   const response = await fetch(uri);
+  //   const blob = await response.blob();
+  //   return blob;
+  // };
 
   async function submitReport() {
     try {
       setLoading(true);
 
-      // Initialize FormData
-      const formData = new FormData();
+      // Initialize FormData is_response
 
-      formData.append("category", categ);
-      formData.append("sub_report_type", insidentType);
-      formData.append("description", textInput);
-      formData.append("state_name", selectedState);
-      formData.append("lga_name", selectedLocalGov);
-      formData.append("is_anonymous", isEnabled);
-      formData.append("date_of_incidence", date);
+      const data = {
+        category: categ,
+        sub_report_type: insidentType,
+        description: textInput,
+        state_name: selectedState,
+        lga_name: selectedLocalGov,
+        is_anonymous: isEnabled,
+        date_of_incidence: date,
+        is_response : checkboxValue
+      };
+
       if (address) {
-        formData.append("landmark", address);
+        data.landmark = address;
       }
       if (location) {
-        formData.append("latitude", location?.latitude);
-        formData.append("longitude", location?.longitude);
+        data.latitude = location?.latitude;
+        data.longitude = location?.longitude;
       }
 
-      if (albums && albums.length > 0) {
-        for (let index = 0; index < albums.length; index++) {
-          const album = albums[index];
-          const fileType = album.substring(album.lastIndexOf(".") + 1);
-          formData.append("mediaFiles[]", {
-            uri: album,
-            type: `image/${fileType}`,
-            name: `media_${index}.${fileType}`,
-          });
-        }
-      }
-
-      if (storedRecording) {
-        const audioFileType = storedRecording.substring(
-          storedRecording.lastIndexOf(".") + 1
-        ); // Get file extension
-
-        formData.append("mediaFiles[]", {
-          uri: storedRecording,
-          type: `audio/${audioFileType}`,
-          name: `recording.${audioFileType}`,
-        });
-      }
-
-      console.log(`form data data`, formData);
-      const response = await axios.post(CREATE_REPORT, formData, {
+      const response = await axios.post(CREATE_REPORT, data, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       });
+      
+    
+      if (response.data.status === "Created" && response.data.reportID) {
+        const reportTypeID = response.data.reportID;
+        const formData = new FormData();
 
-      console.log("Report created successfully:", response.data);
+        if (albums && albums.length > 0) {
+          albums.forEach((album, index) => {
+            const fileType = album
+              .substring(album.lastIndexOf(".") + 1)
+              .toLowerCase();
+            let mediaType = "image";
+            if (["mp4", "mov", "avi", "mkv", "webm"].includes(fileType)) {
+              mediaType = "video";
+            }
+
+            formData.append("mediaFiles[]", {
+              uri: album,
+              type: `${mediaType}/${fileType}`,
+              name: `media_${index}.${fileType}`,
+            });
+          });
+        }
+
+        if (storedRecording) {
+          const audioFileType = storedRecording.substring(
+            storedRecording.lastIndexOf(".") + 1
+          );
+          formData.append("mediaFiles[]", {
+            uri: storedRecording,
+            type: `audio/${audioFileType}`,
+            name: `recording.${audioFileType}`,
+          });
+        }
+
+        formData.append("report_id", reportTypeID);
+
+        
+        const Mediaresponse = await axios.post(MEDIA_UPLOAD, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log(Mediaresponse.data);
+      }
+      
       navigation.navigate("ReportSuccess");
 
       setLoading(false);
@@ -158,6 +181,9 @@ const Crime = ({ navigation }) => {
         console.log("error:", error.message);
         setErrorMessage("An unexpected error occurred. Please try again.");
       }
+    } finally{
+      setLoading(false);
+      
     }
   }
 

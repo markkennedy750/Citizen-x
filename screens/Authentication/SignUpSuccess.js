@@ -58,7 +58,12 @@ const SignUpSuccess = ({ navigation, route }) => {
             fontWeight: "700",
             fontSize: 17,
           }}
-          onPress={() => navigation.navigate("SignIn")}
+          onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "SignIn" }],
+            });
+          }}
         />
       </View>
     </View>

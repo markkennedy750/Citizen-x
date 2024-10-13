@@ -7,9 +7,9 @@
     "icon": "./assets/citizenx.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/citizenx_resize.png",
+      "image": "./assets/citizenx_remake.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffff"
+      "backgroundColor": "#f3f2f2"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -34,7 +34,7 @@
       ]
     },
     "web": {
-      "favicon": "./assets/citizenx.png"
+      "favicon": "./assets/citizenx_remake.png"
     },
     "scheme": "CITIZEN_X",
     "extra": {
@@ -42,7 +42,7 @@
         "projectId": "37271682-1c79-46cd-8a73-3c2cac94cb3c"
       }
     },
-    "owner": "kennedy757",
+    "owner": "CitizenX",
     "plugins": [
       "expo-secure-store",
       "expo-font",

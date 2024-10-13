@@ -54,72 +54,86 @@ const Embassies = ({ navigation }) => {
     getData();
   }, []);
 
-  async function compressImage(uri) {
-    try {
-      const manipulatedImage = await ImageManipulator.manipulateAsync(
-        uri,
-        [{ resize: { width: 900 } }], // Resize width to 900px
-        { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG } // Adjust compression as needed
-      );
-      return manipulatedImage.uri;
-    } catch (error) {
-      console.log("Error compressing image: ", error);
-      return uri;
-    }
-  }
-
   async function submitReport() {
     try {
       setLoading(true);
-      const formData = new FormData();
-      formData.append("category", categ);
-      formData.append("sub_report_type", insidentType);
-      formData.append("description", textInput);
-      formData.append("country", country);
-      formData.append("state_embassy_location", stateEmbassey);
-      formData.append("is_anonymous", isEnabled);
-      formData.append("landmark", address || "");
-      formData.append("latitude", location?.latitude || "");
-      formData.append("longitude", location?.longitude || "");
+      //country state_embassy_location
+      const data = {
+        category: categ,
+        sub_report_type: insidentType,
+        description: textInput,
+        is_anonymous: isEnabled,
+      };
+      if (address) {
+        data.landmark = address;
+      }
+      if (location) {
+        data.latitude = location?.latitude;
+        data.longitude = location?.longitude;
+      }
 
-      if (albums && albums.length > 0) {
-        for (let index = 0; index < albums.length; index++) {
-          const album = albums[index];
-          const fileType = album.substring(album.lastIndexOf(".") + 1);
-          formData.append("mediaFiles[]", {
-            uri: album,
-            type: `image/${fileType}`,
-            name: `media_${index}.${fileType}`, 
-          });
-        }
+      if (ambassedor) {
+        data.ambassedor_name = ambassedor;
       }
-  
-      
-      if (storedRecording) {
-        const audioFileType = storedRecording.substring(storedRecording.lastIndexOf(".") + 1); // Get file extension
-  
-        formData.append("mediaFiles[]", {
-          uri: storedRecording,
-          type: `audio/${audioFileType}`,
-          name: `recording.${audioFileType}`, 
-        });
+      if (stateEmbassey) {
+        data.state_embassy_location = stateEmbassey;
       }
-  
-     
-      const response = await axios.post(CREATE_REPORT, formData, {
+      if (country) {
+        data.country = country;
+      }
+      const response = await axios.post(CREATE_REPORT, data, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       });
-  
 
-      console.log("report created successfully:", response.data);
-      setLoading(false);
-      if (response.data.status === "Created") {
-        navigation.navigate("ReportSuccess");
+      if (response.data.status === "Created" && response.data.reportID) {
+        const reportTypeID = response.data.reportID;
+        const formData = new FormData();
+
+        if (albums && albums.length > 0) {
+          albums.forEach((album, index) => {
+            const fileType = album
+              .substring(album.lastIndexOf(".") + 1)
+              .toLowerCase();
+            let mediaType = "image";
+            if (["mp4", "mov", "avi", "mkv", "webm"].includes(fileType)) {
+              mediaType = "video";
+            }
+
+            formData.append("mediaFiles[]", {
+              uri: album,
+              type: `${mediaType}/${fileType}`,
+              name: `media_${index}.${fileType}`,
+            });
+          });
+        }
+
+        if (storedRecording) {
+          const audioFileType = storedRecording.substring(
+            storedRecording.lastIndexOf(".") + 1
+          );
+          formData.append("mediaFiles[]", {
+            uri: storedRecording,
+            type: `audio/${audioFileType}`,
+            name: `recording.${audioFileType}`,
+          });
+        }
+
+        formData.append("report_id", reportTypeID);
+
+        const Mediaresponse = await axios.post(MEDIA_UPLOAD, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log(Mediaresponse.data);
       }
-      return response.data;
+      setLoading(false);
+
+      navigation.navigate("ReportSuccess");
     } catch (error) {
       setLoading(false);
       setError(error);
@@ -140,6 +154,8 @@ const Embassies = ({ navigation }) => {
         setErrorMessage("An unexpected error occurred. Please try again.");
         return rejectWithValue(error.message);
       }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -170,6 +186,7 @@ const Embassies = ({ navigation }) => {
       loading === false
     );
   }
+
   const radioButtons = useMemo(
     () => [
       {

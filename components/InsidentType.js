@@ -39,7 +39,7 @@ const InsidentType = ({
         }}
       >
         <RNPickerSelect
-          placeholder={{ label: "Select type of insident", value: null }}
+          placeholder={{ label: "Select type of incident", value: null }}
           onValueChange={(value) => setInsidentType(value)}
           items={insident}
         />

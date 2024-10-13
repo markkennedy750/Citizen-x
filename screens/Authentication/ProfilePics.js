@@ -174,7 +174,11 @@ const ProfilePics = ({ navigation, route }) => {
                 />
               )}
             </TouchableOpacity>
-            <Text style={styles.text}>Add Profile Photo</Text>
+            <Text style={styles.text}>
+              {profileImage
+                ? "Profile Photo Added"
+                : "Add Profile Photo (Optional)"}
+            </Text>
           </View>
 
           <TextButton
