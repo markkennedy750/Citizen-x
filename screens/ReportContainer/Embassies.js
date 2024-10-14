@@ -58,41 +58,52 @@ const Embassies = ({ navigation }) => {
     try {
       setLoading(true);
       //country state_embassy_location
-      const data = {
-        category: categ,
-        sub_report_type: insidentType,
-        description: textInput,
-        is_anonymous: isEnabled,
-      };
+
+      const formData = new FormData();
+      formData.append("category", categ);
+      formData.append("sub_report_type", insidentType);
+      formData.append("description", textInput);
+      formData.append("is_anonymous", isEnabled);
+      //formData.append("date_of_incidence", date);
+      //formData.append("is_response", checkboxValue);
+
       if (address) {
-        data.landmark = address;
+        formData.append("landmark", address);
       }
       if (location) {
-        data.latitude = location?.latitude;
-        data.longitude = location?.longitude;
+        formData.append("latitude", location?.latitude);
+        formData.append("longitude", location?.longitude);
       }
-
       if (ambassedor) {
-        data.ambassedor_name = ambassedor;
+        formData.append("ambassedor_name", ambassedor);
+
+        
       }
       if (stateEmbassey) {
-        data.state_embassy_location = stateEmbassey;
+        formData.append("state_embassy_location", stateEmbassey);
       }
       if (country) {
-        data.country = country;
+        formData.append("country", country);
       }
-      const response = await axios.post(CREATE_REPORT, data, {
+      console.log(formData);
+
+
+      const response = await axios.post(CREATE_REPORT, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
 
+      console.log("Report Response:", response.data);
+      
+    
+
       if (response.data.status === "Created" && response.data.reportID) {
         const reportTypeID = response.data.reportID;
-        const formData = new FormData();
 
-        if (albums && albums.length > 0) {
+        if ((albums && albums.length > 0) || (storedRecording)) {
+          const formData = new FormData();
           albums.forEach((album, index) => {
             const fileType = album
               .substring(album.lastIndexOf(".") + 1)
@@ -108,28 +119,28 @@ const Embassies = ({ navigation }) => {
               name: `media_${index}.${fileType}`,
             });
           });
-        }
 
-        if (storedRecording) {
-          const audioFileType = storedRecording.substring(
-            storedRecording.lastIndexOf(".") + 1
-          );
-          formData.append("mediaFiles[]", {
-            uri: storedRecording,
-            type: `audio/${audioFileType}`,
-            name: `recording.${audioFileType}`,
+          if (storedRecording) {
+            const audioFileType = storedRecording.substring(
+              storedRecording.lastIndexOf(".") + 1
+            );
+            formData.append("mediaFiles[]", {
+              uri: storedRecording,
+              type: `audio/${audioFileType}`,
+              name: `recording.${audioFileType}`,
+            });
+          }
+
+          formData.append("report_id", reportTypeID);
+
+          const Mediaresponse = await axios.post(MEDIA_UPLOAD, formData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
           });
+          console.log(Mediaresponse.data);
         }
-
-        formData.append("report_id", reportTypeID);
-
-        const Mediaresponse = await axios.post(MEDIA_UPLOAD, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log(Mediaresponse.data);
       }
       setLoading(false);
 

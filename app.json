@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "citixenx",
-    "slug": "citixenx",
+    "name": "Citizenx",
+    "slug": "Citizenx",
     "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/citizenx.png",
@@ -42,7 +42,7 @@
         "projectId": "37271682-1c79-46cd-8a73-3c2cac94cb3c"
       }
     },
-    "owner": "CitizenX",
+    "owner": "kennedy757",
     "plugins": [
       "expo-secure-store",
       "expo-font",

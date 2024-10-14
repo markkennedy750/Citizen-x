@@ -112,80 +112,109 @@ const Accidents = ({ navigation }) => {
     try {
       setLoading(true);
 
-      const data = {
-        category: categ,
-        sub_report_type: insidentType,
-        description: textInput,
-        state_name: selectedState,
-        lga_name: selectedLocalGov,
-        is_anonymous: isEnabled,
-        date_of_incidence: date,
-      };
+      const formData = new FormData();
+      formData.append("category", categ);
+      formData.append("sub_report_type", insidentType);
+      formData.append("description", textInput);
+      formData.append("state_name", selectedState);
+      formData.append("lga_name", selectedLocalGov);
+      formData.append("is_anonymous", isEnabled);
+      formData.append("date_of_incidence", date);
 
       if (address) {
-        data.landmark = address;
+        formData.append("landmark", address);
       }
       if (location) {
-        data.latitude = location?.latitude;
-        data.longitude = location?.longitude;
+        formData.append("latitude", location?.latitude);
+        formData.append("longitude", location?.longitude);
       }
 
-      if(causeOfAccident){
-        data.accident_cause = causeOfAccident
+      if (causeOfAccident) {
+        formData.append("accident_cause", causeOfAccident);
       }
 
-      const response = await axios.post(CREATE_REPORT, data, {
+      console.log(formData);
+
+      const response = await axios.post(CREATE_REPORT, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
+      ////////////////////////////////
 
       if (response.data.status === "Created" && response.data.reportID) {
         const reportTypeID = response.data.reportID;
-        const formData = new FormData();
 
-        if (albums && albums.length > 0) {
+        // Append media files
+        if ((albums && albums.length > 0) || storedRecording) {
+          const mediaFormData = new FormData();
+          const validImageTypes = [
+            "png",
+            "jpg",
+            "jpeg",
+            "gif",
+            "bmp",
+            "tiff",
+            "webp",
+          ]; // Allowed image types
+
           albums.forEach((album, index) => {
             const fileType = album
               .substring(album.lastIndexOf(".") + 1)
               .toLowerCase();
-            let mediaType = "image";
-            if (["mp4", "mov", "avi", "mkv", "webm"].includes(fileType)) {
-              mediaType = "video";
+
+            // Check if the fileType is a valid image type
+            if (validImageTypes.includes(fileType)) {
+              mediaFormData.append("mediaFiles[]", {
+                uri: album,
+                type: `image/${fileType}`,
+                name: `media_${index}.${fileType}`,
+              });
+            } else {
+              Alert.alert(
+                "Media Error",
+                `Invalid file type: ${fileType}. Only image files are allowed.`
+              );
+              console.warn(
+                `Invalid file type: ${fileType}. Only image files are allowed.`
+              );
             }
+          });
 
-            formData.append("mediaFiles[]", {
-              uri: album,
-              type: `${mediaType}/${fileType}`,
-              name: `media_${index}.${fileType}`,
+          if (storedRecording) {
+            const audioFileType = storedRecording.substring(
+              storedRecording.lastIndexOf(".") + 1
+            );
+            mediaFormData.append("mediaFiles[]", {
+              uri: storedRecording,
+              type: `audio/${audioFileType}`,
+              name: `recording.${audioFileType}`,
             });
+          }
+          mediaFormData.append("report_id", reportTypeID);
+
+          // Media upload request
+          const mediaResponse = await axios.post(MEDIA_UPLOAD, mediaFormData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+              // No need to manually set Content-Type for multipart/form-data
+            },
           });
+          if (mediaResponse.status === 200) {
+            console.log("Media files uploaded successfully");
+          } else {
+            throw new Error("Media upload failed");
+          }
+
+          console.log("Media Upload Response:", mediaResponse.data);
         }
 
-        if (storedRecording) {
-          const audioFileType = storedRecording.substring(
-            storedRecording.lastIndexOf(".") + 1
-          );
-          formData.append("mediaFiles[]", {
-            uri: storedRecording,
-            type: `audio/${audioFileType}`,
-            name: `recording.${audioFileType}`,
-          });
-        }
-
-        formData.append("report_id", reportTypeID);
-
-        const Mediaresponse = await axios.post(MEDIA_UPLOAD, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log(Mediaresponse.data);
+        // Handle stored recordings (if needed)
       }
-      setLoading(false);
 
+      setLoading(false);
       navigation.navigate("ReportSuccess");
     } catch (error) {
       setLoading(false);
@@ -193,14 +222,12 @@ const Accidents = ({ navigation }) => {
         console.log("Server error:", error.response.data);
         setErrorMessage("Server issue. Please try again later.");
       } else if (error.request) {
-        console.log("Network error:", error);
+        console.log("Request error:", error.request);
         setErrorMessage("Check your connection and try again.");
       } else {
-        console.log("Error:", error.message);
+        console.log("Axios error:", error.message);
         setErrorMessage("Unexpected error occurred. Please try again.");
       }
-    } finally {
-      setLoading(false);
     }
   }
 

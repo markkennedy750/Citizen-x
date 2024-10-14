@@ -102,23 +102,28 @@ const EditProfile = ({ navigation }) => {
     }
   }, [profileImag]);
 
+  useEffect(() => {
+    dispatch(profile_sec({ access_token: token }));
+  }, [fullName, localGov, state]);
+
   async function updateProfile() {
     try {
       setLoading(true);
-      const data = {};
+      const formData = new FormData();
+
       if (fullName) {
-        data.fullname = fullName;
+        formData.append("fullname", fullName);
       }
       if (UserName) {
-        data.username = UserName;
+        formData.append("username", UserName);
       }
       if (state) {
-        data.state = state;
+        formData.append("state", state);
       }
       if (localGov) {
-        data.lga = localGov;
+        formData.append("lga", localGov);
       }
-      const response = await axios.put(UPDATE_PROFILE, data, {
+      const response = await axios.put(UPDATE_PROFILE, formData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

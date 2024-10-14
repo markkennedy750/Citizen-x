@@ -62,55 +62,58 @@ const FakeProduct = ({ navigation }) => {
     getData();
   }, []);
 
-  async function compressImage(uri) {
-    try {
-      const manipulatedImage = await ImageManipulator.manipulateAsync(
-        uri,
-        [{ resize: { width: 900 } }], // Resize width to 900px
-        { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG } // Adjust compression as needed
-      );
-      return manipulatedImage.uri;
-    } catch (error) {
-      console.log("Error compressing image: ", error);
-      return uri;
-    }
-  }
+  // async function compressImage(uri) {
+  //   try {
+  //     const manipulatedImage = await ImageManipulator.manipulateAsync(
+  //       uri,
+  //       [{ resize: { width: 900 } }], // Resize width to 900px
+  //       { compress: 0.5, format: ImageManipulator.SaveFormat.JPEG } // Adjust compression as needed
+  //     );
+  //     return manipulatedImage.uri;
+  //   } catch (error) {
+  //     console.log("Error compressing image: ", error);
+  //     return uri;
+  //   }
+  // }
 
   async function submitReport() {
     try {
       setLoading(true);
 
-      const data = {
-        category: categ,
-        sub_report_type: insidentType,
-        description: textInput,
-        state_name: selectedState,
-        lga_name: selectedLocalGov,
-        is_anonymous: isEnabled,
-      };
+      const formData = new FormData();
+      formData.append("category", categ);
+      formData.append("sub_report_type", insidentType);
+      formData.append("description", textInput);
+      formData.append("state_name", selectedState);
+      formData.append("lga_name", selectedLocalGov);
+      formData.append("is_anonymous", isEnabled);
+
       if (address) {
-        data.landmark = address;
+        formData.append("landmark", address);
       }
       if (location) {
-        data.latitude = location?.latitude;
-        data.longitude = location?.longitude;
+        formData.append("latitude", location?.latitude);
+        formData.append("longitude", location?.longitude);
       }
       if (productName) {
-        data.product_name = productName;
+        formData.append("product_name", productName);
       }
+      console.log(formData);
 
-      const response = await axios.post(CREATE_REPORT, data, {
+      const response = await axios.post(CREATE_REPORT, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
 
+      console.log("Report Response:", response.data);
+
       if (response.data.status === "Created" && response.data.reportID) {
         const reportTypeID = response.data.reportID;
-        const formData = new FormData();
 
-        if (albums && albums.length > 0) {
+        if ((albums && albums.length > 0) || (storedRecording)) {
+          const formData = new FormData();
           albums.forEach((album, index) => {
             const fileType = album
               .substring(album.lastIndexOf(".") + 1)
@@ -126,28 +129,28 @@ const FakeProduct = ({ navigation }) => {
               name: `media_${index}.${fileType}`,
             });
           });
-        }
 
-        if (storedRecording) {
-          const audioFileType = storedRecording.substring(
-            storedRecording.lastIndexOf(".") + 1
-          );
-          formData.append("mediaFiles[]", {
-            uri: storedRecording,
-            type: `audio/${audioFileType}`,
-            name: `recording.${audioFileType}`,
+          if (storedRecording) {
+            const audioFileType = storedRecording.substring(
+              storedRecording.lastIndexOf(".") + 1
+            );
+            formData.append("mediaFiles[]", {
+              uri: storedRecording,
+              type: `audio/${audioFileType}`,
+              name: `recording.${audioFileType}`,
+            });
+          }
+
+          formData.append("report_id", reportTypeID);
+
+          const Mediaresponse = await axios.post(MEDIA_UPLOAD, formData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
           });
+          console.log(Mediaresponse.data);
         }
-
-        formData.append("report_id", reportTypeID);
-
-        const Mediaresponse = await axios.post(MEDIA_UPLOAD, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log(Mediaresponse.data);
       }
 
       setLoading(false);
