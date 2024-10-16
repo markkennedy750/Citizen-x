@@ -322,10 +322,12 @@ const ApiFeed = ({ item }) => {
             </View>
             <View style={styles.reportDaTim}>
               {item?.time_of_incidence && (
-                <Text style={styles.date}>{
-                  item?.date_of_incidence
-                  //formatDate(date)
-                }</Text>
+                <Text style={styles.date}>
+                  {
+                    item?.date_of_incidence
+                    //formatDate(date)
+                  }
+                </Text>
               )}
 
               <View
@@ -507,25 +509,21 @@ const ApiFeed = ({ item }) => {
             flexDirection: "row",
           }}
         >
-          {bookmarkLoading ? (
-            <ActivityIndicator size="large" color={`${COLORS.black}`} />
-          ) : (
-            <TouchableOpacity
-              style={{ width: 20 }}
-              onPress={() => {
-                bookmarkfunc(id);
+          <TouchableOpacity
+            style={{ width: 20 }}
+            onPress={() => {
+              bookmarkfunc(id);
+            }}
+          >
+            <Image
+              source={icons.bookmarkicon}
+              style={{
+                width: 22,
+                height: 22,
+                tintColor: "#000000",
               }}
-            >
-              <Image
-                source={icons.bookmarkicon}
-                style={{
-                  width: 22,
-                  height: 22,
-                  tintColor: "#000000",
-                }}
-              />
-            </TouchableOpacity>
-          )}
+            />
+          </TouchableOpacity>
         </View>
         <View
           style={{

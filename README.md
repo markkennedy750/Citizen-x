@@ -4,6 +4,8 @@ primary color = background: #0E9C67;
 background: #B7FF9D33;
 background: #0E9C67;
 
+https://expo.dev/artifacts/eas/cpAsme6S1ocfaDPLXLbSyf.apk
+
 [privacy policy](https://citizenx-dashboard-sbqx.onrender.com/privacy)
 
 > > npx expo start -c
@@ -21,8 +23,7 @@ background: #0E9C67;
 > > npm install expo@latest
 
 > > npx expo install --fix
-> > https://github.com/react-native-clipboard/clipboard?tab=readme-ov-file#readme
-> > https://ashishnoob.medium.com/docker-basic-cheatsheet-011b8ccf78fc
+> > https://github.com/react-native-clipboard/clipboard?tab=readme-ov-file#readme > > https://ashishnoob.medium.com/docker-basic-cheatsheet-011b8ccf78fc
 > > ////////////////////////////////////////////////////////////////////////////////////
 > > nogton
 > > wheeli
@@ -696,7 +697,10 @@ Android developer
 
 2. > > eas build
 
+3. > > eas build --platform android
+
 Build apk for android
+https://expo.dev/accounts/kennedy757/projects/citixenx/builds/c203e047-fda1-46c6-9482-e2ef6547a69b
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

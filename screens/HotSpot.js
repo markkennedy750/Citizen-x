@@ -60,7 +60,7 @@ const HotSpot = ({ navigation }) => {
   const ReportContainer = ({ primaryText, secondaryText }) => (
     <TouchableOpacity
       style={styles.reportComponentContainer}
-      onPress={() => navigation.navigate("SearchScreen")}
+      //onPress={() => navigation.navigate("SearchScreen")}
     >
       <Text style={styles.primTextContainer}>{primaryText}</Text>
       <Text style={styles.secTextContainer}>{secondaryText}</Text>

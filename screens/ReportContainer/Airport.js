@@ -122,7 +122,7 @@ const Airport = ({ navigation }) => {
   async function submitReport() {
     try {
       setLoading(true);
-
+      
       const formData = new FormData();
       formData.append("category", categ);
       formData.append("sub_report_type", insidentType);
@@ -158,6 +158,7 @@ const Airport = ({ navigation }) => {
 
         if ((albums && albums.length > 0) || storedRecording) {
           const formData = new FormData();
+          
           albums.forEach((album, index) => {
             const fileType = album
               .substring(album.lastIndexOf(".") + 1)
