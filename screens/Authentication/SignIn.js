@@ -51,7 +51,10 @@ const SignIn = ({ navigation }) => {
       //console.log(response.data);
       if (response.status === 200) {
         setLoading(false);
-        navigation.navigate("MainScreen");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "MainScreen" }],
+        });
       }
     } catch (error) {
       setLoading(false);
@@ -113,7 +116,7 @@ const SignIn = ({ navigation }) => {
         </View>
         {/** Email Form Inputs */}
         <FormInput
-          label="email"
+          label="Email"
           keyboardType="email-address"
           autoCompleteType="email"
           onChange={(value) => {
@@ -150,7 +153,7 @@ const SignIn = ({ navigation }) => {
         />
 
         <FormInput
-          label="password"
+          label="Password"
           secureTextEntry={!showPass}
           autoCompleteType="password"
           containerStyle={{
@@ -253,7 +256,12 @@ const SignIn = ({ navigation }) => {
               fontWeight: "700",
               fontSize: 18,
             }}
-            onPress={() => navigation.navigate("SignUp")}
+            onPress={() => {
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "SignUp" }],
+              });
+            }}
           />
         </View>
       </View>
@@ -263,11 +271,12 @@ const SignIn = ({ navigation }) => {
         <View style={styles.modalContainer}>
           <Image
             source={icons.erroricon}
-            style={{ height: 100, width: 120, marginTop: 10 }}
+            style={{ height: 90, width: 90, marginTop: 5 }}
+            resizeMode="contain"
           />
 
           <View style={styles.logoutTextContainer}>
-            <Text style={styles.primaryText}>LogIn Failed</Text>
+            <Text style={styles.primaryText}>Login Failed</Text>
             <Text style={styles.secondaryText}>{errorMessage}</Text>
           </View>
           <TextButton
@@ -277,7 +286,7 @@ const SignIn = ({ navigation }) => {
               width: "80%",
               alignItems: "center",
               justifyContent: "center",
-              marginTop: 50,
+              marginTop: 30,
               borderRadius: SIZES.radius,
               backgroundColor: COLORS.primary,
             }}
@@ -299,7 +308,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight || 45,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.gray2,
   },
   image: {
     width: 65,
@@ -317,7 +326,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: "98%",
-    height: 350,
+    height: 320,
     backgroundColor: "white",
     alignSelf: "center",
     marginTop: "auto",
@@ -327,6 +336,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1.5,
     borderColor: COLORS.gray2,
+    paddingHorizontal: 8,
   },
   imagelogoutContainer: {
     alignItems: "center",
@@ -337,7 +347,7 @@ const styles = StyleSheet.create({
   logoutTextContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   primaryText: {
     fontSize: 20,
@@ -349,5 +359,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     lineHeight: 20,
     textAlign: "center",
+    marginVertical: 10,
   },
 });

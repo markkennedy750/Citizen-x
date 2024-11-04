@@ -41,23 +41,35 @@ const SplashScreen = ({ navigation }) => {
 
           if (profile_sec.fulfilled.match(resultAction)) {
             setTimeout(() => {
-              navigation.navigate("MainScreen");
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "MainScreen" }],
+              });
             }, 4000);
           } else {
             dispatch(logout());
             setTimeout(() => {
-              navigation.navigate("WelcomeScreen");
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "WelcomeScreen" }],
+              });
             }, 4000);
           }
         } else {
           dispatch(logout());
           setTimeout(() => {
-            navigation.navigate("WelcomeScreen");
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "WelcomeScreen" }],
+            });
           }, 4000);
         }
       } catch (error) {
         console.error("Error validating token", error);
-        navigation.navigate("WelcomeScreen");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "WelcomeScreen" }],
+        });
       } finally {
         setAppIsReady(true);
         await Splash.hideAsync();
@@ -88,7 +100,7 @@ const SplashScreen = ({ navigation }) => {
       />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

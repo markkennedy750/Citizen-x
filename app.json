@@ -2,7 +2,7 @@
   "expo": {
     "name": "Citizenx",
     "slug": "citixenx",
-    "version": "1.2.0",
+    "version": "1.3.2",
     "orientation": "portrait",
     "icon": "./assets/citizenx.png",
     "userInterfaceStyle": "light",
@@ -26,7 +26,7 @@
         "backgroundColor": "#0E9C67"
       },
       "package": "com.kennedy757.citixenx",
-      "versionCode": 6,
+      "versionCode": 7,
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",

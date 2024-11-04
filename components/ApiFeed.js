@@ -319,6 +319,55 @@ const ApiFeed = ({ item }) => {
               ) : (
                 <Text style={styles.usename}>@Anonymous</Text>
               )}
+              {item?.is_verified === false ? (
+                <View
+                  style={{
+                    marginLeft: 20,
+                    width: "auto",
+                    height: "auto",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#640303",
+                    padding: 5,
+                    borderRadius: 50,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      fontSize: 10,
+                      lineHeight: 12,
+                      color: COLORS.white2,
+                    }}
+                  >
+                    Not verified
+                  </Text>
+                </View>
+              ) : (
+                <View
+                  style={{
+                    marginLeft: 30,
+                    width: "auto",
+                    height: "auto",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: COLORS.primary,
+                    padding: 5,
+                    borderRadius: 50,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontWeight: "600",
+                      fontSize: 10,
+                      lineHeight: 12,
+                      color: COLORS.white2,
+                    }}
+                  >
+                    verified post
+                  </Text>
+                </View>
+              )}
             </View>
             <View style={styles.reportDaTim}>
               {item?.time_of_incidence && (

@@ -85,10 +85,13 @@ const deleteUser = require("../assets/icons/icon/deleteUser.png");
 const notify = require("../assets/icons/icon/notify.png");
 const emailSent = require("../assets/icons/icon/emailSent.png");
 const workInProgress = require("../assets/icons/icon/workInProgress.png");
+const termscondition = require("../assets/icons/icon/termscondition.png");
+const CancelPNG = require("../assets/icons/icon/CancelPNG.png");
 const swap = require("../assets/icons/icon/swap.svg");
 const citizenx = require("../assets/citizenx.png");
 
 export default {
+  CancelPNG,
   workInProgress,
   emailSent,
   notify,
@@ -178,4 +181,5 @@ export default {
   questioncircleo,
   erroricon,
   deleteUser,
+  termscondition
 };

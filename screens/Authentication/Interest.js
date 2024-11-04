@@ -17,7 +17,14 @@ const Interest = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.textContainer}>
         <View style={{ width: 50 }} />
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "InitialSignUp" }],
+            });
+          }}
+        >
           <Text style={styles.exitText}>Skip</Text>
         </TouchableOpacity>
       </View>
@@ -58,7 +65,10 @@ const Interest = ({ navigation }) => {
           fontWeight: "700",
           fontSize: 17,
         }}
-        onPress={() => navigation.navigate("InitialSignUp")}
+        onPress={() => {
+          navigation.navigate("InitialSignUp")
+          
+        }}
       />
     </View>
   );

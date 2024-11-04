@@ -62,6 +62,7 @@ import ApiFeedDetail from "./screens/ApiFeedDetails";
 import SingleImage from "./screens/SingleImage";
 import TermsAndConditions from "./screens/TermsAndConditions";
 import AnonymousFeed from "./screens/AnonymousFeed";
+import Disclaimer from "./screens/Disclaimer";
 
 //import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Stack = createStackNavigator();
@@ -117,6 +118,13 @@ export default function App() {
           <Stack.Screen
             name="TermsAndConditions"
             component={TermsAndConditions}
+            options={{
+              animation: "fade",
+            }}
+          />
+          <Stack.Screen
+            name="Disclaimer"
+            component={Disclaimer}
             options={{
               animation: "fade",
             }}

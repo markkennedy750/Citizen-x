@@ -5,8 +5,18 @@ background: #B7FF9D33;
 background: #0E9C67;
 
 https://expo.dev/artifacts/eas/cpAsme6S1ocfaDPLXLbSyf.apk
+https://github.com/markkennedy750/CX-app
 
 [privacy policy](https://citizenx-dashboard-sbqx.onrender.com/privacy)
+
+https://github.com/axios/axios/issues/6195
+
+const response = await axios.post(url, formData ,
+{headers: {
+'Accept': 'application/json',
+'Content-Type': 'multipart/form-data',
+}}
+);
 
 > > npx expo start -c
 

@@ -1,4 +1,12 @@
-import { StyleSheet, Text, View, Platform } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Modal,
+  TouchableOpacity,
+  Image,
+  FlatList,
+} from "react-native";
 import React, { useEffect, useState, useMemo } from "react";
 import ReportWrapper from "./ReportWrapper";
 import InsidentType from "../../components/InsidentType";
@@ -8,18 +16,21 @@ import UserLocation from "../../components/UserLocation";
 import StateLocal from "../../components/StateLocal";
 import AnonymousPost from "../../components/AnonymousPost";
 import TextButton from "../../components/TextButton";
-import { COLORS, SIZES } from "../../constants";
 import FormInput from "../../components/FormInput";
 import RadioGroup from "react-native-radio-buttons-group";
-import { useDispatch, useSelector } from "react-redux";
-import { createReport } from "../../Redux/authSlice";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingImage from "../../components/loadingStates/LoadingImage";
-import { CREATE_REPORT } from "../../Redux/URL";
+import { COLORS, icons, SIZES } from "../../constants";
 import axios from "axios";
 import ErrorImage from "../../components/loadingStates/ErrorImage";
 import NetworkError from "../../components/loadingStates/NetworkError";
-import * as ImageManipulator from "expo-image-manipulator";
+//import * as ImageManipulator from "expo-image-manipulator";
+
+//import * as ImagePicker from "expo-image-picker";
+import TextIconButton from "../../components/TextIconButton";
+import { ActivityIndicator } from "react-native";
+import { CREATE_REPORT, MEDIA_UPLOAD } from "../../Redux/URL";
 
 const Hospital = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -43,6 +54,10 @@ const Hospital = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
+  const [reportTypeID, setReportTypeID] = useState("");
+
   const categ = "Hospital";
 
   useEffect(() => {
@@ -56,6 +71,121 @@ const Hospital = ({ navigation }) => {
     };
     getData();
   }, []);
+
+  const mediaAccess = async () => {
+    try {
+      setImageLoading(true);
+      let result = await ImagePicker.launchImageLibraryAsync({
+        //allowsEditing: true,
+        quality: 1,
+        allowsMultipleSelection: true,
+      });
+
+      if (!result.canceled) {
+        const selectedImages = result.assets.map((asset) => asset.uri);
+        setAlbums(selectedImages);
+        setImageLoading(false);
+        // return selectedImages;
+      } else {
+        Alert.alert("You did not select any images.");
+        setImageLoading(false);
+      }
+    } catch (error) {
+      Alert.alert("Error accessing media library", error);
+    } finally {
+      setImageLoading(false);
+    }
+  };
+
+  const renderImage = ({ item }) => (
+    <Image
+      source={{ uri: item }}
+      style={{
+        width: 80,
+        height: 80,
+        marginRight: 10,
+        borderRadius: SIZES.radius,
+      }}
+    />
+  );
+
+  async function uploadMediaFile() {
+    try {
+      setLoading(true);
+
+      const mediaFormData = new FormData();
+      mediaFormData.append("report_id", reportTypeID);
+
+      if (albums) {
+        console.log(albums);
+        albums.forEach((album, index) => {
+          const fileType = album
+            .substring(album.lastIndexOf(".") + 1)
+            .toLowerCase();
+          let mediaType = ["mp4", "mov", "avi", "mkv", "webm"].includes(
+            fileType
+          )
+            ? "video"
+            : "image";
+
+          mediaFormData.append("mediaFiles", {
+            uri: album,
+            type: `${mediaType}/${fileType}`,
+            name: `media_${index}.${fileType}`,
+          });
+        });
+
+        if (storedRecording) {
+          const audioFileType = storedRecording.substring(
+            storedRecording.lastIndexOf(".") + 1
+          );
+          mediaFormData.append("mediaFiles", {
+            uri: storedRecording,
+            type: `audio/${audioFileType}`,
+            name: `recording.${audioFileType}`,
+          });
+        }
+      }
+      const mediaResponse = await axios.post(MEDIA_UPLOAD, mediaFormData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        transformRequest: (data, headers) => {
+          return data;
+        },
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          console.log(percentCompleted);
+        },
+      });
+      console.log(mediaResponse.data);
+      navigation.navigate("ReportSuccess");
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setError(error);
+      if (error.response) {
+        console.log("server error:", error.response.data);
+        setErrorMessage(
+          "There was an issue with the server. Please try again later."
+        );
+      } else if (error.request) {
+        console.log("network error:", error.message);
+        setErrorMessage(
+          "Network error. Please check your internet connection and try again."
+        );
+      } else {
+        console.log("error:", error.message);
+        setErrorMessage("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function submitReport() {
     try {
@@ -89,58 +219,19 @@ const Hospital = ({ navigation }) => {
       const response = await axios.post(CREATE_REPORT, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
 
       console.log("Report Response:", response.data);
 
-      if (response.data.status === "Created" && response.data.reportID) {
-        const reportTypeID = response.data.reportID;
+      setReportTypeID(response.data.reportID);
 
-        if ((albums && albums.length > 0) || storedRecording) {
-          const formData = new FormData();
-          albums.forEach((album, index) => {
-            const fileType = album
-              .substring(album.lastIndexOf(".") + 1)
-              .toLowerCase();
-            let mediaType = "image";
-            if (["mp4", "mov", "avi", "mkv", "webm"].includes(fileType)) {
-              mediaType = "video";
-            }
-
-            formData.append("mediaFiles[]", {
-              uri: album,
-              type: `${mediaType}/${fileType}`,
-              name: `media_${index}.${fileType}`,
-            });
-          });
-
-          if (storedRecording) {
-            const audioFileType = storedRecording.substring(
-              storedRecording.lastIndexOf(".") + 1
-            );
-            formData.append("mediaFiles[]", {
-              uri: storedRecording,
-              type: `audio/${audioFileType}`,
-              name: `recording.${audioFileType}`,
-            });
-          }
-
-          formData.append("report_id", reportTypeID);
-
-          const Mediaresponse = await axios.post(MEDIA_UPLOAD, formData, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          console.log(Mediaresponse.data);
-        }
-      }
-
+      setReportTypeID(response.data.reportID);
       setLoading(false);
-      navigation.navigate("ReportSuccess");
+      setModalOpen(true);
+      console.log("Report Response:", response.data);
     } catch (error) {
       setLoading(false);
       setError(error);
@@ -329,14 +420,6 @@ const Hospital = ({ navigation }) => {
         value={textInput}
         placeholder="Enter Description"
       />
-      <CameraVideoMedia
-        setAlbums={setAlbums}
-        setStoredRecording={setStoredRecording}
-        setPhotoUri={setPhotoUri}
-        albums={albums}
-        videoMedia={videoMedia}
-        setVideoMedia={setVideoMedia}
-      />
       <FormInput
         label="Hospital Name"
         //keyboardType="text"
@@ -464,6 +547,163 @@ const Hospital = ({ navigation }) => {
         }}
         onPress={submitReport}
       />
+      <Modal animationType="slide" transparent={true} visible={modalOpen}>
+        <View
+          style={{
+            width: "100%",
+            height: "80%",
+            flex: 1,
+            backgroundColor: COLORS.lightGray2,
+            marginTop: SIZES.padding * 6,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            borderWidth: 1.5,
+            borderColor: COLORS.gray2,
+            padding: 15,
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              marginLeft: "auto",
+            }}
+            onPress={() => {
+              setModalOpen(false);
+              navigation.navigate("ReportSuccess");
+            }}
+          >
+            <Image
+              source={icons.CancelPNG}
+              resizeMode="contain"
+              style={{
+                width: 15,
+                height: 15,
+              }}
+            />
+          </TouchableOpacity>
+          <View>
+            <Text
+              style={{
+                fontSize: 25,
+                fontWeight: "500",
+                lineHeight: 30,
+                color: COLORS.darkGray,
+              }}
+            >
+              Attach a Media File
+            </Text>
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: "500",
+                lineHeight: 30,
+                color: COLORS.darkGray,
+              }}
+            >
+              Click below to attach a media file to the Post
+            </Text>
+            <TouchableOpacity
+              style={{
+                borderWidth: 1.5,
+                padding: 10,
+                borderColor: COLORS.gray,
+                borderRadius: 20,
+              }}
+              disabled={imageLoading}
+              onPress={mediaAccess}
+            >
+              {imageLoading ? (
+                <ActivityIndicator size="large" color={`${COLORS.primary}`} />
+              ) : (
+                <Image
+                  source={icons.folderoutline}
+                  resizeMode="contain"
+                  style={{
+                    width: 150,
+                    height: 150,
+                    tintColor: COLORS.darkGray,
+                  }}
+                />
+              )}
+              <Text
+                style={{
+                  fontSize: 17,
+                  fontWeight: "500",
+                  lineHeight: 30,
+                  color: COLORS.darkGray,
+                  marginLeft: 15,
+                }}
+              >
+                Click to Upload Media
+              </Text>
+            </TouchableOpacity>
+
+            <TextIconButton
+              disabled={imageLoading}
+              containerStyle={{
+                height: 55,
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: SIZES.radius * 3,
+                borderRadius: SIZES.radius,
+                backgroundColor: "#0585FA",
+                width: 200,
+              }}
+              icon={icons.audioRecord}
+              iconPosition="LEFT"
+              iconStyle={{
+                tintColor: "white",
+                width: 19,
+                resizeMode: "cover",
+                height: 25,
+              }}
+              label="Record Audio"
+              labelStyle={{
+                marginLeft: SIZES.radius,
+                color: "white",
+              }}
+              onPress={() =>
+                navigation.navigate("AudioRecordScreen", { setStoredRecording })
+              }
+            />
+            {albums.length > 0 && (
+              <View style={{ marginTop: 15 }}>
+                <FlatList
+                  data={albums}
+                  renderItem={renderImage}
+                  keyExtractor={(item, index) => index.toString()}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                />
+              </View>
+            )}
+          </View>
+          <TextButton
+            label={albums.length ? "Submit Media" : "Continue without media"}
+            //disabled={submitPost() ? false : true}
+            buttonContainerStyle={{
+              height: 55,
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: SIZES.padding * 2,
+              borderRadius: SIZES.radius,
+              backgroundColor: COLORS.primary,
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 17,
+            }}
+            onPress={() => {
+              if (albums.length) {
+                uploadMediaFile();
+              } else {
+                setModalOpen(false);
+                navigation.navigate("ReportSuccess");
+              }
+            }}
+          />
+        </View>
+      </Modal>
     </ReportWrapper>
   );
 };

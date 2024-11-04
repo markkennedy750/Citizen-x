@@ -7,7 +7,8 @@ import {
   Image,
   Modal,
   ActivityIndicator,
-  Vibration
+  Vibration,
+  Linking,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { COLORS, icons, SIZES } from "../constants";
@@ -103,14 +104,30 @@ const Settings = ({ navigation }) => {
 
         <Text style={styles.settingTitle}>Data Saver</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.settingContainer}>
+      <TouchableOpacity
+        style={styles.settingContainer}
+        onPress={() => Linking.openURL("https://www.citizenx.ng/about")}
+      >
         <Image
           source={icons.usersicon}
           style={{ height: 28, width: 28, tintColor: "black" }}
         />
         <Text style={styles.settingTitle}>About Us</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.settingContainer}>
+      <TouchableOpacity
+        style={styles.settingContainer}
+        onPress={() => Linking.openURL("www.citizenx.ng/terms")}
+      >
+        <Image
+          source={icons.termscondition}
+          style={{ height: 28, width: 28, tintColor: "black" }}
+        />
+        <Text style={styles.settingTitle}>Terms and Conditions</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.settingContainer}
+        onPress={() => Linking.openURL("https://www.citizenx.ng/privacy")}
+      >
         <Image
           source={icons.infoicon}
           style={{ height: 28, width: 28, tintColor: "black" }}
@@ -118,7 +135,10 @@ const Settings = ({ navigation }) => {
 
         <Text style={styles.settingTitle}>Privacy Policy</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.settingContainer}>
+      <TouchableOpacity
+        style={styles.settingContainer}
+        onPress={() => Linking.openURL("https://www.citizenx.ng/help")}
+      >
         <Image
           source={icons.questioncircleo}
           style={{ height: 28, width: 28, tintColor: "black" }}

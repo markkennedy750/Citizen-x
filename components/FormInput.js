@@ -26,8 +26,7 @@ const FormInput = ({
         ...containerStyle,
       }}
     >
-      {/** Label & Error msg */}
-
+      {/* Label & Error msg */}
       <View
         style={{
           flexDirection: "row",
@@ -52,7 +51,8 @@ const FormInput = ({
           {errorMsg}
         </Text>
       </View>
-      {/** Text Input */}
+
+      {/* Text Input */}
       <View
         style={{
           flexDirection: "row",
@@ -61,6 +61,8 @@ const FormInput = ({
           marginTop: SIZES.base,
           borderRadius: 10,
           backgroundColor: COLORS.lightGray2,
+          borderWidth: 1.5, // Add border width here
+          borderColor: "#0E9C67", // Optional: add a border color
           ...formInputStyle,
         }}
       >
