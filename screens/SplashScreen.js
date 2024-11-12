@@ -31,6 +31,14 @@ const SplashScreen = ({ navigation }) => {
   // }, []);
 
   useEffect(() => {
+    async function getUser() {
+      const access_token = await AsyncStorage.getItem("access_token");
+      dispatch(profile_sec({ access_token }));
+    }
+    getUser();
+  }, []);
+
+  useEffect(() => {
     const checkTokenValidity = async () => {
       try {
         const token = await AsyncStorage.getItem("access_token");

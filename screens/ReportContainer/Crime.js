@@ -165,7 +165,7 @@ const Crime = ({ navigation }) => {
           const audioFileType = storedRecording.substring(
             storedRecording.lastIndexOf(".") + 1
           );
-          mediaFormData.append("mediaFiles[]", {
+          mediaFormData.append("mediaFiles", {
             uri: storedRecording,
             type: `audio/${audioFileType}`,
             name: `recording.${audioFileType}`,
@@ -177,9 +177,9 @@ const Crime = ({ navigation }) => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
-        transformRequest: (data, headers) => {
-          return data;
-        },
+        // transformRequest: (data, headers) => {
+        //   return data;
+        // },
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
@@ -187,6 +187,8 @@ const Crime = ({ navigation }) => {
           console.log(percentCompleted);
         },
       });
+      setAlbums([]);
+      setReportTypeID(null);
       console.log(mediaResponse.data);
       navigation.navigate("ReportSuccess");
 
@@ -212,7 +214,7 @@ const Crime = ({ navigation }) => {
       setLoading(false);
     }
   }
-  
+
   async function submitReport() {
     try {
       setLoading(true);
@@ -245,8 +247,6 @@ const Crime = ({ navigation }) => {
           "Content-Type": "multipart/form-data",
         },
       });
-
-      setReportTypeID(response.data.reportID);
 
       setReportTypeID(response.data.reportID);
       setLoading(false);
@@ -391,14 +391,7 @@ const Crime = ({ navigation }) => {
         value={textInput}
         placeholder="Enter Description"
       />
-      <CameraVideoMedia
-        setAlbums={setAlbums}
-        setStoredRecording={setStoredRecording}
-        setPhotoUri={setPhotoUri}
-        albums={albums}
-        videoMedia={videoMedia}
-        setVideoMedia={setVideoMedia}
-      />
+
       <DateTime date={date} setDate={setDate} time={time} setTime={setTime} />
       <StateLocal
         selectedState={selectedState}
@@ -484,12 +477,10 @@ const Crime = ({ navigation }) => {
           <TouchableOpacity
             style={{
               marginLeft: "auto",
-              
             }}
             onPress={() => {
               setModalOpen(false);
               navigation.navigate("ReportSuccess");
-
             }}
           >
             <Image
@@ -619,8 +610,7 @@ const Crime = ({ navigation }) => {
                 uploadMediaFile();
               } else {
                 setModalOpen(false);
-              navigation.navigate("ReportSuccess");
-
+                navigation.navigate("ReportSuccess");
               }
             }}
           />

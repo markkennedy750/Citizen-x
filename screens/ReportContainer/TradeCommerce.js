@@ -170,6 +170,9 @@ const TradeCommerce = ({ navigation }) => {
           console.log(percentCompleted);
         },
       });
+
+      setAlbums([]);
+      setReportTypeID(null);
       console.log(mediaResponse.data);
       navigation.navigate("ReportSuccess");
 
@@ -227,54 +230,9 @@ const TradeCommerce = ({ navigation }) => {
 
       console.log("Report Response:", response.data);
 
-      if (response.data.status === "Created" && response.data.reportID) {
-        const reportTypeID = response.data.reportID;
-
-        if ((albums && albums.length > 0) || storedRecording) {
-          const formData = new FormData();
-          albums.forEach((album, index) => {
-            const fileType = album
-              .substring(album.lastIndexOf(".") + 1)
-              .toLowerCase();
-            let mediaType = "image";
-            if (["mp4", "mov", "avi", "mkv", "webm"].includes(fileType)) {
-              mediaType = "video";
-            }
-
-            formData.append("mediaFiles[]", {
-              uri: album,
-              type: `${mediaType}/${fileType}`,
-              name: `media_${index}.${fileType}`,
-            });
-          });
-
-          if (storedRecording) {
-            const audioFileType = storedRecording.substring(
-              storedRecording.lastIndexOf(".") + 1
-            );
-            formData.append("mediaFiles[]", {
-              uri: storedRecording,
-              type: `audio/${audioFileType}`,
-              name: `recording.${audioFileType}`,
-            });
-          }
-
-          formData.append("report_id", reportTypeID);
-
-          const Mediaresponse = await axios.post(MEDIA_UPLOAD, formData, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-            transformRequest: (data, headers) => {
-              return data;
-            },
-          });
-          console.log(Mediaresponse.data);
-        }
-      }
+      setReportTypeID(response.data.reportID);
       setLoading(false);
-      navigation.navigate("ReportSuccess");
+      setModalOpen(true);
     } catch (error) {
       setLoading(false);
       setError(error);

@@ -19,3 +19,5 @@ export const BOOKMARK_FEED = `${HOST}/api/v1/user/bookmark`;
 export const VIEW_BOOKMARKS = `${HOST}/api/v1/user/bookmarked/report`;
 export const FORGET_PASSWORD = `${HOST}/api/v1/password/forgot`;
 export const MEDIA_UPLOAD = `${HOST}/api/v1/user/report/media`;
+export const REPORT_POST = `${HOST}/api/v1/incident-report/block-request`;
+export const REPORT_USER = `${HOST}/api/v1/users/report`;

@@ -24,13 +24,15 @@ import { HOST } from "../Redux/URL";
 const Profile = ({ navigation }) => {
   const [access_token, setAccess_token] = useState("");
   const [catchUser, setCatchUser] = useState({});
+  const [isAppReady, setIsAppReady] = useState(false); // new state to control initial loading
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isValidImage, setIsValidImage] = useState(false);
+
   const dispatch = useDispatch();
   const { loading, error, user, availableCoins } = useSelector(
     (state) => state.auth
   );
-  const profile = feeds[3];
-  const [modalVisible, setModalVisible] = useState(false);
-  const [isValidImage, setIsValidImage] = useState(false);
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -40,6 +42,8 @@ const Profile = ({ navigation }) => {
         setCatchUser(userDetail);
       } catch (e) {
         console.log(e);
+      } finally {
+        setIsAppReady(true); // set ready state once data is fetched
       }
     };
     getData();
@@ -55,22 +59,25 @@ const Profile = ({ navigation }) => {
     }
   }, [user?.profileImage]);
 
+  useEffect(() => {
+    if (access_token) {
+      dispatch(profile_sec({ access_token }));
+      dispatch(rewardCount({ access_token }));
+    }
+  }, [dispatch, access_token]);
+
   function loguserout() {
     dispatch(logout());
     setModalVisible(false);
     navigation.navigate("SignIn");
   }
 
-  useEffect(() => {
-    dispatch(profile_sec({ access_token }));
-    dispatch(rewardCount({ access_token }));
-  }, [dispatch]);
-
   function refreshBtn() {
     dispatch(profile_sec({ access_token }));
   }
 
-  if (loading) return <LoadingImage />;
+  if (!isAppReady || loading) return <LoadingImage />;
+
   if (error)
     return (
       <View style={{ flex: 1 }}>

@@ -161,6 +161,8 @@ const Hospital = ({ navigation }) => {
           console.log(percentCompleted);
         },
       });
+      setAlbums([]);
+      setReportTypeID(null);
       console.log(mediaResponse.data);
       navigation.navigate("ReportSuccess");
 
@@ -228,7 +230,6 @@ const Hospital = ({ navigation }) => {
 
       setReportTypeID(response.data.reportID);
 
-      setReportTypeID(response.data.reportID);
       setLoading(false);
       setModalOpen(true);
       console.log("Report Response:", response.data);

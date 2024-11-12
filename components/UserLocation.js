@@ -1,5 +1,5 @@
 import { Platform, View, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextIconButton from "./TextIconButton";
 import { COLORS, SIZES, icons } from "../constants";
 import * as Location from "expo-location";
@@ -26,6 +26,11 @@ const UserLocation = ({ location, setLocation }) => {
       console.log(errorMsg);
     }
   }
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
   return (
     <View
       style={{

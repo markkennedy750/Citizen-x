@@ -49,7 +49,7 @@ const Technology = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
 
-  const [modalOpen, setModalOpen] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [reportTypeID, setReportTypeID] = useState("");
 
@@ -148,7 +148,7 @@ const Technology = ({ navigation }) => {
           const audioFileType = storedRecording.substring(
             storedRecording.lastIndexOf(".") + 1
           );
-          mediaFormData.append("mediaFiles[]", {
+          mediaFormData.append("mediaFiles", {
             uri: storedRecording,
             type: `audio/${audioFileType}`,
             name: `recording.${audioFileType}`,
@@ -170,6 +170,9 @@ const Technology = ({ navigation }) => {
           console.log(percentCompleted);
         },
       });
+
+      setAlbums([]);
+      setReportTypeID(null);
       console.log(mediaResponse.data);
       navigation.navigate("ReportSuccess");
 
@@ -228,11 +231,9 @@ const Technology = ({ navigation }) => {
       console.log("Report Response:", response.data);
 
       setReportTypeID(response.data.reportID);
-
-      setReportTypeID(response.data.reportID);
       setLoading(false);
       setModalOpen(true);
-      console.log("Report Response:", response.data);
+   
     } catch (error) {
       setLoading(false);
       setError(error);
@@ -388,14 +389,6 @@ const Technology = ({ navigation }) => {
         onChange={setTextInput}
         value={textInput}
         placeholder="Enter Description"
-      />
-      <CameraVideoMedia
-        setAlbums={setAlbums}
-        setStoredRecording={setStoredRecording}
-        setPhotoUri={setPhotoUri}
-        albums={albums}
-        videoMedia={videoMedia}
-        setVideoMedia={setVideoMedia}
       />
 
       <StateLocal
@@ -563,7 +556,7 @@ const Technology = ({ navigation }) => {
                 <FlatList
                   data={albums}
                   renderItem={renderImage}
-                    keyExtractor={(item, index) => index.toString()}
+                  keyExtractor={(item, index) => index.toString()}
                   horizontal
                   showsHorizontalScrollIndicator={false}
                 />
@@ -591,8 +584,7 @@ const Technology = ({ navigation }) => {
                 uploadMediaFile();
               } else {
                 setModalOpen(false);
-              navigation.navigate("ReportSuccess");
-
+                navigation.navigate("ReportSuccess");
               }
             }}
           />

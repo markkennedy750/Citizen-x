@@ -158,6 +158,8 @@ const Embassies = ({ navigation }) => {
           console.log(percentCompleted);
         },
       });
+      setAlbums([]);
+      setReportTypeID(null);
       console.log(mediaResponse.data);
       navigation.navigate("ReportSuccess");
 
@@ -227,7 +229,6 @@ const Embassies = ({ navigation }) => {
 
       setReportTypeID(response.data.reportID);
 
-      setReportTypeID(response.data.reportID);
       setLoading(false);
       setModalOpen(true);
       console.log("Report Response:", response.data);
@@ -422,14 +423,7 @@ const Embassies = ({ navigation }) => {
         value={textInput}
         placeholder="Enter Description"
       />
-      <CameraVideoMedia
-        setAlbums={setAlbums}
-        setStoredRecording={setStoredRecording}
-        setPhotoUri={setPhotoUri}
-        albums={albums}
-        videoMedia={videoMedia}
-        setVideoMedia={setVideoMedia}
-      />
+
       <FormInput
         label="Country"
         //keyboardType="text"

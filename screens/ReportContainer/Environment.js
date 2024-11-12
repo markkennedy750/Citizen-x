@@ -131,7 +131,7 @@ const Environment = ({ navigation }) => {
           const audioFileType = storedRecording.substring(
             storedRecording.lastIndexOf(".") + 1
           );
-          mediaFormData.append("mediaFiles[]", {
+          mediaFormData.append("mediaFiles", {
             uri: storedRecording,
             type: `audio/${audioFileType}`,
             name: `recording.${audioFileType}`,
@@ -153,6 +153,8 @@ const Environment = ({ navigation }) => {
           console.log(percentCompleted);
         },
       });
+      setAlbums([]);
+      setReportTypeID(null);
       console.log(mediaResponse.data);
       navigation.navigate("ReportSuccess");
 
@@ -209,8 +211,6 @@ const Environment = ({ navigation }) => {
       });
 
       console.log("Report Response:", response.data);
-
-      setReportTypeID(response.data.reportID);
 
       setReportTypeID(response.data.reportID);
       setLoading(false);
@@ -381,15 +381,6 @@ const Environment = ({ navigation }) => {
         value={textInput}
         placeholder="Enter Description"
       />
-      <CameraVideoMedia
-        setAlbums={setAlbums}
-        setStoredRecording={setStoredRecording}
-        setPhotoUri={setPhotoUri}
-        albums={albums}
-        videoMedia={videoMedia}
-        setVideoMedia={setVideoMedia}
-      />
-
       <StateLocal
         selectedState={selectedState}
         setSelectedState={setSelectedState}
@@ -455,7 +446,6 @@ const Environment = ({ navigation }) => {
             onPress={() => {
               setModalOpen(false);
               navigation.navigate("ReportSuccess");
-
             }}
           >
             <Image
@@ -585,8 +575,7 @@ const Environment = ({ navigation }) => {
                 uploadMediaFile();
               } else {
                 setModalOpen(false);
-              navigation.navigate("ReportSuccess");
-
+                navigation.navigate("ReportSuccess");
               }
             }}
           />

@@ -58,7 +58,7 @@ const Roads = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
 
-  const [modalOpen, setModalOpen] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [reportTypeID, setReportTypeID] = useState("");
 
@@ -157,7 +157,7 @@ const Roads = ({ navigation }) => {
           const audioFileType = storedRecording.substring(
             storedRecording.lastIndexOf(".") + 1
           );
-          mediaFormData.append("mediaFiles[]", {
+          mediaFormData.append("mediaFiles", {
             uri: storedRecording,
             type: `audio/${audioFileType}`,
             name: `recording.${audioFileType}`,
@@ -179,6 +179,9 @@ const Roads = ({ navigation }) => {
           console.log(percentCompleted);
         },
       });
+
+      setAlbums([]);
+      setReportTypeID(null);
       console.log(mediaResponse.data);
       navigation.navigate("ReportSuccess");
 
@@ -242,8 +245,6 @@ const Roads = ({ navigation }) => {
       });
 
       console.log("Report Response:", response.data);
-
-      setReportTypeID(response.data.reportID);
 
       setReportTypeID(response.data.reportID);
       setLoading(false);
@@ -453,14 +454,7 @@ const Roads = ({ navigation }) => {
         value={textInput}
         placeholder="Enter Description"
       />
-      <CameraVideoMedia
-        setAlbums={setAlbums}
-        setStoredRecording={setStoredRecording}
-        setPhotoUri={setPhotoUri}
-        albums={albums}
-        videoMedia={videoMedia}
-        setVideoMedia={setVideoMedia}
-      />
+
       <FormInput
         label="Road Name"
         //keyboardType="text"
@@ -720,8 +714,7 @@ const Roads = ({ navigation }) => {
                 uploadMediaFile();
               } else {
                 setModalOpen(false);
-              navigation.navigate("ReportSuccess");
-
+                navigation.navigate("ReportSuccess");
               }
             }}
           />

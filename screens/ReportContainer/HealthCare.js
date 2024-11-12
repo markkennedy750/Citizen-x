@@ -170,6 +170,8 @@ const HealthCare = ({ navigation }) => {
           console.log(percentCompleted);
         },
       });
+      setAlbums([]);
+      setReportTypeID(null);
       console.log(mediaResponse.data);
       navigation.navigate("ReportSuccess");
 
@@ -229,7 +231,6 @@ const HealthCare = ({ navigation }) => {
 
       setReportTypeID(response.data.reportID);
 
-      setReportTypeID(response.data.reportID);
       setLoading(false);
       setModalOpen(true);
       console.log("Report Response:", response.data);
@@ -423,14 +424,6 @@ const HealthCare = ({ navigation }) => {
         onChange={setTextInput}
         value={textInput}
         placeholder="Enter Description"
-      />
-      <CameraVideoMedia
-        setAlbums={setAlbums}
-        setStoredRecording={setStoredRecording}
-        setPhotoUri={setPhotoUri}
-        albums={albums}
-        videoMedia={videoMedia}
-        setVideoMedia={setVideoMedia}
       />
 
       <StateLocal
@@ -654,8 +647,7 @@ const HealthCare = ({ navigation }) => {
                 uploadMediaFile();
               } else {
                 setModalOpen(false);
-              navigation.navigate("ReportSuccess");
-
+                navigation.navigate("ReportSuccess");
               }
             }}
           />

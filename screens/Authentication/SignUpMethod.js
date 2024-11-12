@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
   Platform,
+  Linking,
 } from "react-native";
 import { SIZES, COLORS, icons } from "../../constants";
 import TextButton from "../../components/TextButton";
@@ -202,7 +203,7 @@ const SignUpMethods = ({ navigation }) => {
             fontWeight: "400",
             fontSize: 11,
           }}
-          onPress={() => navigation.navigate("TermsAndConditions")}
+          onPress={() => Linking.openURL("https://www.citizenx.ng/terms")}
         />
       </View>
       <View
@@ -232,7 +233,7 @@ const SignUpMethods = ({ navigation }) => {
             fontWeight: "400",
             fontSize: 11,
           }}
-          onPress={() => navigation.navigate("TermsAndConditions")}
+          onPress={() => Linking.openURL("https://www.citizenx.ng/privacy")}
         />
       </View>
 

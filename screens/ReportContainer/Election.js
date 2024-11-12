@@ -190,6 +190,8 @@ const Election = ({ navigation }) => {
           console.log(percentCompleted);
         },
       });
+      setAlbums([]);
+      setReportTypeID(null);
       console.log(mediaResponse.data);
       navigation.navigate("ReportSuccess");
 
@@ -251,8 +253,6 @@ const Election = ({ navigation }) => {
       });
 
       console.log("Report Response:", response.data);
-
-      setReportTypeID(response.data.reportID);
 
       setReportTypeID(response.data.reportID);
       setLoading(false);

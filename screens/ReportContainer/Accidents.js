@@ -192,7 +192,7 @@ const Accidents = ({ navigation }) => {
           const audioFileType = storedRecording.substring(
             storedRecording.lastIndexOf(".") + 1
           );
-          mediaFormData.append("mediaFiles[]", {
+          mediaFormData.append("mediaFiles", {
             uri: storedRecording,
             type: `audio/${audioFileType}`,
             name: `recording.${audioFileType}`,
@@ -214,6 +214,9 @@ const Accidents = ({ navigation }) => {
           console.log(percentCompleted);
         },
       });
+
+      setAlbums([]);
+    setReportTypeID(null);
       console.log(mediaResponse.data);
       navigation.navigate("ReportSuccess");
 
@@ -278,7 +281,6 @@ const Accidents = ({ navigation }) => {
 
       setReportTypeID(response.data.reportID);
 
-      setReportTypeID(response.data.reportID);
       setLoading(false);
       setModalOpen(true);
       console.log("Report Response:", response.data);
@@ -406,14 +408,6 @@ const Accidents = ({ navigation }) => {
         onChange={setTextInput}
         value={textInput}
         placeholder="Enter Description"
-      />
-      <CameraVideoMedia
-        setAlbums={setAlbums}
-        setStoredRecording={setStoredRecording}
-        setPhotoUri={setPhotoUri}
-        albums={albums}
-        videoMedia={videoMedia}
-        setVideoMedia={setVideoMedia}
       />
       <FormInput
         label="Cause of Accidents"

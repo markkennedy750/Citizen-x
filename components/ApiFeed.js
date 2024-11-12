@@ -11,6 +11,7 @@ import {
   FlatList,
   Modal,
   Share,
+  ScrollView,
 } from "react-native";
 import { COLORS, icons, SIZES } from "../constants";
 import TextComponent from "./TextComponent";
@@ -18,10 +19,12 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DOWN_VOTE, UPVOTE } from "../Redux/URL";
+import { DOWN_VOTE, REPORT_POST, UPVOTE, REPORT_USER } from "../Redux/URL";
 import { Audio } from "expo-av";
 import { bookmarkPost } from "../Redux/authSlice";
 import TextButton from "./TextButton";
+import LoadingImage from "./loadingStates/LoadingImage";
+//import Modal from "react-native-modal";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -39,31 +42,112 @@ const ApiFeed = ({ item }) => {
   const [numColumns, setNumColumns] = useState(1);
   const [sound, setSound] = useState(null);
   const [errorModal, setErrorModal] = useState(null);
+  const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingModal, setLoadingModal] = useState(false);
   const dispatch = useDispatch();
+
   const { bookmarkLoading, bookmarkError } = useSelector((state) => state.auth);
 
-  const date = item?.time_of_incidence;
+  const date = item?.date_of_incidence;
   const id = item?.id;
+  const userId = item?.user_id;
+
+  useEffect(() => {
+    if (loading) {
+      setLoadingModal(true);
+    } else if (loading === false) {
+      setLoadingModal(false);
+    }
+  }, [loading, loadingModal]);
+
+  function handleError(error) {
+    if (error.response) {
+      console.log("Server error:", error.response.data.error);
+      const errorMessage = error.response.data.error;
+      Alert.alert("Error", errorMessage);
+    } else if (error.request) {
+      console.log("Network error:", error.message);
+      Alert.alert(
+        "Network error. Please check your internet connection and try again."
+      );
+    } else {
+      console.log("Error:", error.message);
+      Alert.alert("An unexpected error occurred. Please try again.");
+    }
+  }
 
   async function bookmarkfunc(id) {
     const access_token = await AsyncStorage.getItem("access_token");
     dispatch(bookmarkPost({ access_token, id }));
   }
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
 
+  async function reportPost(id, message) {
+    try {
+      setLoading(true);
+      const formatDate = new FormData();
+      formatDate.append("message", message);
+      const response = await axios.put(
+        `${REPORT_POST}/${id}`,
+        {
+          message: message,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response);
+      setLoading(false);
+      navigation.navigate("ComplainSuccess");
+    } catch (error) {
+      console.log(error);
+      // setLoading(false);
+      //handleError(error);
+    } finally {
+      setLoading(false);
+      navigation.navigate("ComplainSuccess");
+    }
+  }
+
+  async function reportUser(userId) {
+    try {
+      setLoading(true);
+
+      const response = await axios.put(`${REPORT_USER} / ${userId}`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(response);
+      setLoading(false);
+      navigation.navigate("ComplainSuccess");
+    } catch (error) {
+      //setLoading(false);
+      //handleError(error);
+    } finally {
+      setLoading(false);
+      navigation.navigate("ComplainSuccess");
+    }
+  }
+  const formatDate = (dateString) => {
+    const dateOnlyRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (dateOnlyRegex.test(dateString)) {
+      return dateString;
+    }
+    const date = new Date(dateString);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const seconds = String(date.getSeconds()).padStart(2, "0");
-    const milliseconds = String(date.getMilliseconds()).charAt(0);
-
-    return `${year}-${month}-${day}:${hours}:${minutes}:${seconds}.${milliseconds}`;
+    return `${year}-${month}-${day}`;
   };
 
   const postId = item?.id;
+
+  const toggleModal = () => {
+    setModal(!modal);
+  };
 
   async function upVoteClick(postId) {
     setupvote((prev) => !prev);
@@ -136,22 +220,6 @@ const ApiFeed = ({ item }) => {
     }
   }
 
-  function handleError(error) {
-    if (error.response) {
-      console.log("Server error:", error.response.data.error);
-      const errorMessage = error.response.data.error;
-      Alert.alert("Error", errorMessage);
-    } else if (error.request) {
-      console.log("Network error:", error.message);
-      Alert.alert(
-        "Network error. Please check your internet connection and try again."
-      );
-    } else {
-      console.log("Error:", error.message);
-      Alert.alert("An unexpected error occurred. Please try again.");
-    }
-  }
-
   useEffect(() => {
     if (item?.thumbnail_urls) {
       Image.prefetch(item?.thumbnail_urls)
@@ -185,15 +253,15 @@ const ApiFeed = ({ item }) => {
   // Function to determine how many rows we need
   const calculateRows = () => {
     if (mediaFiles.length <= 3) return 1;
-    return Math.ceil(mediaFiles.length / 2); // 2 media per row after 3 items
+    return Math.ceil(mediaFiles.length / 2);
   };
 
   const validateImage = async (imageUrl) => {
     try {
       await Image.prefetch(imageUrl);
-      return true; // Image is loadable
+      return true;
     } catch {
-      return false; // Image failed to load
+      return false;
     }
   };
 
@@ -290,7 +358,25 @@ const ApiFeed = ({ item }) => {
           //navigation.navigate("ApiFeedDetail", { feed: item });
         }}
       >
-        <View style={styles.profileContainer}>
+        <View style={[styles.profileContainer, { position: "relative" }]}>
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              // marginTop: "auto",
+            }}
+            onPress={() => setModal(true)}
+          >
+            <Text style={{ fontWeight: "800", fontSize: 35 }}>.</Text>
+            <Text style={{ fontWeight: "800", fontSize: 35 }}>.</Text>
+            <Text style={{ fontWeight: "800", fontSize: 35 }}>.</Text>
+          </TouchableOpacity>
+
+          {/* User Profile and Info */}
           {item?.user_is_anonymous === true ? (
             <Image source={icons.anonymous} style={styles.profileImg} />
           ) : (
@@ -373,8 +459,8 @@ const ApiFeed = ({ item }) => {
               {item?.time_of_incidence && (
                 <Text style={styles.date}>
                   {
-                    item?.date_of_incidence
-                    //formatDate(date)
+                    //item?.date_of_incidence
+                    formatDate(date)
                   }
                 </Text>
               )}
@@ -404,6 +490,7 @@ const ApiFeed = ({ item }) => {
             </View>
           </View>
         </View>
+
         {item?.category && (
           <View style={styles.reporttype}>
             <Text style={styles.reportText}>{item?.category}</Text>
@@ -626,6 +713,158 @@ const ApiFeed = ({ item }) => {
           />
         </View>
       </Modal>
+      <Modal animationType="slide" transparent={true} visible={modal}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "flex-end",
+            backgroundColor: "transparent",
+          }}
+        >
+          <ScrollView
+            contentContainerStyle={{
+              paddingVertical: SIZES.padding,
+              gap: 10,
+            }}
+            style={{
+              maxHeight: "93%", // Adjusts height to allow scrolling while keeping some space at the top
+              width: "100%",
+              borderTopLeftRadius: 18,
+              borderTopRightRadius: 18,
+              borderWidth: 1.5,
+              borderColor: COLORS.gray2,
+              backgroundColor: COLORS.lightGray2,
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                marginLeft: "auto",
+              }}
+              onPress={() => {
+                setModal(false);
+              }}
+            >
+              <Image
+                source={icons.CancelPNG}
+                resizeMode="contain"
+                style={{
+                  width: 13,
+                  height: 13,
+                  marginRight: 10,
+                }}
+              />
+            </TouchableOpacity>
+            <View
+              style={{
+                width: "95%",
+                alignSelf: "center",
+                backgroundColor: COLORS.white2,
+                borderWidth: 1.5,
+                padding: 10,
+                borderColor: COLORS.gray2,
+                borderRadius: 12,
+              }}
+            >
+              <Text style={styles.titleReport}>Report Post</Text>
+              <Text style={styles.subTitleReport}>
+                Please select a reason for reporting this post
+              </Text>
+              <TouchableOpacity
+                style={styles.containerReport}
+                onPress={() => {
+                  const message =
+                    "Report Post: Please select a reason for reporting this post";
+                  reportPost(id, message);
+                }}
+              >
+                <Text style={styles.inquires}>Spam or Misleading:</Text>
+                <Text style={styles.subInquires}>
+                  The post is spam, promotional, or contains false information.
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.containerReport}
+                onPress={() => {
+                  const message =
+                    "Inappropriate Content: The post contains offensive, harmful, or obscene content.";
+                  reportPost(id, message);
+                }}
+              >
+                <Text style={styles.inquires}>Inappropriate Content:</Text>
+                <Text style={styles.subInquires}>
+                  The post contains offensive, harmful, or obscene content.
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.containerReport}
+                onPress={() => {
+                  const message =
+                    "Misinformation: The post spreads unverified or misleading information.";
+                  reportPost(id, message);
+                }}
+              >
+                <Text style={styles.inquires}>Misinformation:</Text>
+                <Text style={styles.subInquires}>
+                  The post spreads unverified or misleading information.
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                width: "95%",
+                alignSelf: "center",
+                backgroundColor: COLORS.white2,
+                borderWidth: 1.5,
+                padding: 10,
+                borderColor: COLORS.gray2,
+                borderRadius: 12,
+              }}
+            >
+              <Text style={styles.titleReport}>Report User</Text>
+              <Text style={styles.subTitleReport}>
+                Please select a reason for reporting this user
+              </Text>
+              <TouchableOpacity
+                style={styles.containerReport}
+                onPress={() => {
+                  reportUser(userId);
+                }}
+              >
+                <Text style={styles.inquires}>Inappropriate Content:</Text>
+                <Text style={styles.subInquires}>
+                  The user posts offensive or inappropriate material.
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.containerReport}
+                onPress={() => {
+                  reportUser(userId);
+                }}
+              >
+                <Text style={styles.inquires}>Harassment:</Text>
+                <Text style={styles.subInquires}>
+                  The user engages in harassing or threatening behavior.
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.containerReport}
+                onPress={() => {
+                  reportUser(userId);
+                }}
+              >
+                <Text style={styles.inquires}>Spam: </Text>
+                <Text style={styles.subInquires}>
+                  The user primarily uses CitizenX for spam or promotional
+                  purposes.
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </View>
+      </Modal>
+      <Modal animationType="slide" transparent={true} visible={loadingModal}>
+        <LoadingImage />
+      </Modal>
     </View>
   );
 };
@@ -821,5 +1060,33 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     lineHeight: 20,
     textAlign: "center",
+  },
+  titleReport: {
+    fontSize: 20,
+    fontWeight: "600",
+    lineHeight: 25,
+  },
+  subTitleReport: {
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 8,
+  },
+  inquires: {
+    fontSize: 17,
+    fontWeight: "600",
+    lineHeight: 20,
+  },
+  subInquires: {
+    fontSize: 15,
+    fontWeight: "500",
+  },
+  containerReport: {
+    paddingVertical: 12,
+    gap: 6,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: COLORS.lightGray1,
+    padding: 12,
+    marginVertical: 10,
   },
 });

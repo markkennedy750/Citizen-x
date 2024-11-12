@@ -63,6 +63,7 @@ import SingleImage from "./screens/SingleImage";
 import TermsAndConditions from "./screens/TermsAndConditions";
 import AnonymousFeed from "./screens/AnonymousFeed";
 import Disclaimer from "./screens/Disclaimer";
+import ComplainSuccess from "./components/ComplainSuccess";
 
 //import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Stack = createStackNavigator();
@@ -151,6 +152,13 @@ export default function App() {
           <Stack.Screen
             name="ForgotPassword"
             component={ForgetPassword}
+            options={{
+              animation: "fade",
+            }}
+          />
+          <Stack.Screen
+            name="ComplainSuccess"
+            component={ComplainSuccess}
             options={{
               animation: "fade",
             }}

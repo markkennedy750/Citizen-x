@@ -90,7 +90,6 @@ const FakeProduct = ({ navigation }) => {
   //   }
   // }
 
-
   const mediaAccess = async () => {
     try {
       setImageLoading(true);
@@ -158,7 +157,7 @@ const FakeProduct = ({ navigation }) => {
           const audioFileType = storedRecording.substring(
             storedRecording.lastIndexOf(".") + 1
           );
-          mediaFormData.append("mediaFiles[]", {
+          mediaFormData.append("mediaFiles", {
             uri: storedRecording,
             type: `audio/${audioFileType}`,
             name: `recording.${audioFileType}`,
@@ -180,6 +179,9 @@ const FakeProduct = ({ navigation }) => {
           console.log(percentCompleted);
         },
       });
+
+      setAlbums([]);
+      setReportTypeID(null);
       console.log(mediaResponse.data);
       navigation.navigate("ReportSuccess");
 
@@ -205,7 +207,7 @@ const FakeProduct = ({ navigation }) => {
       setLoading(false);
     }
   }
-  
+
   async function submitReport() {
     try {
       setLoading(true);
@@ -221,9 +223,13 @@ const FakeProduct = ({ navigation }) => {
       if (address) {
         formData.append("landmark", address);
       }
-      if (location) {
+      if (location && location.latitude && location.longitude) {
         formData.append("latitude", location?.latitude);
         formData.append("longitude", location?.longitude);
+      } else {
+        console.log("Location data is missing or incomplete.");
+        setErrorMessage("Please enable location services and try again.");
+        return;
       }
       if (productName) {
         formData.append("product_name", productName);
@@ -242,7 +248,6 @@ const FakeProduct = ({ navigation }) => {
 
       setReportTypeID(response.data.reportID);
 
-      setReportTypeID(response.data.reportID);
       setLoading(false);
       setModalOpen(true);
       console.log("Report Response:", response.data);
@@ -395,14 +400,6 @@ const FakeProduct = ({ navigation }) => {
         value={textInput}
         placeholder="Enter Description"
       />
-      <CameraVideoMedia
-        setAlbums={setAlbums}
-        setStoredRecording={setStoredRecording}
-        setPhotoUri={setPhotoUri}
-        albums={albums}
-        videoMedia={videoMedia}
-        setVideoMedia={setVideoMedia}
-      />
 
       <StateLocal
         selectedState={selectedState}
@@ -484,7 +481,6 @@ const FakeProduct = ({ navigation }) => {
             onPress={() => {
               setModalOpen(false);
               navigation.navigate("ReportSuccess");
-
             }}
           >
             <Image
@@ -614,8 +610,7 @@ const FakeProduct = ({ navigation }) => {
                 uploadMediaFile();
               } else {
                 setModalOpen(false);
-              navigation.navigate("ReportSuccess");
-
+                navigation.navigate("ReportSuccess");
               }
             }}
           />
