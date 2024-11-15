@@ -42,6 +42,7 @@ const Disclaimer = ({ navigation }) => {
             lineHeight: 25,
             color: COLORS.red,
             marginVertical: SIZES.padding,
+            textAlign: "center",
           }}
         >
           We Disclaim:
@@ -52,18 +53,21 @@ const Disclaimer = ({ navigation }) => {
             fontSize: 18,
             lineHeight: 20,
             fontWeight: "400",
+            textAlign: "center",
           }}
         >
-          CitizenX is definitely not affiliated with any government entity—just
-          a group of citizens here to help you keep tabs! 🕵️‍♂️📍 Information is
-          user-sourced, and we don’t offer any official government services (but
-          wouldn’t that be cool? 😄). For the official stuff, check government
-          sites directly.
+          CitizenX Nigeria is an independent community reporting and KPI
+          platform, not affiliated with any government entity. All information
+          is user-generated, and we do not provide official government services
+          or information. For official resources, please refer directly to
+          government websites. We are committed to empowering citizens by
+          providing a platform for transparent reporting and community
+          engagement.
         </Text>
       </View>
 
       <TextButton
-        label="Continue"
+        label="Get Started"
         //disabled={isEnableSignIn() ? false : true}
         buttonContainerStyle={{
           height: 50,
@@ -80,7 +84,7 @@ const Disclaimer = ({ navigation }) => {
           fontSize: 17,
         }}
         onPress={() => {
-          navigation.navigate("Interest");
+          navigation.navigate("SplashScreen");
         }}
       />
       <View

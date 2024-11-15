@@ -44,7 +44,7 @@ const BasicRevealAnimation = () => {
         animate={{ opacity: 1, translateY: 0 }}
         transition={{ delay: 2000 }}
       >
-        <Text style={styles.title}>Welcome to Citizen X</Text>
+        <Text style={styles.title}>Welcome to Citizen X Nigeria</Text>
         <Text
           style={{
             textAlign: "center",
@@ -57,7 +57,7 @@ const BasicRevealAnimation = () => {
           Share. Report. Impact.
         </Text>
         <Text style={styles.text}>
-          CitizenX is a platform for a more engaged local community. Share
+          This is a platform for a more engaged local communities in Nigeria. Share
           views, report incidents, and update local events easily. Every report
           makes a difference.
         </Text>
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
     color: "black",
