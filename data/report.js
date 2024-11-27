@@ -81,7 +81,7 @@ const reportData = [
   {
     id: 14,
     image: require("../assets/reports/transport.png"),
-    title: "transport",
+    title: "Transport",
     navigation: "Transport",
   },
   {
@@ -106,13 +106,13 @@ const reportData = [
   {
     id: 18,
     image: require("../assets/reports/socialwelfare.png"),
-    title: "socialwelfare",
+    title: "Social Welfare",
     navigation: "SocialWelfare",
   },
   {
     id: 19,
     image: require("../assets/reports/tradecommerce.png"),
-    title: "Trade&Commerce",
+    title: "Trade & Commerce",
     navigation: "TradeCommerce",
   },
   {

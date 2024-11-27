@@ -683,6 +683,8 @@ color: COLORS.white,
 
 Build expo application
 
+"feed_urls": "https://citizenx.s3.eu-north-1.amazonaws.com/media2/16_media_0.jpeg,https://citizenx.s3.eu-north-1.amazonaws.com/media2/16_media_1.jpeg"
+
 1. > > npm install -g eas-cli
 2. > > eas login
 3. > > eas whoami

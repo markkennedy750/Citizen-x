@@ -64,6 +64,7 @@ const Profile = ({ navigation }) => {
       dispatch(profile_sec({ access_token }));
       dispatch(rewardCount({ access_token }));
     }
+    console.log(availableCoins);
   }, [dispatch, access_token]);
 
   function loguserout() {
@@ -258,7 +259,7 @@ const Profile = ({ navigation }) => {
                     marginHorizontal: 8,
                   }}
                 >
-                  35
+                  {availableCoins?.total_balance}
                 </Text>
               </View>
               <View

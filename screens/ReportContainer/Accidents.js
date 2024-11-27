@@ -188,16 +188,16 @@ const Accidents = ({ navigation }) => {
           });
         });
 
-        if (storedRecording) {
-          const audioFileType = storedRecording.substring(
-            storedRecording.lastIndexOf(".") + 1
-          );
-          mediaFormData.append("mediaFiles", {
-            uri: storedRecording,
-            type: `audio/${audioFileType}`,
-            name: `recording.${audioFileType}`,
-          });
-        }
+      }
+      if (storedRecording) {
+        const audioFileType = storedRecording.substring(
+          storedRecording.lastIndexOf(".") + 1
+        );
+        mediaFormData.append("mediaFiles", {
+          uri: storedRecording,
+          type: `audio/${audioFileType}`,
+          name: `recording.${audioFileType}`,
+        });
       }
       const mediaResponse = await axios.post(MEDIA_UPLOAD, mediaFormData, {
         headers: {
@@ -216,7 +216,7 @@ const Accidents = ({ navigation }) => {
       });
 
       setAlbums([]);
-    setReportTypeID(null);
+      setReportTypeID(null);
       console.log(mediaResponse.data);
       navigation.navigate("ReportSuccess");
 
@@ -254,7 +254,7 @@ const Accidents = ({ navigation }) => {
       formData.append("state_name", selectedState);
       formData.append("lga_name", selectedLocalGov);
       formData.append("is_anonymous", isEnabled);
-      formData.append("date_of_incidence", date);
+      formData.append("date_of_incidence", new Date(date).toISOString());
 
       if (address) {
         formData.append("landmark", address);
@@ -268,7 +268,7 @@ const Accidents = ({ navigation }) => {
         formData.append("accident_cause", causeOfAccident);
       }
 
-      console.log(formData);
+      console.log(new Date(date).toISOString());
 
       const response = await axios.post(CREATE_REPORT, formData, {
         headers: {

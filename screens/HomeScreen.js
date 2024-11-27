@@ -5,6 +5,7 @@ import {
   StatusBar,
   FlatList,
   RefreshControl,
+  Alert,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import { COLORS, SIZES } from "../constants";
@@ -17,13 +18,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoadingImage from "../components/loadingStates/LoadingImage";
 import TextButton from "../components/TextButton";
 import ErrorImage from "../components/loadingStates/ErrorImage";
+import { AUTH_FEEDS } from "../Redux/URL";
+import axios from "axios";
 
 const Home = () => {
   // const [apiFeeds, setApiFeeds] = useState({});
   const [accessToken, setAccessToken] = useState("");
   const [refreshing, setRefreshing] = useState(false);
-  const dispatch = useDispatch();
-  const { loading, error, auth_feed } = useSelector((state) => state.auth);
+  const [fetchedFeed, setFetchedFeed] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  //const dispatch = useDispatch();
+  //const { loading, error, auth_feed } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const getData = async () => {
@@ -37,20 +43,75 @@ const Home = () => {
     getData();
   }, []);
 
+  function handleError(error) {
+    if (error.response) {
+      console.log("Server error:", error.response.data.error);
+      const errorMessage = error.response.data.error;
+      Alert.alert("Error", errorMessage);
+    } else if (error.request) {
+      console.log("Network error:", error.message);
+      Alert.alert(
+        "Network error. Please check your internet connection and try again."
+      );
+    } else {
+      console.log("Error:", error.message);
+      Alert.alert("An unexpected error occurred. Please try again.");
+    }
+  }
+
+  async function fetchFeed(accessToken) {
+    setLoading(true);
+    try {
+      if (accessToken) {
+        const response = await axios.get(
+          "https://citizenx-9hk2.onrender.com/api/v1/incident_reports",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        setFetchedFeed(response.data.incident_reports);
+        //console.log(fetchedFeed);
+        setLoading(false);
+        //return response.data.incident_reports;
+        setError(false);
+      } else {
+        const response = await axios.get(AUTH_FEEDS);
+        setFetchedFeed(response.data.incident_reports);
+        setLoading(false);
+        setError(false);
+        //return response.data.incident_reports;
+      }
+    } catch {
+      handleError(error);
+      setLoading(false);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
-    dispatch(authFeed({ accessToken }));
-  }, [dispatch]);
+    fetchFeed(accessToken);
+    console.log(fetchedFeed);
+  }, []);
+  // dispatch(authFeed({ accessToken }));
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    dispatch(authFeed({ accessToken }));
+    fetchFeed(accessToken);
+
+    //dispatch(authFeed({ accessToken }));
     if (loading === false) {
       setRefreshing(false);
     }
   }, []);
 
   function refreshBtn() {
-    dispatch(authFeed({ accessToken }));
+    fetchFeed(accessToken);
+
+    // dispatch(authFeed({ accessToken }));
   }
 
   if (loading) return <LoadingImage />;
@@ -109,7 +170,7 @@ const Home = () => {
       </View>
 
       <FlatList
-        data={auth_feed}
+        data={fetchedFeed}
         renderItem={({ item }) => <ApiFeed item={item} />}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ ...styles.itemContainer, flexGrow: 1 }}

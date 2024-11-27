@@ -6,14 +6,12 @@ import {
   StatusBar,
   TouchableOpacity,
   Image,
+  Linking,
 } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import { SIZES, COLORS, icons } from "../../constants";
-import { useNavigation } from "@react-navigation/native";
 
-const ReportGuideline = () => {
-  const navigation = useNavigation();
-
+const ReportGuideline = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.primaryContainer}>
       <TouchableOpacity
@@ -27,35 +25,69 @@ const ReportGuideline = () => {
       </TouchableOpacity>
 
       <View style={styles.textContainer}>
-        <Text style={styles.title}>Report Guidelines</Text>
+        <Text style={styles.title}>Reporting Guide</Text>
         <Text style={styles.subTitle}>
-          Here a some quick guides regarding how you can best make your reports.
+          Create impactful reports quickly and easily. Here's how:
         </Text>
       </View>
+
       <View style={styles.bulletContainer}>
         <View style={styles.singleContainer}>
-          <Text style={styles.bullet}>•</Text>
+          <Text style={styles.bullet}>1.</Text>
           <Text style={styles.item}>
-            Provide specific details about the problem, such as its location and
-            time of occurrence, to aid authorities in resolving it promptly.
-          </Text>
-        </View>
-        <View style={styles.singleContainer}>
-          <Text style={styles.bullet}>•</Text>
-          <Text style={styles.item}>
-            If possible, provide visual evidence such as photos or videos to
-            illustrate the issue, helping authorities understand its seriousness
-            and respond promptly.
+            <Text style={styles.bold}>Category & Subcategory:</Text> Choose the
+            issue type (e.g., Crime, Corruption) and its specific focus (e.g.,
+            Theft, Bribery).
           </Text>
         </View>
 
         <View style={styles.singleContainer}>
-          <Text style={styles.bullet}>•</Text>
+          <Text style={styles.bullet}>2.</Text>
           <Text style={styles.item}>
-            Ensure accuracy by reviewing all information before submission, as
-            errors can hinder the resolution process.
+            <Text style={styles.bold}>Location Details:</Text> Specify the
+            State, LGA, and exact location (address or landmark).
           </Text>
         </View>
+
+        <View style={styles.singleContainer}>
+          <Text style={styles.bullet}>3.</Text>
+          <Text style={styles.item}>
+            <Text style={styles.bold}>Event Info:</Text> Include the date and
+            time, or skip it if the report is being made live, and provide a
+            factual description of the issue.
+          </Text>
+        </View>
+
+        <View style={styles.singleContainer}>
+          <Text style={styles.bullet}>4.</Text>
+          <Text style={styles.item}>
+            <Text style={styles.bold}>Impact & Media Attachments:</Text>{" "}
+            Describe the impact and upload supporting media (photos, videos, or
+            audio).
+          </Text>
+        </View>
+
+        <View style={styles.singleContainer}>
+          <Text style={styles.bullet}>5.</Text>
+          <Text style={styles.item}>
+            <Text style={styles.bold}>Submit & Earn Points:</Text> Submit your
+            report, wait for verification, and earn reward points!
+          </Text>
+        </View>
+      </View>
+
+      <View style={{ marginTop: 20 }}>
+        <Text style={styles.item}>
+          For full guidelines, visit{" "}
+          <TouchableOpacity
+            onPress={() => Linking.openURL("https://www.citizenx.com/help")}
+          >
+            <Text style={{ color: COLORS.primary, fontWeight: "bold" }}>
+              www.citizenx.com/help
+            </Text>
+          </TouchableOpacity>
+          .
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -73,11 +105,6 @@ const styles = StyleSheet.create({
     width: 32,
     height: 30,
   },
-  image: {
-    flex: 1,
-    width: 30,
-    height: 25,
-  },
   textContainer: {
     flexDirection: "column",
     marginTop: 20,
@@ -94,23 +121,18 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 14,
     lineHeight: 19.6,
+    marginBottom: 15,
   },
   bulletContainer: {
-    marginTop: 15,
     marginLeft: 4,
     flexDirection: "column",
     justifyContent: "flex-start",
   },
   bullet: {
-    fontSize: 35,
+    fontSize: 20,
     marginRight: 5,
-    marginTop: 0,
-    marginBottom: 37,
   },
   item: {
-    //flexDirection: "row",
-    //alignItems: "center",
-    // marginBottom: 10,
     marginTop: 0,
     marginRight: 4,
     fontWeight: "400",
@@ -119,8 +141,11 @@ const styles = StyleSheet.create({
   },
   singleContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "flex-start",
-    marginBottom: 10,
+    marginBottom: 15,
+  },
+  bold: {
+    fontWeight: "600",
   },
 });

@@ -83,40 +83,6 @@ const Report = ({ navigation }) => {
         contentContainerStyle={{ ...styles.itemContainer, flexGrow: 1 }}
         ListFooterComponent={footerButton}
       />
-      <Modal animationType="slide" transparent={true} visible={errorModal}>
-        <View style={styles.modalContainer}>
-          <Image
-            source={icons.workInProgress}
-            style={{ height: 130, width: 210, marginTop: 12 }}
-          />
-
-          <View style={styles.logoutTextContainer}>
-            <Text style={styles.primaryText}>Work in progress</Text>
-            <Text style={styles.secondaryText}>
-              Only Image and audio media file is accepted at the mean time video
-              files will be in the next version
-            </Text>
-          </View>
-          <TextButton
-            label="Dismiss"
-            buttonContainerStyle={{
-              height: 55,
-              width: "80%",
-              alignItems: "center",
-              justifyContent: "center",
-              marginTop: 50,
-              borderRadius: SIZES.radius,
-              backgroundColor: COLORS.primary,
-            }}
-            labelStyle={{
-              color: COLORS.white,
-              fontWeight: "700",
-              fontSize: 18,
-            }}
-            onPress={() => setErrorModal(false)}
-          />
-        </View>
-      </Modal>
     </View>
   );
 };

@@ -11,6 +11,7 @@ import LoadingImage from "./loadingStates/LoadingImage";
 import { GET_USER_FEED } from "../Redux/URL";
 import axios from "axios";
 import ApiUserFeed from "./ApiUserFeed";
+import ApiFeed from "./ApiFeed";
 
 const UserPost = () => {
   const [refreshing, setRefreshing] = useState(false);

@@ -19,11 +19,18 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DOWN_VOTE, REPORT_POST, UPVOTE, REPORT_USER } from "../Redux/URL";
+import {
+  DOWN_VOTE,
+  REPORT_POST,
+  UPVOTE,
+  REPORT_USER,
+  BOOKMARK_FEED,
+} from "../Redux/URL";
 import { Audio } from "expo-av";
 import { bookmarkPost } from "../Redux/authSlice";
 import TextButton from "./TextButton";
 import LoadingImage from "./loadingStates/LoadingImage";
+import FeedImage from "./FeedImage";
 //import Modal from "react-native-modal";
 
 const screenWidth = Dimensions.get("window").width;
@@ -45,11 +52,13 @@ const ApiFeed = ({ item }) => {
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingModal, setLoadingModal] = useState(false);
-  const dispatch = useDispatch();
+  const [bookmarkclick, setBookmarkClick] = useState(false);
+  const [bookmarkLoading, setBookmarkLoading] = useState(false);
+  //const dispatch = useDispatch();
 
-  const { bookmarkLoading, bookmarkError } = useSelector((state) => state.auth);
+  // const { bookmarkLoading, bookmarkError } = useSelector((state) => state.auth);
 
-  const date = item?.date_of_incidence;
+  const date = item?.timeof_incidence;
   const id = item?.id;
   const userId = item?.user_id;
 
@@ -79,7 +88,25 @@ const ApiFeed = ({ item }) => {
 
   async function bookmarkfunc(id) {
     const access_token = await AsyncStorage.getItem("access_token");
-    dispatch(bookmarkPost({ access_token, id }));
+    //dispatch(bookmarkPost({ access_token, id }));
+    setBookmarkLoading(true);
+    try {
+      const response = await axios.get(`${BOOKMARK_FEED}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      setBookmarkClick(true);
+      setBookmarkLoading(false);
+
+      return response.data.message;
+    } catch (error) {
+      handleError(error);
+      setBookmarkClick(false);
+      setBookmarkLoading(false);
+    } finally {
+      setBookmarkLoading(false);
+    }
   }
 
   async function reportPost(id, message) {
@@ -231,6 +258,7 @@ const ApiFeed = ({ item }) => {
   }, [item?.thumbnail_urls]);
 
   const parseFeedUrls = (feedUrls) => {
+    if (!feedUrls) return [];
     const urls = feedUrls.split(",");
     const validMedia = urls.filter((url) =>
       url.match(/\.(jpeg|jpg|gif|png|mp3|wav|ogg)$/)
@@ -267,8 +295,8 @@ const ApiFeed = ({ item }) => {
 
   useEffect(() => {
     const processMedia = async () => {
-      if (item?.feed_urls) {
-        const parsedMedia = parseFeedUrls(item.feed_urls);
+      if (item?.full_size_urls) {
+        const parsedMedia = parseFeedUrls(item.full_size_urls);
         const validMedia = [];
 
         for (let url of parsedMedia) {
@@ -282,6 +310,7 @@ const ApiFeed = ({ item }) => {
           }
         }
 
+        // Update the mediaFiles state for this specific item
         setMediaFiles(validMedia);
         setNumColumns(validMedia.length > 1 ? 2 : 1);
       }
@@ -392,16 +421,16 @@ const ApiFeed = ({ item }) => {
             <View style={styles.usernameContainer}>
               {item?.user_is_anonymous === true ? (
                 <Text style={styles.fulName}>Anonymous User</Text>
-              ) : item?.fullname ? (
-                <Text style={styles.fulName}>{item?.fullname}</Text>
+              ) : item?.user_fullname ? (
+                <Text style={styles.fulName}>{item?.user_fullname}</Text>
               ) : (
                 <Text style={styles.fulName}>Anonymous User</Text>
               )}
 
               {item?.user_is_anonymous === true ? (
                 <Text style={styles.usename}>@Anonymous</Text>
-              ) : item?.username ? (
-                <Text style={styles.usename}>@{item?.username}</Text>
+              ) : item?.user_username ? (
+                <Text style={styles.usename}>@{item?.user_username}</Text>
               ) : (
                 <Text style={styles.usename}>@Anonymous</Text>
               )}
@@ -456,7 +485,7 @@ const ApiFeed = ({ item }) => {
               )}
             </View>
             <View style={styles.reportDaTim}>
-              {item?.time_of_incidence && (
+              {item?.timeof_incidence && (
                 <Text style={styles.date}>
                   {
                     //item?.date_of_incidence
@@ -503,19 +532,11 @@ const ApiFeed = ({ item }) => {
         </View>
       </View>
 
-      <View>
-        {mediaFiles.length > 0 && (
-          <FlatList
-            data={mediaFiles}
-            renderItem={renderMedia}
-            keyExtractor={(media, index) => index.toString()}
-            numColumns={mediaFiles.length > 1 ? 2 : 1}
-            key={mediaFiles.length > 1 ? 2 : 1}
-            horizontal={false}
-            contentContainerStyle={styles.mediaContainer}
-          />
-        )}
-      </View>
+      {item?.feed_urls && (
+        <View>
+          <FeedImage url={item?.feed_urls} />
+        </View>
+      )}
       <View style={styles.iconContainer}>
         <View style={styles.voteContainer}>
           {voteLoading ? (
@@ -539,7 +560,7 @@ const ApiFeed = ({ item }) => {
                   style={{
                     width: 28,
                     height: 28,
-                    tintColor: "#000000",
+                    tintColor: upvote === false ? "#000000" : "#114833",
                   }}
                   resizeMode="contain"
                 />
@@ -597,7 +618,7 @@ const ApiFeed = ({ item }) => {
                   style={{
                     width: 28,
                     height: 28,
-                    tintColor: "#000000",
+                    tintColor: downvote === false ? "#000000" : "#9D0404",
                   }}
                   resizeMode="contain"
                 />
@@ -645,21 +666,25 @@ const ApiFeed = ({ item }) => {
             flexDirection: "row",
           }}
         >
-          <TouchableOpacity
-            style={{ width: 20 }}
-            onPress={() => {
-              bookmarkfunc(id);
-            }}
-          >
-            <Image
-              source={icons.bookmarkicon}
-              style={{
-                width: 22,
-                height: 22,
-                tintColor: "#000000",
+          {bookmarkLoading ? (
+            <ActivityIndicator size="large" color={`${COLORS.black}`} />
+          ) : (
+            <TouchableOpacity
+              style={{ width: 20 }}
+              onPress={() => {
+                bookmarkfunc(item?.id);
               }}
-            />
-          </TouchableOpacity>
+            >
+              <Image
+                source={icons.bookmarkicon}
+                style={{
+                  width: 22,
+                  height: 22,
+                  tintColor: setBookmarkClick ? "#114833" : COLORS.gray2,
+                }}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         <View
           style={{

@@ -221,7 +221,9 @@ const Election = ({ navigation }) => {
   async function submitReport() {
     try {
       setLoading(true);
-      //rating
+
+      // Initialize FormData is_response
+
       const formData = new FormData();
       formData.append("category", categ);
       formData.append("sub_report_type", insidentType);
@@ -229,14 +231,11 @@ const Election = ({ navigation }) => {
       formData.append("state_name", selectedState);
       formData.append("lga_name", selectedLocalGov);
       formData.append("is_anonymous", isEnabled);
-      formData.append("date_of_incidence", date);
+      formData.append("date_of_incidence", new Date(date).toISOString());
       //formData.append("is_response", checkboxValue);
 
       if (address) {
         formData.append("landmark", address);
-      }
-      if (selectedId) {
-        formData.append("rating", selectedId);
       }
       if (location) {
         formData.append("latitude", location?.latitude);
@@ -252,8 +251,6 @@ const Election = ({ navigation }) => {
         },
       });
 
-      console.log("Report Response:", response.data);
-
       setReportTypeID(response.data.reportID);
       setLoading(false);
       setModalOpen(true);
@@ -266,23 +263,17 @@ const Election = ({ navigation }) => {
         setErrorMessage(
           "There was an issue with the server. Please try again later."
         );
-        return rejectWithValue(error.response.data);
       } else if (error.request) {
         console.log("network error:", error.message);
         setErrorMessage(
           "Network error. Please check your internet connection and try again."
         );
-        return rejectWithValue(error.message);
       } else {
         console.log("error:", error.message);
         setErrorMessage("An unexpected error occurred. Please try again.");
-        return rejectWithValue(error.message);
       }
-    } finally {
-      setLoading(false);
     }
   }
-
   const radioButtons = useMemo(
     () => [
       {
@@ -492,7 +483,7 @@ const Election = ({ navigation }) => {
           fontWeight: "700",
           fontSize: 17,
         }}
-        onPress={submitReport}
+        onPress={async () => await submitReport()}
       />
       <Modal animationType="slide" transparent={true} visible={modalOpen}>
         <View
