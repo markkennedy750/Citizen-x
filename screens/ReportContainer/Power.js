@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  Alert,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState, useMemo } from "react";
 import ReportWrapper from "./ReportWrapper";
@@ -33,6 +35,9 @@ import { CREATE_REPORT, MEDIA_UPLOAD } from "../../Redux/URL";
 import * as ImagePicker from "expo-image-picker";
 import TextIconButton from "../../components/TextIconButton";
 import { ActivityIndicator } from "react-native";
+
+import { Video } from "expo-av";
+import * as FileSystem from "expo-file-system";
 
 const Power = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -62,6 +67,68 @@ const Power = ({ navigation }) => {
   const [reportTypeID, setReportTypeID] = useState("");
 
   const categ = "Power";
+
+  const renderVideoThumbnail = ({ item }) => (
+    <View style={styles.videoContainer}>
+      <Video
+        source={{ uri: item }}
+        style={styles.video}
+        resizeMode="cover"
+        shouldPlay={false} // Prevent playback
+        isMuted={true} // Mute the video
+        usePoster // Use the poster as a thumbnail
+        posterSource={{ uri: item }} // Use the same video URI as the poster
+        isLooping={false} // No looping
+        disableFocus={true} // Prevent user focus
+      />
+    </View>
+  );
+
+  const videoAccess = async () => {
+    try {
+      setImageLoading(true);
+
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+        quality: 1,
+        allowsMultipleSelection: true, // Allow multiple video selection
+      });
+
+      if (!result.canceled) {
+        // Extract selected video URIs
+        const selectedVideos = result.assets;
+
+        // Validate minimum and maximum file size
+        const validVideos = [];
+        for (let video of selectedVideos) {
+          const videoInfo = await FileSystem.getInfoAsync(video.uri);
+          const fileSizeInMB = videoInfo.size / (1024 * 1024); // Convert size to MB
+
+          if (fileSizeInMB <= 100) {
+            validVideos.push(video.uri);
+          }
+        }
+
+        // Check if minimum of 3 valid videos are selected
+        if (validVideos.length > 2) {
+          Alert.alert(
+            "Error",
+            "Please select at least 2 videos within 100 MB each."
+          );
+          setImageLoading(false);
+          return;
+        }
+
+        setVideoMedia(validVideos);
+      } else {
+        Alert.alert("You did not select any videos.");
+      }
+    } catch (error) {
+      Alert.alert("Error accessing media library", error.message);
+    } finally {
+      setImageLoading(false);
+    }
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -119,6 +186,26 @@ const Power = ({ navigation }) => {
       const mediaFormData = new FormData();
       mediaFormData.append("report_id", reportTypeID);
 
+      if (videoMedia.length > 0) {
+        console.log(videoMedia);
+
+        videoMedia.forEach((videoUri, index) => {
+          const fileType = videoUri
+            .substring(videoUri.lastIndexOf(".") + 1)
+            .toLowerCase();
+          const allowedVideoTypes = ["mp4", "mov", "avi", "mkv", "webm"];
+          if (allowedVideoTypes.includes(fileType)) {
+            mediaFormData.append("mediaFiles", {
+              uri: videoUri,
+              type: `video/${fileType}`,
+              name: `video_${index}.${fileType}`,
+            });
+          } else {
+            console.warn(`Invalid file type: ${fileType}`);
+          }
+        });
+      }
+
       if (albums) {
         console.log(albums);
         albums.forEach((album, index) => {
@@ -137,17 +224,16 @@ const Power = ({ navigation }) => {
             name: `media_${index}.${fileType}`,
           });
         });
-
-        if (storedRecording) {
-          const audioFileType = storedRecording.substring(
-            storedRecording.lastIndexOf(".") + 1
-          );
-          mediaFormData.append("mediaFiles", {
-            uri: storedRecording,
-            type: `audio/${audioFileType}`,
-            name: `recording.${audioFileType}`,
-          });
-        }
+      }
+      if (storedRecording) {
+        const audioFileType = storedRecording.substring(
+          storedRecording.lastIndexOf(".") + 1
+        );
+        mediaFormData.append("mediaFiles", {
+          uri: storedRecording,
+          type: `audio/${audioFileType}`,
+          name: `recording.${audioFileType}`,
+        });
       }
       const mediaResponse = await axios.post(MEDIA_UPLOAD, mediaFormData, {
         headers: {
@@ -164,6 +250,7 @@ const Power = ({ navigation }) => {
           console.log(percentCompleted);
         },
       });
+
       setAlbums([]);
       setReportTypeID(null);
       console.log(mediaResponse.data);
@@ -497,7 +584,7 @@ const Power = ({ navigation }) => {
       />
 
       <Modal animationType="slide" transparent={true} visible={modalOpen}>
-        <View
+        <ScrollView
           style={{
             width: "100%",
             height: "80%",
@@ -585,14 +672,39 @@ const Power = ({ navigation }) => {
                 Click to Upload Media
               </Text>
             </TouchableOpacity>
-
             <TextIconButton
               disabled={imageLoading}
               containerStyle={{
                 height: 55,
                 alignItems: "center",
                 justifyContent: "center",
-                marginTop: SIZES.radius * 3,
+                marginTop: SIZES.radius,
+                borderRadius: SIZES.radius,
+                backgroundColor: "#0585FA",
+                width: 200,
+              }}
+              icon={icons.playcircle}
+              iconPosition="LEFT"
+              iconStyle={{
+                tintColor: "white",
+                width: 19,
+                resizeMode: "cover",
+                height: 25,
+              }}
+              label="Select a Video"
+              labelStyle={{
+                marginLeft: SIZES.radius,
+                color: "white",
+              }}
+              onPress={() => videoAccess()}
+            />
+            <TextIconButton
+              disabled={imageLoading}
+              containerStyle={{
+                height: 55,
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: SIZES.radius,
                 borderRadius: SIZES.radius,
                 backgroundColor: "#0585FA",
                 width: 200,
@@ -615,7 +727,7 @@ const Power = ({ navigation }) => {
               }
             />
             {albums.length > 0 && (
-              <View style={{ marginTop: 15 }}>
+              <View style={{ marginTop: 8 }}>
                 <FlatList
                   data={albums}
                   renderItem={renderImage}
@@ -625,15 +737,30 @@ const Power = ({ navigation }) => {
                 />
               </View>
             )}
+            {videoMedia.length > 0 && (
+              <View style={styles.galleryContainer}>
+                <FlatList
+                  data={videoMedia}
+                  renderItem={renderVideoThumbnail}
+                  keyExtractor={(item, index) => index.toString()}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                />
+              </View>
+            )}
           </View>
           <TextButton
-            label={albums.length ? "Submit Media" : "Continue without media"}
+            label={
+              albums.length || videoMedia.length
+                ? "Submit Media"
+                : "Continue without media"
+            }
             //disabled={submitPost() ? false : true}
             buttonContainerStyle={{
               height: 55,
               alignItems: "center",
               justifyContent: "center",
-              marginTop: SIZES.padding * 2,
+              marginTop: SIZES.padding,
               borderRadius: SIZES.radius,
               backgroundColor: COLORS.primary,
             }}
@@ -643,7 +770,7 @@ const Power = ({ navigation }) => {
               fontSize: 17,
             }}
             onPress={() => {
-              if (albums.length) {
+              if (albums.length || videoMedia.length) {
                 uploadMediaFile();
               } else {
                 setModalOpen(false);
@@ -651,7 +778,7 @@ const Power = ({ navigation }) => {
               }
             }}
           />
-        </View>
+        </ScrollView>
       </Modal>
     </ReportWrapper>
   );
@@ -668,5 +795,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 10,
+  },
+
+  galleryContainer: {
+    marginTop: 5,
+  },
+  videoContainer: {
+    width: 80,
+    height: 80,
+    marginRight: 10,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  video: {
+    width: "100%",
+    height: "100%",
   },
 });

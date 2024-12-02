@@ -31,6 +31,7 @@ import { bookmarkPost } from "../Redux/authSlice";
 import TextButton from "./TextButton";
 import LoadingImage from "./loadingStates/LoadingImage";
 import FeedImage from "./FeedImage";
+import VideoImage from "./VideoImage";
 //import Modal from "react-native-modal";
 
 const screenWidth = Dimensions.get("window").width;
@@ -534,7 +535,7 @@ const ApiFeed = ({ item }) => {
 
       {item?.feed_urls && (
         <View>
-          <FeedImage url={item?.feed_urls} />
+          <VideoImage url={item?.feed_urls} />
         </View>
       )}
       <View style={styles.iconContainer}>

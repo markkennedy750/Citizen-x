@@ -186,11 +186,7 @@ const ProfilePics = ({ navigation, route }) => {
             buttonContainerStyle={styles.nextButton}
             labelStyle={styles.nextButtonLabel}
             onPress={() => {
-              if (profileImage) {
-                signUpFnc();
-              } else if (profileImage === "") {
-                noProfileSignUp();
-              }
+              signUpFnc();
             }}
           />
         </View>

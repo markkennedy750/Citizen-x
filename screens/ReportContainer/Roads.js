@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  Alert,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState, useMemo } from "react";
 import ReportWrapper from "./ReportWrapper";
@@ -33,6 +35,9 @@ import NetworkError from "../../components/loadingStates/NetworkError";
 import * as ImagePicker from "expo-image-picker";
 import TextIconButton from "../../components/TextIconButton";
 import { ActivityIndicator } from "react-native";
+
+import { Video } from "expo-av";
+import * as FileSystem from "expo-file-system";
 
 const Roads = ({ navigation }) => {
   const [insidentType, setInsidentType] = useState("");
@@ -134,6 +139,26 @@ const Roads = ({ navigation }) => {
       const mediaFormData = new FormData();
       mediaFormData.append("report_id", reportTypeID);
 
+      if (videoMedia.length > 0) {
+        console.log(videoMedia);
+
+        videoMedia.forEach((videoUri, index) => {
+          const fileType = videoUri
+            .substring(videoUri.lastIndexOf(".") + 1)
+            .toLowerCase();
+          const allowedVideoTypes = ["mp4", "mov", "avi", "mkv", "webm"];
+          if (allowedVideoTypes.includes(fileType)) {
+            mediaFormData.append("mediaFiles", {
+              uri: videoUri,
+              type: `video/${fileType}`,
+              name: `video_${index}.${fileType}`,
+            });
+          } else {
+            console.warn(`Invalid file type: ${fileType}`);
+          }
+        });
+      }
+
       if (albums) {
         console.log(albums);
         albums.forEach((album, index) => {
@@ -152,17 +177,16 @@ const Roads = ({ navigation }) => {
             name: `media_${index}.${fileType}`,
           });
         });
-
-        if (storedRecording) {
-          const audioFileType = storedRecording.substring(
-            storedRecording.lastIndexOf(".") + 1
-          );
-          mediaFormData.append("mediaFiles", {
-            uri: storedRecording,
-            type: `audio/${audioFileType}`,
-            name: `recording.${audioFileType}`,
-          });
-        }
+      }
+      if (storedRecording) {
+        const audioFileType = storedRecording.substring(
+          storedRecording.lastIndexOf(".") + 1
+        );
+        mediaFormData.append("mediaFiles", {
+          uri: storedRecording,
+          type: `audio/${audioFileType}`,
+          name: `recording.${audioFileType}`,
+        });
       }
       const mediaResponse = await axios.post(MEDIA_UPLOAD, mediaFormData, {
         headers: {
@@ -564,7 +588,7 @@ const Roads = ({ navigation }) => {
       />
 
       <Modal animationType="slide" transparent={true} visible={modalOpen}>
-        <View
+        <ScrollView
           style={{
             width: "100%",
             height: "80%",
@@ -652,14 +676,39 @@ const Roads = ({ navigation }) => {
                 Click to Upload Media
               </Text>
             </TouchableOpacity>
-
             <TextIconButton
               disabled={imageLoading}
               containerStyle={{
                 height: 55,
                 alignItems: "center",
                 justifyContent: "center",
-                marginTop: SIZES.radius * 3,
+                marginTop: SIZES.radius,
+                borderRadius: SIZES.radius,
+                backgroundColor: "#0585FA",
+                width: 200,
+              }}
+              icon={icons.playcircle}
+              iconPosition="LEFT"
+              iconStyle={{
+                tintColor: "white",
+                width: 19,
+                resizeMode: "cover",
+                height: 25,
+              }}
+              label="Select a Video"
+              labelStyle={{
+                marginLeft: SIZES.radius,
+                color: "white",
+              }}
+              onPress={() => videoAccess()}
+            />
+            <TextIconButton
+              disabled={imageLoading}
+              containerStyle={{
+                height: 55,
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: SIZES.radius,
                 borderRadius: SIZES.radius,
                 backgroundColor: "#0585FA",
                 width: 200,
@@ -682,7 +731,7 @@ const Roads = ({ navigation }) => {
               }
             />
             {albums.length > 0 && (
-              <View style={{ marginTop: 15 }}>
+              <View style={{ marginTop: 8 }}>
                 <FlatList
                   data={albums}
                   renderItem={renderImage}
@@ -692,15 +741,30 @@ const Roads = ({ navigation }) => {
                 />
               </View>
             )}
+            {videoMedia.length > 0 && (
+              <View style={styles.galleryContainer}>
+                <FlatList
+                  data={videoMedia}
+                  renderItem={renderVideoThumbnail}
+                  keyExtractor={(item, index) => index.toString()}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                />
+              </View>
+            )}
           </View>
           <TextButton
-            label={albums.length ? "Submit Media" : "Continue without media"}
+            label={
+              albums.length || videoMedia.length
+                ? "Submit Media"
+                : "Continue without media"
+            }
             //disabled={submitPost() ? false : true}
             buttonContainerStyle={{
               height: 55,
               alignItems: "center",
               justifyContent: "center",
-              marginTop: SIZES.padding * 2,
+              marginTop: SIZES.padding,
               borderRadius: SIZES.radius,
               backgroundColor: COLORS.primary,
             }}
@@ -710,7 +774,7 @@ const Roads = ({ navigation }) => {
               fontSize: 17,
             }}
             onPress={() => {
-              if (albums.length) {
+              if (albums.length || videoMedia.length) {
                 uploadMediaFile();
               } else {
                 setModalOpen(false);
@@ -718,7 +782,7 @@ const Roads = ({ navigation }) => {
               }
             }}
           />
-        </View>
+        </ScrollView>
       </Modal>
     </ReportWrapper>
   );
@@ -729,5 +793,19 @@ export default Roads;
 const styles = StyleSheet.create({
   checkBoxContainer: {
     marginVertical: 20,
+  },
+  galleryContainer: {
+    marginTop: 5,
+  },
+  videoContainer: {
+    width: 80,
+    height: 80,
+    marginRight: 10,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  video: {
+    width: "100%",
+    height: "100%",
   },
 });
