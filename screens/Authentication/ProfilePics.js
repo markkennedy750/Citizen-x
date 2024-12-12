@@ -93,15 +93,17 @@ const ProfilePics = ({ navigation, route }) => {
         },
       });
 
-      navigation.navigate("SignUpSuccess", {
-        fullname,
-        email,
-        phoneNumber,
-        password,
-        username,
-      });
-      console.log("Signup response data:", response.data);
-      setLoading(false);
+      if (response.status === 201 || response.status === 200) {
+        console.log("Signup response data:", response.data);
+        setLoading(false);
+        navigation.navigate("SignUpSuccess", {
+          fullname,
+          email,
+          phoneNumber,
+          password,
+          username,
+        });
+      }
     } catch (error) {
       setLoading(false);
       setErrorModal(true);
@@ -109,9 +111,9 @@ const ProfilePics = ({ navigation, route }) => {
       console.log(error);
       if (error.response) {
         console.log("server error:", error.response.data);
-        setErrorMessage(
-          "There was an issue with the server. Please try again later."
-        );
+        const errorMessage =
+          error.response.data.errors || "An error occurred. Please try again.";
+        setErrorMessage(errorMessage);
         return rejectWithValue(error.response.data);
       } else if (error.request) {
         console.log("network error:", error.message);
@@ -248,10 +250,10 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
   },
   profileImage: {
-    width: 120,
-    height: 120,
+    width: 80,
+    height: 80,
     borderRadius: 70,
-    marginRight: 15,
+    marginRight: 10,
     marginTop: 18,
   },
   authLayout: {

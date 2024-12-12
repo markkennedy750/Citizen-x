@@ -7,11 +7,15 @@ import * as Location from "expo-location";
 const UserLocation = ({ location, setLocation }) => {
   //const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [permissionDenied, setPermissionDenied] = useState(true);
 
   async function getLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      setErrorMsg("Permission to access location was denied");
+      setErrorMsg(
+        "Permission to access location was denied your location is required to make report"
+      );
+      setPermissionDenied(true);
       return;
     }
 
@@ -22,14 +26,26 @@ const UserLocation = ({ location, setLocation }) => {
         latitude: mylocation.coords.latitude,
         longitude: mylocation.coords.longitude,
       });
+      setPermissionDenied(false);
     } else if (errorMsg) {
       console.log(errorMsg);
+      setPermissionDenied(true);
     }
   }
 
   useEffect(() => {
     getLocation();
-  }, []);
+    let intervalId;
+    if (permissionDenied) {
+      intervalId = setInterval(() => {
+        getLocation();
+      }, 3000);
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [permissionDenied]);
 
   return (
     <View

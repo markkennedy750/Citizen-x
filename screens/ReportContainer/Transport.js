@@ -646,12 +646,15 @@ const Transport = ({ navigation }) => {
 
       <Modal animationType="slide" transparent={true} visible={modalOpen}>
         <ScrollView
-          style={{
+          contentContainerStyle={{
             width: "100%",
-            height: "80%",
+            //height: "80%",
             flex: 1,
             backgroundColor: COLORS.lightGray2,
-            marginTop: SIZES.padding * 6,
+            marginTop:
+              albums.length || videoMedia.length
+                ? SIZES.padding * 6
+                : SIZES.padding * 3,
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
             borderWidth: 1.5,
@@ -715,28 +718,28 @@ const Transport = ({ navigation }) => {
                   source={icons.folderoutline}
                   resizeMode="contain"
                   style={{
-                    width: 150,
-                    height: 150,
+                    width: albums.length || videoMedia.length ? 90 : 110,
+                    height: albums.length || videoMedia.length ? 90 : 110,
                     tintColor: COLORS.darkGray,
                   }}
                 />
               )}
               <Text
                 style={{
-                  fontSize: 17,
+                  fontSize: 15,
                   fontWeight: "500",
-                  lineHeight: 30,
+                  lineHeight: 25,
                   color: COLORS.darkGray,
                   marginLeft: 15,
                 }}
               >
-                Click to Upload Media
+                Click to Upload Picture
               </Text>
             </TouchableOpacity>
             <TextIconButton
               disabled={imageLoading}
               containerStyle={{
-                height: 55,
+                height: 50,
                 alignItems: "center",
                 justifyContent: "center",
                 marginTop: SIZES.radius,
@@ -748,7 +751,7 @@ const Transport = ({ navigation }) => {
               iconPosition="LEFT"
               iconStyle={{
                 tintColor: "white",
-                width: 19,
+                width: 25,
                 resizeMode: "cover",
                 height: 25,
               }}
@@ -759,34 +762,7 @@ const Transport = ({ navigation }) => {
               }}
               onPress={() => videoAccess()}
             />
-            <TextIconButton
-              disabled={imageLoading}
-              containerStyle={{
-                height: 55,
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: SIZES.radius,
-                borderRadius: SIZES.radius,
-                backgroundColor: "#0585FA",
-                width: 200,
-              }}
-              icon={icons.audioRecord}
-              iconPosition="LEFT"
-              iconStyle={{
-                tintColor: "white",
-                width: 19,
-                resizeMode: "cover",
-                height: 25,
-              }}
-              label="Record Audio"
-              labelStyle={{
-                marginLeft: SIZES.radius,
-                color: "white",
-              }}
-              onPress={() =>
-                navigation.navigate("AudioRecordScreen", { setStoredRecording })
-              }
-            />
+
             {albums.length > 0 && (
               <View style={{ marginTop: 8 }}>
                 <FlatList
@@ -816,12 +792,15 @@ const Transport = ({ navigation }) => {
                 ? "Submit Media"
                 : "Continue without media"
             }
-            //disabled={submitPost() ? false : true}
+            // disabled={submitPost() ? false : true}
             buttonContainerStyle={{
               height: 55,
               alignItems: "center",
               justifyContent: "center",
-              marginTop: SIZES.padding,
+              marginTop:
+                albums.length || videoMedia.length
+                  ? SIZES.padding * 0.5
+                  : SIZES.padding * 5, // Correctly using a ternary operator
               borderRadius: SIZES.radius,
               backgroundColor: COLORS.primary,
             }}

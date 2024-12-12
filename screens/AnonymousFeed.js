@@ -110,6 +110,7 @@ const AnonymousFeed = ({ navigation }) => {
               fontWeight: "600",
               fontSize: 16,
               color: COLORS.primary,
+              lineHeight: 25,
             }}
           >
             Create an account to see more
@@ -122,6 +123,7 @@ const AnonymousFeed = ({ navigation }) => {
             fontSize: 19,
             color: COLORS.primary,
             marginLeft: 15,
+            lineHeight: 25,
           }}
         >
           Reports Feed

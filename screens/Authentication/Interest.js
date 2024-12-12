@@ -78,7 +78,7 @@ export default Interest;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: StatusBar.currentHeight || 40,
+    paddingTop: 25,
     paddingHorizontal: 23,
     flex: 1,
     backgroundColor: "white",

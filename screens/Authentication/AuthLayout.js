@@ -28,7 +28,7 @@ const AuthLayout = ({
         flex: 1,
         //paddingVertical: SIZES.padding,
         backgroundColor: "white",
-        marginTop: StatusBar.currentHeight || 45,
+        paddingTop:  20,
         ...containerStyle,
       }}
     >

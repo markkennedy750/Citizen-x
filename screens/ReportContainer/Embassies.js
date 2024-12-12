@@ -620,202 +620,181 @@ const Embassies = ({ navigation }) => {
       />
 
       <Modal animationType="slide" transparent={true} visible={modalOpen}>
-        <ScrollView
+      <ScrollView
+        contentContainerStyle={{
+          width: "100%",
+          //height: "80%",
+          flex: 1,
+          backgroundColor: COLORS.lightGray2,
+          marginTop:
+            albums.length || videoMedia.length
+              ? SIZES.padding * 6
+              : SIZES.padding * 3,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          borderWidth: 1.5,
+          borderColor: COLORS.gray2,
+          padding: 15,
+        }}
+      >
+        <TouchableOpacity
           style={{
-            width: "100%",
-            height: "80%",
-            flex: 1,
-            backgroundColor: COLORS.lightGray2,
-            marginTop: SIZES.padding * 6,
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            borderWidth: 1.5,
-            borderColor: COLORS.gray2,
-            padding: 15,
+            marginLeft: "auto",
+          }}
+          onPress={() => {
+            setModalOpen(false);
+            navigation.navigate("ReportSuccess");
           }}
         >
-          <TouchableOpacity
+          <Image
+            source={icons.CancelPNG}
+            resizeMode="contain"
             style={{
-              marginLeft: "auto",
+              width: 15,
+              height: 15,
             }}
-            onPress={() => {
-              setModalOpen(false);
-              navigation.navigate("ReportSuccess");
+          />
+        </TouchableOpacity>
+        <View>
+          <Text
+            style={{
+              fontSize: 25,
+              fontWeight: "500",
+              lineHeight: 30,
+              color: COLORS.darkGray,
             }}
           >
-            <Image
-              source={icons.CancelPNG}
-              resizeMode="contain"
-              style={{
-                width: 15,
-                height: 15,
-              }}
-            />
-          </TouchableOpacity>
-          <View>
-            <Text
-              style={{
-                fontSize: 25,
-                fontWeight: "500",
-                lineHeight: 30,
-                color: COLORS.darkGray,
-              }}
-            >
-              Attach a Media File
-            </Text>
+            Attach a Media File
+          </Text>
+          <Text
+            style={{
+              fontSize: 15,
+              fontWeight: "500",
+              lineHeight: 30,
+              color: COLORS.darkGray,
+            }}
+          >
+            Click below to attach a media file to the Post
+          </Text>
+          <TouchableOpacity
+            style={{
+              borderWidth: 1.5,
+              padding: 10,
+              borderColor: COLORS.gray,
+              borderRadius: 20,
+            }}
+            disabled={imageLoading}
+            onPress={mediaAccess}
+          >
+            {imageLoading ? (
+              <ActivityIndicator size="large" color={`${COLORS.primary}`} />
+            ) : (
+              <Image
+                source={icons.folderoutline}
+                resizeMode="contain"
+                style={{
+                  width: albums.length || videoMedia.length ? 90 : 110,
+                  height: albums.length || videoMedia.length ? 90 : 110,
+                  tintColor: COLORS.darkGray,
+                }}
+              />
+            )}
             <Text
               style={{
                 fontSize: 15,
                 fontWeight: "500",
-                lineHeight: 30,
+                lineHeight: 25,
                 color: COLORS.darkGray,
+                marginLeft: 15,
               }}
             >
-              Click below to attach a media file to the Post
+              Click to Upload Picture
             </Text>
-            <TouchableOpacity
-              style={{
-                borderWidth: 1.5,
-                padding: 10,
-                borderColor: COLORS.gray,
-                borderRadius: 20,
-              }}
-              disabled={imageLoading}
-              onPress={mediaAccess}
-            >
-              {imageLoading ? (
-                <ActivityIndicator size="large" color={`${COLORS.primary}`} />
-              ) : (
-                <Image
-                  source={icons.folderoutline}
-                  resizeMode="contain"
-                  style={{
-                    width: 150,
-                    height: 150,
-                    tintColor: COLORS.darkGray,
-                  }}
-                />
-              )}
-              <Text
-                style={{
-                  fontSize: 17,
-                  fontWeight: "500",
-                  lineHeight: 30,
-                  color: COLORS.darkGray,
-                  marginLeft: 15,
-                }}
-              >
-                Click to Upload Media
-              </Text>
-            </TouchableOpacity>
-            <TextIconButton
-              disabled={imageLoading}
-              containerStyle={{
-                height: 55,
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: SIZES.radius,
-                borderRadius: SIZES.radius,
-                backgroundColor: "#0585FA",
-                width: 200,
-              }}
-              icon={icons.playcircle}
-              iconPosition="LEFT"
-              iconStyle={{
-                tintColor: "white",
-                width: 19,
-                resizeMode: "cover",
-                height: 25,
-              }}
-              label="Select a Video"
-              labelStyle={{
-                marginLeft: SIZES.radius,
-                color: "white",
-              }}
-              onPress={() => videoAccess()}
-            />
-            <TextIconButton
-              disabled={imageLoading}
-              containerStyle={{
-                height: 55,
-                alignItems: "center",
-                justifyContent: "center",
-                marginTop: SIZES.radius,
-                borderRadius: SIZES.radius,
-                backgroundColor: "#0585FA",
-                width: 200,
-              }}
-              icon={icons.audioRecord}
-              iconPosition="LEFT"
-              iconStyle={{
-                tintColor: "white",
-                width: 19,
-                resizeMode: "cover",
-                height: 25,
-              }}
-              label="Record Audio"
-              labelStyle={{
-                marginLeft: SIZES.radius,
-                color: "white",
-              }}
-              onPress={() =>
-                navigation.navigate("AudioRecordScreen", { setStoredRecording })
-              }
-            />
-            {albums.length > 0 && (
-              <View style={{ marginTop: 8 }}>
-                <FlatList
-                  data={albums}
-                  renderItem={renderImage}
-                  keyExtractor={(item, index) => index.toString()}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                />
-              </View>
-            )}
-            {videoMedia.length > 0 && (
-              <View style={styles.galleryContainer}>
-                <FlatList
-                  data={videoMedia}
-                  renderItem={renderVideoThumbnail}
-                  keyExtractor={(item, index) => index.toString()}
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                />
-              </View>
-            )}
-          </View>
-          <TextButton
-            label={
-              albums.length || videoMedia.length
-                ? "Submit Media"
-                : "Continue without media"
-            }
-            //disabled={submitPost() ? false : true}
-            buttonContainerStyle={{
-              height: 55,
+          </TouchableOpacity>
+          <TextIconButton
+            disabled={imageLoading}
+            containerStyle={{
+              height: 50,
               alignItems: "center",
               justifyContent: "center",
-              marginTop: SIZES.padding,
+              marginTop: SIZES.radius,
               borderRadius: SIZES.radius,
-              backgroundColor: COLORS.primary,
+              backgroundColor: "#0585FA",
+              width: 200,
             }}
+            icon={icons.playcircle}
+            iconPosition="LEFT"
+            iconStyle={{
+              tintColor: "white",
+              width: 25,
+              resizeMode: "cover",
+              height: 25,
+            }}
+            label="Select a Video"
             labelStyle={{
-              color: COLORS.white,
-              fontWeight: "700",
-              fontSize: 17,
+              marginLeft: SIZES.radius,
+              color: "white",
             }}
-            onPress={() => {
-              if (albums.length || videoMedia.length) {
-                uploadMediaFile();
-              } else {
-                setModalOpen(false);
-                navigation.navigate("ReportSuccess");
-              }
-            }}
+            onPress={() => videoAccess()}
           />
-        </ScrollView>
-      </Modal>
+
+          {albums.length > 0 && (
+            <View style={{ marginTop: 8 }}>
+              <FlatList
+                data={albums}
+                renderItem={renderImage}
+                keyExtractor={(item, index) => index.toString()}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          )}
+          {videoMedia.length > 0 && (
+            <View style={styles.galleryContainer}>
+              <FlatList
+                data={videoMedia}
+                renderItem={renderVideoThumbnail}
+                keyExtractor={(item, index) => index.toString()}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          )}
+        </View>
+        <TextButton
+          label={
+            albums.length || videoMedia.length
+              ? "Submit Media"
+              : "Continue without media"
+          }
+          // disabled={submitPost() ? false : true}
+          buttonContainerStyle={{
+            height: 55,
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop:
+              albums.length || videoMedia.length
+                ? SIZES.padding * 0.5
+                : SIZES.padding * 5, // Correctly using a ternary operator
+            borderRadius: SIZES.radius,
+            backgroundColor: COLORS.primary,
+          }}
+          labelStyle={{
+            color: COLORS.white,
+            fontWeight: "700",
+            fontSize: 17,
+          }}
+          onPress={() => {
+            if (albums.length || videoMedia.length) {
+              uploadMediaFile();
+            } else {
+              setModalOpen(false);
+              navigation.navigate("ReportSuccess");
+            }
+          }}
+        />
+      </ScrollView>
+    </Modal>
     </ReportWrapper>
   );
 };

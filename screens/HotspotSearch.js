@@ -109,7 +109,7 @@ const HotspotSearch = ({ navigation }) => {
           />
         </View>
         <TextButton
-          label="Submit Report"
+          label="Report Filter"
           disabled={submitPost() ? false : true}
           buttonContainerStyle={{
             height: 55,

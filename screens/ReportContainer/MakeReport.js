@@ -514,7 +514,7 @@ const MakeReport = ({ navigation }) => {
       />
       <Modal animationType="slide" transparent={true} visible={modalOpen}>
         <ScrollView
-          style={{
+          contentContainerStyle={{
             width: "100%",
             height: "80%",
             flex: 1,
@@ -598,7 +598,7 @@ const MakeReport = ({ navigation }) => {
                   marginLeft: 15,
                 }}
               >
-                Click to Upload Media
+                Click to Upload Picture
               </Text>
             </TouchableOpacity>
             <TextIconButton

@@ -2,12 +2,11 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { COLORS, icons } from "../constants";
 
-
 const Invite = () => {
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <Text style={styles.linkText}>https://link.citizenx.app/DapoKarim</Text>
+        <Text style={styles.linkText}>https://www.citizenx.ng</Text>
         <TouchableOpacity style={styles.linkButton}>
           <Text style={styles.linkButtonText}>copy link</Text>
         </TouchableOpacity>

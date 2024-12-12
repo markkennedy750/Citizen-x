@@ -25,50 +25,50 @@ const BookMark = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        setLoading(true);
-        const value = await AsyncStorage.getItem("access_token");
-        const response = await axios.get(VIEW_BOOKMARKS, {
-          headers: {
-            Authorization: `Bearer ${value}`,
-          },
-        });
-        // console.log(
-        //   "Auth Feeds successfully gotten:",
-        //   response.data.incident_reports
-        // );
-        if (response.status === 200) {
-          setUserBookMark(response.data.bookmarked_reports);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-        setError(true);
+  const getData = async () => {
+    try {
+      setLoading(true);
+      const value = await AsyncStorage.getItem("access_token");
+      const response = await axios.get(VIEW_BOOKMARKS, {
+        headers: {
+          Authorization: `Bearer ${value}`,
+        },
+      });
+      // console.log(
+      //   "Auth Feeds successfully gotten:",
+      //   response.data.incident_reports
+      // );
+      console.log(response);
+      setUserBookMark(response.data.bookmarked_reports);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setError(true);
 
-        if (error.response) {
-          console.log("server error:", error.response.data);
-          setErrorMessage(
-            "There was an issue with the server. Please try again later."
-          );
-          return rejectWithValue(error.response.data);
-        } else if (error.request) {
-          console.log("network error:", error.message);
-          setErrorMessage(
-            "Network error. Please check your internet connection and try again."
-          );
-          return rejectWithValue(error.message);
-        } else {
-          console.log("error:", error.message);
-          setErrorMessage("An unexpected error occurred. Please try again.");
-          return rejectWithValue(error.message);
-        }
-      } finally {
-        setLoading(false);
+      if (error.response) {
+        console.log("server error:", error.response.data);
+        setErrorMessage(
+          "There was an issue with the server. Please try again later."
+        );
+        return rejectWithValue(error.response.data);
+      } else if (error.request) {
+        console.log("network error:", error.message);
+        setErrorMessage(
+          "Network error. Please check your internet connection and try again."
+        );
+        return rejectWithValue(error.message);
+      } else {
+        console.log("error:", error.message);
+        setErrorMessage("An unexpected error occurred. Please try again.");
+        return rejectWithValue(error.message);
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     getData();
   }, []);
 

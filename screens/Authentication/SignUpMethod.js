@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Platform,
   Linking,
+  Dimensions,
 } from "react-native";
 import { SIZES, COLORS, icons } from "../../constants";
 import TextButton from "../../components/TextButton";
@@ -21,21 +22,14 @@ import axios from "axios";
 import { LOGIN_WITH_GOOGLE } from "../../Redux/URL";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const { width, height } = Dimensions.get("window");
+
 WebBrowser.maybeCompleteAuthSession();
+
 const SignUpMethods = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
 
-  // const [request, response, promptAsync] = Google.useAuthRequest({
-  //   clientId: Platform.select({
-  //     androidClientId: ANDROID_GOOGLE_CLIENT_ID,
-  //     iosClientId: IOS_GOOGLE_CLIENT_ID,
-  //   }),
-  //   redirectUri: AuthSession.makeRedirectUri({
-  //     useProxy: true,
-  //   }),
-  //   scopes: ["openid", "profile", "email"],
-  // });
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId:
       "1089518464102-r4upttig1g193o85v3nkqae937ppk0h0.apps.googleusercontent.com",
@@ -45,7 +39,6 @@ const SignUpMethods = ({ navigation }) => {
 
   const getUserInfo = async (token) => {
     setLoading(true);
-
     try {
       const res = await axios.get(LOGIN_WITH_GOOGLE, {
         headers: {
@@ -60,7 +53,7 @@ const SignUpMethods = ({ navigation }) => {
       navigation.navigate("MainScreen");
     } catch (error) {
       console.error("Google login error:", error);
-      Alert.alert("Google login error:", error);
+      Alert.alert("Google login error:", error.message);
     } finally {
       setLoading(false);
     }
@@ -76,54 +69,33 @@ const SignUpMethods = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.miniContainer}>
+      <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.navigate("InitialSignUp")}
-          style={styles.imageContainer}
+          style={styles.backButton}
         >
-          <Image
-            source={icons.arrowleft}
-            style={{ width: 20, height: 20, tintColor: "black" }}
-          />
+          <Image source={icons.arrowleft} style={styles.icon} />
         </TouchableOpacity>
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.titleContainer}>Choose Sign up option</Text>
-        <Text style={styles.subTitleContainer}>Join Citizen X today!</Text>
+        <Text style={styles.title}>Choose Sign up option</Text>
+        <Text style={styles.subtitle}>Join Citizen X today!</Text>
       </View>
       <View style={styles.buttonContainer}>
         <TextButton
           label="Continue with email"
-          //disabled={isEnableSignUp() ? false : true}
           disabled={loading}
-          buttonContainerStyle={{
-            height: 55,
-            alignItems: "center",
-            marginTop: SIZES.padding,
-            borderRadius: SIZES.radius,
-            backgroundColor: "#0E9C67",
-            width: "100%",
-          }}
-          labelStyle={{
-            color: COLORS.white,
-            fontWeight: "700",
-            fontSize: 17,
-          }}
+          buttonContainerStyle={styles.emailButton}
+          labelStyle={styles.buttonLabel}
           onPress={() => navigation.navigate("SignUp")}
         />
-        <View style={styles.lineConatiner}>
-          <View
-            style={{ width: "35%", height: 2, backgroundColor: COLORS.black }}
-          />
-          <Text style={styles.line}>Or</Text>
-          <View
-            style={{ width: "35%", height: 2, backgroundColor: COLORS.black }}
-          />
+        <View style={styles.divider}>
+          <View style={styles.line} />
+          <Text style={styles.orText}>Or</Text>
+          <View style={styles.line} />
         </View>
       </View>
       <View>
-        {/** Facebook */}
-
         <TextIconButton
           disabled={loading}
           containerStyle={{
@@ -147,7 +119,6 @@ const SignUpMethods = ({ navigation }) => {
           onPress={() => {}}
         />
 
-        {/** Google */}
         {loading ? (
           <ActivityIndicator size="large" color={COLORS.primary} />
         ) : (
@@ -241,7 +212,7 @@ const SignUpMethods = ({ navigation }) => {
         style={{
           flexDirection: "row",
           marginTop: "auto",
-          marginBottom: 25,
+          marginBottom: 3,
           justifyContent: "center",
           alignItems: "center",
         }}
@@ -259,7 +230,7 @@ const SignUpMethods = ({ navigation }) => {
         <TextButton
           label="Sign In"
           buttonContainerStyle={{
-            marginLeft: 2,
+            //marginLeft: 2,
             backgroundColor: null,
           }}
           labelStyle={{
@@ -279,54 +250,99 @@ export default SignUpMethods;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 45,
-    paddingHorizontal: SIZES.padding * 0.5,
+    padding: 20,
     backgroundColor: COLORS.background,
   },
-  miniContainer: {
+  header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
   },
-  imageContainer: {
-    width: 32,
-    height: 30,
+  backButton: {
+    padding: 10,
   },
-  image: {
-    flex: 1,
-    width: 32,
-    height: 30,
+  icon: {
+    width: 20,
+    height: 20,
+    tintColor: COLORS.black,
   },
   textContainer: {
-    marginTop: 40,
-    padding: 5,
-    // height: 85,
-    //width: "100",
+    marginTop: height * 0.05,
   },
-  titleContainer: {
+  title: {
+    fontSize: width * 0.08,
+    fontWeight: "700",
     color: COLORS.black,
-    fontWeight: "800",
-    fontSize: 30,
-    lineHeight: 33,
   },
-  subTitleContainer: {
-    color: COLORS.black,
-    marginTop: 3,
-    fontWeight: "500",
-    fontSize: 14,
+  subtitle: {
+    fontSize: width * 0.04,
+    marginTop: 5,
+    color: COLORS.darkGray,
   },
   buttonContainer: {
-    marginTop: 10,
+    marginTop: height * 0.02,
   },
-  lineConatiner: {
-    marginVertical: 35,
+  emailButton: {
+    height: 55,
+    justifyContent: "center",
+    borderRadius: 10,
+    backgroundColor: COLORS.primary,
+    width: "100%",
+  },
+  buttonLabel: {
+    fontSize: width * 0.045,
+    color: COLORS.white,
+    fontWeight: "700",
+  },
+  divider: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    marginVertical: 20,
   },
   line: {
+    flex: 1,
+    height: 1,
+    backgroundColor: COLORS.gray,
+  },
+  orText: {
+    marginHorizontal: 10,
+    fontSize: width * 0.04,
+    color: COLORS.gray,
+  },
+  facebookButton: {
+    marginTop: 10,
+    height: 50,
+    justifyContent: "center",
+    backgroundColor: COLORS.blue,
+    borderRadius: 10,
+  },
+  googleButton: {
+    marginTop: 10,
+    height: 50,
+    justifyContent: "center",
+    backgroundColor: COLORS.lightGray,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: COLORS.gray,
+  },
+  googleLabel: {
+    marginLeft: 10,
+    fontSize: width * 0.045,
     color: COLORS.black,
-    fontWeight: "600",
-    fontSize: 20,
+  },
+  footer: {
+    marginTop: "auto",
+    alignItems: "center",
+  },
+  footerText: {
+    fontSize: width * 0.04,
+    color: COLORS.darkGray,
+  },
+  signInButton: {
+    backgroundColor: null,
+  },
+  signInLabel: {
+    fontSize: width * 0.045,
+    color: COLORS.primary,
+    fontWeight: "700",
   },
 });

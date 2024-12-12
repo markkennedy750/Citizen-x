@@ -20,6 +20,7 @@ import TextButton from "../components/TextButton";
 
 const Coin = ({ navigation }) => {
   const [access_token, setAccess_token] = useState("");
+  const [isAppReady, setIsAppReady] = useState(false); // new state to control initial loading
 
   const dispatch = useDispatch();
   const { loading, error, availableCoins } = useSelector((state) => state.auth);
@@ -28,23 +29,29 @@ const Coin = ({ navigation }) => {
     const getData = async () => {
       try {
         const value = await AsyncStorage.getItem("access_token");
-        setAccess_token(value);
+        if (value) {
+          setAccess_token(value);
+        }
       } catch (e) {
         console.log(e);
+      } finally {
+        setIsAppReady(true); // Ensure app is marked as ready after token retrieval
       }
     };
     getData();
   }, []);
 
   useEffect(() => {
-    dispatch(rewardCount({ access_token }));
-  }, [dispatch]);
+    if (access_token) {
+      dispatch(rewardCount({ access_token }));
+    }
+  }, [access_token, dispatch]);
 
   function refreshBtn() {
     dispatch(rewardCount({ access_token }));
   }
 
-  if (loading) return <LoadingImage />;
+  if (!isAppReady || loading) return <LoadingImage />;
 
   if (error)
     return (

@@ -8,6 +8,7 @@ import {
   ScrollView,
   Modal,
   Vibration,
+  Linking,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 //import { AuthLayout } from "../";
@@ -63,10 +64,10 @@ const SignIn = ({ navigation }) => {
       console.log(error);
       if (error.response) {
         console.log("server error:", error.response.data);
-        setErrorMessage(
-          "There was an issue with the server. Please try again later."
-        );
-        return rejectWithValue(error.response.data);
+        const errorMessage =
+        error.response.data.errors || "An error occurred. Please try again.";
+      setErrorMessage(errorMessage);
+        return rejectWithValue(error.response.message);
       } else if (error.request) {
         console.log("network error:", error.message);
         setErrorMessage(
@@ -199,9 +200,7 @@ const SignIn = ({ navigation }) => {
               color: COLORS.gray,
               fontWeight: "600",
             }}
-            onPress={() => {
-              navigation.navigate("ForgotPassword");
-            }}
+            onPress={() => Linking.openURL("https://www.citizenx.ng/forgot")}
           />
         </View>
         {/** Sign In */}

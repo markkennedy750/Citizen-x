@@ -88,10 +88,12 @@ const workInProgress = require("../assets/icons/icon/workInProgress.png");
 const termscondition = require("../assets/icons/icon/termscondition.png");
 const CancelPNG = require("../assets/icons/icon/CancelPNG.png");
 const threeDots = require("../assets/icons/icon/threeDots.png");
+const refresh_btn = require("../assets/icons/icon/refresh_btn.png");
 const swap = require("../assets/icons/icon/swap.svg");
 const citizenx = require("../assets/citizenx.png");
 
 export default {
+  refresh_btn,
   threeDots,
   CancelPNG,
   workInProgress,

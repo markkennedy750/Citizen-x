@@ -9,7 +9,8 @@ import {
   Alert,
   Modal,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback, useEffect, useState } from "react";
 import feeds from "../data/DummyFeedData";
 import { COLORS, icons, SIZES } from "../constants";
 import BottomTabFeed from "../components/BottomTabFeed";
@@ -19,7 +20,8 @@ import LoadingImage from "../components/loadingStates/LoadingImage";
 import { logout, profile_sec, rewardCount } from "../Redux/authSlice";
 import ErrorImage from "../components/loadingStates/ErrorImage";
 import TextButton from "../components/TextButton";
-import { HOST } from "../Redux/URL";
+import { HOST, PROFILE } from "../Redux/URL";
+import axios from "axios";
 
 const Profile = ({ navigation }) => {
   const [access_token, setAccess_token] = useState("");
@@ -33,6 +35,26 @@ const Profile = ({ navigation }) => {
     (state) => state.auth
   );
 
+  const handleRefresh = () => {
+    if (access_token) {
+      dispatch(profile_sec({ access_token }));
+      dispatch(rewardCount({ access_token }));
+      Alert.alert("Profile Refreshed", "Your profile details are updated!");
+    }
+  };
+
+  const userProfile = async () => {
+    try {
+      const response = await axios.get(PROFILE, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     const getData = async () => {
       try {
@@ -66,6 +88,16 @@ const Profile = ({ navigation }) => {
     }
     console.log(availableCoins);
   }, [dispatch, access_token]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (access_token) {
+        dispatch(profile_sec({ access_token }));
+        dispatch(rewardCount({ access_token }));
+        userProfile();
+      }
+    }, [dispatch, access_token])
+  );
 
   function loguserout() {
     dispatch(logout());
@@ -210,13 +242,13 @@ const Profile = ({ navigation }) => {
   const host = `${HOST}/`;
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handleRefresh}>
         <Image
-          source={icons.arrowleft}
-          style={{ width: 20, height: 20, tintColor: "black" }}
+          source={icons.refresh_btn}
+          style={{ width: 32, height: 32, tintColor: COLORS.primary }}
         />
       </TouchableOpacity>
-      <View style={{ marginTop: 12 }}>
+      <View style={{ marginTop: 10 }}>
         <View style={styles.profileContiner}>
           <Image
             source={

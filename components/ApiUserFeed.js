@@ -20,6 +20,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DOWN_VOTE, UPVOTE } from "../Redux/URL";
 import { Audio } from "expo-av";
 import { bookmarkPost } from "../Redux/authSlice";
+import VideoImage from "./VideoImage";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -39,7 +40,7 @@ const ApiFeed = ({ item }) => {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.auth);
 
-  const date = item?.time_of_incidence;
+  const date = item?.date_of_incidence;
   const id = item?.id;
 
   async function bookmarkfunc(id) {
@@ -47,17 +48,15 @@ const ApiFeed = ({ item }) => {
     dispatch(bookmarkPost({ access_token, id }));
   }
   const formatDate = (dateString) => {
+    const dateOnlyRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (dateOnlyRegex.test(dateString)) {
+      return dateString;
+    }
     const date = new Date(dateString);
-
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const seconds = String(date.getSeconds()).padStart(2, "0");
-    const milliseconds = String(date.getMilliseconds()).charAt(0);
-
-    return `${year}-${month}-${day}:${hours}:${minutes}:${seconds}.${milliseconds}`;
+    return `${year}-${month}-${day}`;
   };
 
   const postId = item?.id;
@@ -149,14 +148,14 @@ const ApiFeed = ({ item }) => {
   }
 
   useEffect(() => {
-    if (item?.thumbnail_urls) {
-      Image.prefetch(item?.thumbnail_urls)
+    if (item?.profile_image) {
+      Image.prefetch(item?.profile_image)
         .then(() => setIsValidImage(true))
         .catch(() => setIsValidImage(false));
     } else {
       setIsValidImage(false);
     }
-  }, [item?.thumbnail_urls]);
+  }, [item?.profile_image]);
 
   const parseFeedUrls = (feedUrls) => {
     const urls = feedUrls.split(",");
@@ -220,11 +219,12 @@ const ApiFeed = ({ item }) => {
 
   const renderMedia = ({ item: media, index }) => {
     if (!media || !media.url) {
-      return null; 
+      return null;
     }
     const isSingleImage = mediaFiles.length === 1;
-    const isLastOddImage = mediaFiles.length % 2 !== 0 && index === mediaFiles.length - 1;
-  
+    const isLastOddImage =
+      mediaFiles.length % 2 !== 0 && index === mediaFiles.length - 1;
+
     if (media.type === "image") {
       return (
         <TouchableOpacity
@@ -234,7 +234,11 @@ const ApiFeed = ({ item }) => {
         >
           <Image
             source={{ uri: media.url }}
-            style={isSingleImage || isLastOddImage ? styles.singleImage : styles.image}
+            style={
+              isSingleImage || isLastOddImage
+                ? styles.singleImage
+                : styles.image
+            }
           />
         </TouchableOpacity>
       );
@@ -264,7 +268,7 @@ const ApiFeed = ({ item }) => {
           ) : (
             <Image
               source={
-                isValidImage ? { uri: item?.thumbnail_urls } : icons.anonymous
+                isValidImage ? { uri: item?.profile_image } : icons.anonymous
               }
               style={styles.profileImg}
             />
@@ -274,22 +278,22 @@ const ApiFeed = ({ item }) => {
             <View style={styles.usernameContainer}>
               {item?.user_is_anonymous === true ? (
                 <Text style={styles.fulName}>Anonymous User</Text>
-              ) : item?.fullname ? (
-                <Text style={styles.fulName}>{item?.fullname}</Text>
+              ) : item?.user_fullname ? (
+                <Text style={styles.fulName}>{item?.user_fullname}</Text>
               ) : (
                 <Text style={styles.fulName}>Anonymous User</Text>
               )}
 
               {item?.user_is_anonymous === true ? (
                 <Text style={styles.usename}>@Anonymous</Text>
-              ) : item?.username ? (
-                <Text style={styles.usename}>@{item?.username}</Text>
+              ) : item?.user_username ? (
+                <Text style={styles.usename}>@{item?.user_username}</Text>
               ) : (
                 <Text style={styles.usename}>@Anonymous</Text>
               )}
             </View>
             <View style={styles.reportDaTim}>
-              {item?.time_of_incidence && (
+              {item?.date_of_incidence && (
                 <Text style={styles.date}>{formatDate(date)}</Text>
               )}
 
@@ -330,19 +334,11 @@ const ApiFeed = ({ item }) => {
         </View>
       </View>
 
-      <View>
-        {mediaFiles.length > 0 && (
-          <FlatList
-            data={mediaFiles}
-            renderItem={renderMedia}
-            keyExtractor={(media, index) => index.toString()}
-            numColumns={mediaFiles.length > 1 ? 2 : 1}
-            key={mediaFiles.length > 1 ? 2 : 1}
-            horizontal={false}
-            contentContainerStyle={styles.mediaContainer}
-          />
-        )}
-      </View>
+      {item?.feed_urls && (
+        <View>
+          <VideoImage url={item?.feed_urls} />
+        </View>
+      )}
       <View style={styles.iconContainer}>
         <View style={styles.voteContainer}>
           {voteLoading ? (

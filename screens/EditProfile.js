@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  Modal,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { COLORS, icons, SIZES } from "../constants";
@@ -42,6 +43,7 @@ const EditProfile = ({ navigation }) => {
   const [imageLoading, setImageLoading] = useState(false);
   const [profileImag, setProfileImag] = useState("");
   const [loading, setLoading] = useState(false);
+  //const [successModal, setSuccessModal] = useState(false);
   const [token, setToken] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [error, setError] = useState("");
@@ -183,7 +185,9 @@ const EditProfile = ({ navigation }) => {
         if (response.status === 200) {
           Alert.alert("Success", "Profile image updated successfully");
           setImageLoading(false);
-          dispatch(profile_sec());
+          dispatch(profile_sec({ access_token: token }));
+          //dispatch(profile_sec());
+          setUpdateSuccess(true);
         }
         return response.data;
       }
@@ -331,7 +335,7 @@ const EditProfile = ({ navigation }) => {
             style={{ width: 20, height: 20, tintColor: "black" }}
           />
         </TouchableOpacity>
-        <Text style={styles.editProfileText}>EditProfile</Text>
+        <Text style={styles.editProfileText}>Edit Profile</Text>
       </View>
 
       <View style={styles.profileImageContainer}>
@@ -477,6 +481,44 @@ const EditProfile = ({ navigation }) => {
           onPress={updateProfile}
         />
       </ScrollView>
+      <Modal animationType="slide" transparent={true} visible={updateSuccess}>
+        <View style={styles.modalContainer}>
+          <Image
+            source={icons.SignUpSuccess}
+            style={{ height: 110, width: 110, marginTop: 5 }}
+            resizeMode="contain"
+          />
+
+          <View style={styles.logoutTextContainer}>
+            <Text style={styles.primaryText}>Profile Updated successfully</Text>
+          </View>
+          <TextButton
+            label="Dismiss"
+            buttonContainerStyle={{
+              height: 50,
+              width: "80%",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
+              borderRadius: SIZES.radius,
+              backgroundColor: COLORS.primary,
+            }}
+            labelStyle={{
+              color: COLORS.white,
+              fontWeight: "700",
+              fontSize: 18,
+            }}
+            onPress={() => {
+              setUpdateSuccess(false);
+              dispatch(profile_sec({ access_token: token }));
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "MainScreen" }],
+              });
+            }}
+          />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -516,5 +558,38 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 16,
     color: COLORS.primary,
+  },
+
+  modalContainer: {
+    width: "98%",
+    height: 235,
+    backgroundColor: "white",
+    alignSelf: "center",
+    marginTop: "auto",
+    marginBottom: 7,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    alignItems: "center",
+    borderWidth: 1.5,
+    borderColor: COLORS.gray2,
+    paddingHorizontal: 8,
+  },
+
+  logoutTextContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 5,
+  },
+  primaryText: {
+    fontSize: 20,
+    fontWeight: "600",
+    lineHeight: 25,
+  },
+  secondaryText: {
+    fontSize: 15,
+    fontWeight: "400",
+    lineHeight: 20,
+    textAlign: "center",
+    marginVertical: 10,
   },
 });

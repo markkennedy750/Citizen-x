@@ -1,7 +1,16 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Dimensions,
+  Platform,
+} from "react-native";
 import { SIZES, COLORS } from "../constants";
 import TextButton from "../components/TextButton";
+
+const { width, height } = Dimensions.get("window");
 
 const InitialSignIn = ({ navigation }) => {
   return (
@@ -10,12 +19,9 @@ const InitialSignIn = ({ navigation }) => {
         <Image
           source={require("../assets/citizenx.png")}
           resizeMode="contain"
-          style={{
-            height: 75,
-            width: 150,
-          }}
+          style={styles.logo}
         />
-        <Text style={styles.imageTitle}>Citizen x</Text>
+        <Text style={styles.imageTitle}>Citizen X</Text>
 
         <View style={styles.textContainer}>
           <Text style={styles.titleContainer}>
@@ -23,75 +29,29 @@ const InitialSignIn = ({ navigation }) => {
           </Text>
         </View>
 
-        <View style={styles.buttomTextButton}>
+        <View style={styles.buttonContainer}>
           <TextButton
             label="Create an account"
-            //disabled={isEnableSignUp() ? false : true}
-            buttonContainerStyle={{
-              height: 55,
-              alignItems: "center",
-              marginTop: SIZES.padding,
-              borderRadius: SIZES.radius,
-              backgroundColor: "#0E9C67",
-              width: "100%",
-            }}
-            labelStyle={{
-              color: COLORS.white,
-              fontWeight: "700",
-              fontSize: 17,
-            }}
+            buttonContainerStyle={styles.createAccountButton}
+            labelStyle={styles.createAccountLabel}
             onPress={() => navigation.navigate("SignUpMethod")}
           />
           <TextButton
             label="Continue without an account"
-            //disabled={isEnableSignUp() ? false : true}
-            buttonContainerStyle={{
-              height: 55,
-              alignItems: "center",
-              marginTop: SIZES.padding,
-              borderRadius: SIZES.radius,
-              backgroundColor: null,
-              borderWidth: 2,
-              width: "100%",
-            }}
-            labelStyle={{
-              color: "black",
-              fontWeight: "700",
-              fontSize: 17,
-              textAlign: "center",
-            }}
+            buttonContainerStyle={styles.continueButton}
+            labelStyle={styles.continueLabel}
             onPress={() => navigation.navigate("AnonymousFeed")}
           />
         </View>
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "flex-end",
-            marginTop: "auto",
-          }}
-        >
-          <Text
-            style={{
-              color: COLORS.darkGray,
-              fontWeight: "700",
-              fontSize: 15,
-              marginRight: 5,
-            }}
-          >
+        <View style={styles.signInContainer}>
+          <Text style={styles.alreadyAccountText}>
             Already have an account?
           </Text>
           <TextButton
             label="Sign In"
-            buttonContainerStyle={{
-              backgroundColor: null,
-            }}
-            labelStyle={{
-              color: "#0E9C67",
-              fontWeight: "700",
-              fontSize: 18,
-            }}
+            buttonContainerStyle={styles.signInButton}
+            labelStyle={styles.signInLabel}
             onPress={() => navigation.navigate("SignIn")}
           />
         </View>
@@ -105,40 +65,84 @@ export default InitialSignIn;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: SIZES.padding,
-    backgroundColor: "white",
     backgroundColor: "#B7FF9D33",
+    paddingHorizontal: "5%",
+    paddingVertical: "5%",
   },
   semiContainer: {
     flex: 1,
-    marginTop: SIZES.padding * 3,
-    paddingTop: SIZES.padding,
-    paddingHorizontal: SIZES.padding,
     alignItems: "center",
+    marginTop: height * 0.05, // Adjust based on screen height
+  },
+  logo: {
+    height: height * 0.1, // Relative to screen height
+    width: width * 0.4, // Relative to screen width
+  },
+  imageTitle: {
+    fontSize: SIZES.font, // Dynamically adjust font size
+    marginTop: 10,
   },
   textContainer: {
-    //flex: 1,
-    marginTop: SIZES.padding * 2.3,
+    marginTop: height * 0.03,
     alignItems: "center",
   },
   titleContainer: {
     color: COLORS.darkGray,
     fontWeight: "800",
-    fontSize: 22,
-    lineHeight: 24,
+    fontSize: SIZES.large, // Use scalable sizes
+    textAlign: "center",
+    lineHeight: 25,
   },
-  subTitleContainer: {
-    marginTop: SIZES.padding * 1,
-    color: COLORS.darkGray2,
-    fontSize: 22,
-    lineHeight: 24,
-  },
-  imageTitle: {
-    fontSize: 17,
-  },
-  buttomTextButton: {
+  buttonContainer: {
     width: "100%",
+    marginTop: height * 0.05,
+    marginBottom: height * 0.1,
+  },
+  createAccountButton: {
+    height: 55,
+    justifyContent: "center",
+    borderRadius: SIZES.radius,
+    backgroundColor: "#0E9C67",
+    width: "100%",
+    marginBottom:SIZES.padding
+  },
+  createAccountLabel: {
+    color: COLORS.white,
+    fontWeight: "700",
+    fontSize: SIZES.medium,
+  },
+  continueButton: {
+    height: 55,
+    justifyContent: "center",
+    borderRadius: SIZES.radius,
+    borderWidth: 2,
     marginTop: 10,
-    marginBottom: 140,
+    width: "100%",
+  },
+  continueLabel: {
+    color: "black",
+    fontWeight: "700",
+    fontSize: SIZES.medium,
+    textAlign: "center",
+  },
+  signInContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "flex-end",
+    marginTop: "auto",
+  },
+  alreadyAccountText: {
+    color: COLORS.darkGray,
+    fontWeight: "700",
+    fontSize: SIZES.small,
+    marginRight: 5,
+  },
+  signInButton: {
+    backgroundColor: null,
+  },
+  signInLabel: {
+    color: "#0E9C67",
+    fontWeight: "700",
+    fontSize: SIZES.medium,
   },
 });
