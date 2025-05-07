@@ -11,11 +11,15 @@
       "resizeMode": "contain",
       "backgroundColor": "#f3f2f2"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": ["audio"],
+        "UIBackgroundModes": [
+          "audio"
+        ],
         "NSPhotoLibraryUsageDescription": "Citizen X need access to your photos to upload a profile picture."
       },
       "bundleIdentifier": "com.kennedy757.citixenx"
@@ -28,9 +32,13 @@
       "package": "com.kennedy757.citixenx",
       "versionCode": 16,
       "permissions": [
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
       ]
     },
     "web": {
@@ -39,10 +47,9 @@
     "scheme": "CITIZEN_X",
     "extra": {
       "eas": {
-        "projectId": "37271682-1c79-46cd-8a73-3c2cac94cb3c"
+        "projectId": "06525c8d-e5e0-450e-93ec-ce6da43f75da"
       }
     },
-    "owner": "kennedy757",
     "plugins": [
       "expo-secure-store",
       "expo-font",
@@ -78,7 +85,9 @@
       [
         "expo-font",
         {
-          "fonts": ["path/to/file.ttf"]
+          "fonts": [
+            "path/to/file.ttf"
+          ]
         }
       ],
       "expo-video"

@@ -711,6 +711,10 @@ Android developer
 
 3. > > eas build --platform android
 
+// "eas": {
+      //   "projectId": "215af4eb-eef5-4144-9881-422e9da706bb"
+      // }
+      //"owner": "kennedy757",
 Build apk for android
 https://expo.dev/accounts/kennedy757/projects/citixenx/builds/c203e047-fda1-46c6-9482-e2ef6547a69b
 
